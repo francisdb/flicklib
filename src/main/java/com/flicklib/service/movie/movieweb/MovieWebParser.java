@@ -61,14 +61,15 @@ public class MovieWebParser extends AbstractJerichoParser{
                         }
                     }
                 }
-            } else if (content.startsWith("The Critics:")) {
-                List<?> childs = divElement.getChildElements();
-                if (childs.size() > 0) {
-                    String score = ((Element) childs.get(0)).getContent().getTextExtractor().toString();
-                    //LOGGER.debug("Critics score: " + score);
-                    // TODO use?
-                }
-            }
+            } 
+//            else if (content.startsWith("The Critics:")) {
+//                List<?> childs = divElement.getChildElements();
+//                if (childs.size() > 0) {
+//                    String score = ((Element) childs.get(0)).getContent().getTextExtractor().toString();
+//                    LOGGER.debug("Critics score: " + score);
+//                    // TODO use?
+//                }
+//            }
         }
     }
 

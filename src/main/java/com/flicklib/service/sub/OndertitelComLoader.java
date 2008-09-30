@@ -32,7 +32,7 @@ import java.util.Set;
  */
 public class OndertitelComLoader implements SubtitlesLoader{
     
-    private final SourceLoader sourceLoader;
+    //private final SourceLoader sourceLoader;
 
     /**
      * http://www.ondertitel.com
@@ -40,7 +40,8 @@ public class OndertitelComLoader implements SubtitlesLoader{
      */
     @Inject
     public OndertitelComLoader(SourceLoader sourceLoader) {
-        this.sourceLoader = sourceLoader;
+        //this.sourceLoader = sourceLoader;
+    	throw new UnsupportedOperationException("Not implemented");
     }
 
     
