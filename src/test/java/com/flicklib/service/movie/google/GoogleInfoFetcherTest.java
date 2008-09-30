@@ -36,7 +36,7 @@ public class GoogleInfoFetcherTest {
      * Test of fetch method, of class GoogleInfoFetcher.
      */
     @Test
-    @Ignore(value="Disabled for CI")
+    //@Ignore(value="Disabled for CI")
     public void testFetch() {
         Movie movie = new Movie();
         movie.setTitle("Pulp Fiction");

@@ -33,7 +33,6 @@ public class OmdbFetcherTest {
      * Test of fetch method, of class OmdbFetcher.
      */
     @Test
-    @Ignore
     public void testFetch() {
         Movie movie = new Movie();
         OmdbFetcher instance = new OmdbFetcher();

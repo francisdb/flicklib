@@ -21,7 +21,6 @@ package com.flicklib.service.movie.flixter;
 import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.HttpSourceLoader;
-import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -35,7 +34,6 @@ public class FlixterInfoFetcherTest {
      * Test of fetch method, of class FlixterInfoFetcher.
      */
     @Test
-    @Ignore
     public void testFetch() {
         Movie movie = new Movie();
         movie.setTitle("The X-Files I Want to Believe");
