@@ -66,10 +66,19 @@
             <artifactId>com.noelios.restlet.ext.httpclient</artifactId>
             <version>1.1-M4</version>
         </dependency>
+        
+        <!-- TESTING -->
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.9</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
