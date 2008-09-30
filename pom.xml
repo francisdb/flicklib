@@ -18,6 +18,22 @@
             </roles>
             <timezone>+1</timezone>
         </developer>
+        <developer>
+            <id>ravi.undupitiya</id>
+            <name>Ravi Undupitiya</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>0</timezone>
+        </developer>
+        <developer>
+            <id>gzsombor</id>
+            <name>Zsombor Gegesy</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>1</timezone>
+        </developer>
     </developers>
     <scm>
         <connection>scm:svn:http://flicklib.googlecode.com/svn/trunk</connection>
