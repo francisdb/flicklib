@@ -1,9 +1,9 @@
 /*
- * This file is part of Movie Browser.
+ * This file is part of Flicklib.
  * 
  * Copyright (C) Francis De Brabandere
  * 
- * Movie Browser is free software; you can redistribute it and/or modify
+ * Flicklib is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
