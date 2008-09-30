@@ -29,6 +29,12 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.5.2</version>
 		</dependency>
+		 <dependency>
+            <groupId>com.google.code.guice</groupId>
+            <artifactId>guice</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
 		<dependency>
 			<groupId>net.htmlparser.jericho</groupId>
 			<artifactId>jericho-html</artifactId>
