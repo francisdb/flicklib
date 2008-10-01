@@ -83,13 +83,8 @@ public class NetflixInfoFetcher implements MovieInfoFetcher {
 		site.setMovie(movie);
 		site.setService(MovieService.NETFLIX);
 
-		// TODO use the noarg constructor in the next release
-		OAuthClient oAuthClient = new OAuthHttpClient(new HttpClientPool(){
-			@Override
-			public HttpClient getHttpClient(URL server) {
-				return new HttpClient();
-			}
-		});
+		// TODO use the noarg constructor in the next OAuth release
+		OAuthClient oAuthClient = new OAuthHttpClient(new NotPoolingHttpClientPool());
 		try {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("term", movie.getTitle());
@@ -114,8 +109,26 @@ public class NetflixInfoFetcher implements MovieInfoFetcher {
 
 		return site;
 	}
-	
-	private class SaxResultUnmarshaller extends DefaultHandler{
+
+	/**
+	 * TODO Should be removed when switching to new OAuth version (is implemented overthere)
+	 * @author francisdb
+	 *
+	 */
+	private static final class NotPoolingHttpClientPool implements HttpClientPool {
+		@Override
+		public HttpClient getHttpClient(URL server) {
+			return new HttpClient();
+		}
+	}
+
+	/**
+	 * Parses a single netflix xml result
+	 * 
+	 * @author francisdb
+	 *
+	 */
+	private static class SaxResultUnmarshaller extends DefaultHandler{
 		
 		/**
 		 * Rating in %
