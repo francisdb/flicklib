@@ -26,6 +26,7 @@ import com.flicklib.service.movie.flixter.Flixster;
 import com.flicklib.service.movie.google.Google;
 import com.flicklib.service.movie.imdb.Imdb;
 import com.flicklib.service.movie.movieweb.MovieWeb;
+import com.flicklib.service.movie.netflix.Netflix;
 import com.flicklib.service.movie.omdb.Omdb;
 import com.flicklib.service.movie.tomatoes.RottenTomatoes;
 
@@ -42,6 +43,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
     private final MovieInfoFetcher googleInfoFetcher;
     private final MovieInfoFetcher flixterInfoFetcher;
     private final MovieInfoFetcher omdbInfoFetcher;
+    private final MovieInfoFetcher netflixInfoFetcher;;
 
     /**
      * Constructs a new InfoFetcherFactoryImpl
@@ -59,13 +61,15 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
             final @RottenTomatoes MovieInfoFetcher tomatoesInfoFetcher,
             final @Google MovieInfoFetcher googleInfoFetcher,
             final @Flixster MovieInfoFetcher flixterInfoFetcher,
-            final @Omdb MovieInfoFetcher omdbInfoFetcher) {
+            final @Omdb MovieInfoFetcher omdbInfoFetcher,
+            final @Netflix MovieInfoFetcher netflixInfoFetcher) {
         this.imdbInfoFetcher = imdbInfoFetcher;
         this.movieWebInfoFetcher = movieWebInfoFetcher;
         this.tomatoesInfoFetcher = tomatoesInfoFetcher;
         this.googleInfoFetcher = googleInfoFetcher;
         this.flixterInfoFetcher = flixterInfoFetcher;
         this.omdbInfoFetcher = omdbInfoFetcher;
+        this.netflixInfoFetcher = netflixInfoFetcher;
     }
     
     
@@ -91,6 +95,9 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
                 break;
             case TOMATOES:
                 fetcher = tomatoesInfoFetcher;
+                break;
+            case NETFLIX:
+                fetcher = netflixInfoFetcher;
                 break;
             default:
                 throw new AssertionError("Unknown service: "+service);
