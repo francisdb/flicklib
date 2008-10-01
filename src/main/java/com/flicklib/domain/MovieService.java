@@ -50,7 +50,12 @@ public enum MovieService {
     /**
      * http://www.flixster.com
      */
-    FLIXSTER("Flixter", "http://www.flixter.com");
+    FLIXSTER("Flixter", "http://www.flixter.com"),
+    
+    /**
+     * http://www.netflix.com
+     */
+    NETFLIX("Netflix", "http://www.netflix.com");
 
     private final String name;
     private final String url;

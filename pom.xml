@@ -42,6 +42,11 @@
     </scm>
     <dependencies>
         <dependency>
+      <groupId>net.oauth</groupId>
+      <artifactId>core</artifactId>
+      <version>20080621</version>
+    </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.5.2</version>
@@ -185,6 +190,11 @@
             <id>maven-restlet</id>
             <name>Public online Restlet repository</name>
             <url>http://maven.restlet.org</url>
+        </repository>
+        <repository>
+            <id>oauth</id>
+            <name>Public OAuth repository</name>
+            <url>http://oauth.googlecode.com/svn/code/maven/</url>
         </repository>
     </repositories>
 
