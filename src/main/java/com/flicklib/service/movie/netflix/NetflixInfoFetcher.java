@@ -19,6 +19,7 @@ package com.flicklib.service.movie.netflix;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,9 +28,11 @@ import net.oauth.OAuthConsumer;
 import net.oauth.OAuthException;
 import net.oauth.OAuthMessage;
 import net.oauth.OAuthServiceProvider;
+import net.oauth.client.HttpClientPool;
 import net.oauth.client.OAuthClient;
 import net.oauth.client.OAuthHttpClient;
 
+import org.apache.commons.httpclient.HttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -80,8 +83,13 @@ public class NetflixInfoFetcher implements MovieInfoFetcher {
 		site.setMovie(movie);
 		site.setService(MovieService.NETFLIX);
 
-		
-		OAuthClient oAuthClient = new OAuthHttpClient();
+		// TODO use the noarg constructor in the next release
+		OAuthClient oAuthClient = new OAuthHttpClient(new HttpClientPool(){
+			@Override
+			public HttpClient getHttpClient(URL server) {
+				return new HttpClient();
+			}
+		});
 		try {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("term", movie.getTitle());
