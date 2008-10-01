@@ -36,6 +36,8 @@ import com.flicklib.service.movie.imdb.ImdbParser;
 import com.flicklib.service.movie.movieweb.MovieWeb;
 import com.flicklib.service.movie.movieweb.MovieWebInfoFetcher;
 import com.flicklib.service.movie.movieweb.MovieWebParser;
+import com.flicklib.service.movie.netflix.Netflix;
+import com.flicklib.service.movie.netflix.NetflixInfoFetcher;
 import com.flicklib.service.movie.omdb.Omdb;
 import com.flicklib.service.movie.omdb.OmdbFetcher;
 import com.flicklib.service.movie.tomatoes.RottenTomatoes;
@@ -71,6 +73,7 @@ public class FlicklibModule extends AbstractModule {
         bind(MovieInfoFetcher.class).annotatedWith(Google.class).to(GoogleInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Flixster.class).to(FlixterInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Omdb.class).to(OmdbFetcher.class);
+        bind(MovieInfoFetcher.class).annotatedWith(Netflix.class).to(NetflixInfoFetcher.class);
 
         bindConstant().annotatedWith(Names.named("http.timeout")).to(20 * 1000);
     }
