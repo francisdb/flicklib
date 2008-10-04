@@ -46,7 +46,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.api.MovieSearchResult;
-import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieService;
 import com.google.inject.Inject;
@@ -78,7 +77,7 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
     }
 
     @Override
-    public List<MovieSearchResult> search(String title) throws IOException {
+    public List<? extends MovieSearchResult> search(String title) throws IOException {
         OAuthClient oAuthClient = new OAuthHttpClient(new NotPoolingHttpClientPool());
         Map<String, String> params = new HashMap<String, String>();
         params.put("term", title);
@@ -92,8 +91,7 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
             XMLReader rdr = XMLReaderFactory.createXMLReader();
             rdr.setContentHandler(saxUms);
             rdr.parse(new InputSource(message.getBodyAsStream()));
-            // Uhh, no, some generic sillyness again :)
-            return (List<MovieSearchResult>) (List) saxUms.result;
+            return saxUms.getResult();
         } catch (IOException e) {
             LOGGER.error("Problem while requesting data from netflix", e);
         } catch (OAuthException e) {
@@ -136,10 +134,15 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
         private MoviePage moviePage = new MoviePage();
         private String tagToReadContentFrom;
 
-        private List<MoviePage> result = new ArrayList<MoviePage>();
+        private final List<MoviePage> result;
 
         public SaxResultUnmarshaller() {
+        	result = new ArrayList<MoviePage>();
         }
+        
+        public List<MoviePage> getResult() {
+			return result;
+		}
 
         @Override
         public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {

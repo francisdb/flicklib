@@ -28,16 +28,28 @@ import com.flicklib.domain.MoviePage;
  * @author fdb
  */
 public interface MovieInfoFetcher {
+	
     /**
-     * Fetched movie info from a service and complements the movieInfo object
-     * @param movie
-     * @param id possible known id for this site, null for none
+     * Fetches movie info from a service and complements the movieInfo object
+     * @param title 
      * @return the parsed moviePage
      */
     MoviePage fetch(String title);
     
-    List<MovieSearchResult> search(String title) throws IOException;
+    /**
+     * Performs a search on the service and returns results
+     * @param title
+     * @return the result list, never null
+     * @throws IOException
+     */
+    List<? extends MovieSearchResult> search(String title) throws IOException;
     
-    MoviePage getMovieInfo(String id) throws IOException;
+    /**
+     * Looks up the detailed movie info for a movieIdForSite
+     * @param movieIdForSite 
+     * @return the moviepage
+     * @throws IOException
+     */
+    MoviePage getMovieInfo(String movieIdForSite) throws IOException;
     
 }

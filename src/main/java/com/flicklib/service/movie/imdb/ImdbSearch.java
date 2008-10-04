@@ -23,7 +23,6 @@ import au.id.jericho.lib.html.Source;
 import com.google.inject.Inject;
 import com.flicklib.api.MovieSearchResult;
 import com.flicklib.api.Parser;
-import com.flicklib.domain.Movie;
 import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.SourceLoader;

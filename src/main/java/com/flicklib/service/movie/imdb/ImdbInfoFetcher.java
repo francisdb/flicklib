@@ -44,6 +44,7 @@ import com.google.inject.Singleton;
 public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImdbInfoFetcher.class);
+    
     private final ImdbSearch imdbSearch;
     private final Parser imdbParser;
     private final SourceLoader loader;
@@ -62,6 +63,8 @@ public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
         if (list==null) {
             list = imdbSearch.getResults(title);
             imdbSearchCache.put(title.toLowerCase().trim(), list);
+        }else{
+        	LOGGER.debug("Returning cached result for "+title);
         }
         return list;
     }

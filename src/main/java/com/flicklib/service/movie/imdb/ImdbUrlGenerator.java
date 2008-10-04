@@ -32,7 +32,6 @@ public class ImdbUrlGenerator {
     /**
      * Generates the imdb url from the imdb id
      * @param localid 
-     * @param movie
      * @return the imdb url
      */
     public static String generateImdbUrl(String localid) {

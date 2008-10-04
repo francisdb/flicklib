@@ -74,7 +74,7 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
     public List<MovieSearchResult> search(String title) throws IOException {
         // use the imdb fetcher, to load IMDB id-s.
         
-        List<MovieSearchResult> list = imdbFetcher.search(title);
+        List<? extends MovieSearchResult> list = imdbFetcher.search(title);
         List<MovieSearchResult> result = new ArrayList<MovieSearchResult>(list.size());
         for (MovieSearchResult search: list) {
             MovieSearchResult msr = new MovieSearchResult ();

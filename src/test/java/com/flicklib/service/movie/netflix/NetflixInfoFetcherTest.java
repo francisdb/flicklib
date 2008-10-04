@@ -32,7 +32,7 @@ import com.flicklib.domain.MovieService;
 public class NetflixInfoFetcherTest {
 
 	/**
-	 * Test method for {@link com.flicklib.service.movie.netflix.NetflixInfoFetcher#fetch(com.flicklib.domain.Movie, java.lang.String)}.
+	 * Test method for {@link com.flicklib.service.movie.netflix.NetflixInfoFetcher#fetch(String)}.
 	 */
     @Test
     public void testFetch() {

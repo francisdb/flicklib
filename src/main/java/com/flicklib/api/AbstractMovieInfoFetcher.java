@@ -19,7 +19,7 @@ public abstract class AbstractMovieInfoFetcher implements MovieInfoFetcher {
     @Override
     public MoviePage fetch(String title) {
         try {
-            List<MovieSearchResult> search = this.search(title);
+            List<? extends MovieSearchResult> search = this.search(title);
             if (search.size() > 0) {
                 MovieSearchResult firstResult = search.get(0);
                 if (firstResult instanceof MoviePage) {

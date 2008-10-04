@@ -80,7 +80,7 @@ public class OmdbFetcher extends AbstractMovieInfoFetcher {
         } catch (IOException ex) {
             LOGGER.error("Could not load rest",ex);
         }
-        return new ArrayList();
+        return new ArrayList<MovieSearchResult>();
     }
 
 

@@ -28,7 +28,6 @@ import au.id.jericho.lib.html.EndTag;
 import au.id.jericho.lib.html.HTMLElementName;
 import au.id.jericho.lib.html.Source;
 
-import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.movie.AbstractJerichoParser;
 import com.flicklib.tools.ElementOnlyTextExtractor;
@@ -48,7 +47,8 @@ public class ImdbParser extends AbstractJerichoParser {
     public ImdbParser() {
     }
 
-    @Override
+
+	@Override
     public void parse(final String html, Source source, MoviePage movie) {
 
         ImdbParserRegex regexParser = new ImdbParserRegex(html);
@@ -129,6 +129,7 @@ public class ImdbParser extends AbstractJerichoParser {
                 movie.setDirector(aElement.getContent().getTextExtractor().toString());
             } else if (hText.contains("User Rating")) {
                 Element aElement = source.findNextElement(end);
+                @SuppressWarnings("unchecked")
                 List<Element> boldOnes = aElement.findAllElements(HTMLElementName.B);
                 if (boldOnes.size()>0) {
                     Element element = boldOnes.get(0);

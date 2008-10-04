@@ -17,7 +17,6 @@
  */
 package com.flicklib.service.movie.flixter;
 
-import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.HttpSourceLoader;
 import org.junit.Test;
