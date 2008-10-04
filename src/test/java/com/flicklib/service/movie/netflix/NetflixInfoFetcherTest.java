@@ -17,11 +17,11 @@
  */
 package com.flicklib.service.movie.netflix;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieService;
 
@@ -34,12 +34,10 @@ public class NetflixInfoFetcherTest {
 	/**
 	 * Test method for {@link com.flicklib.service.movie.netflix.NetflixInfoFetcher#fetch(com.flicklib.domain.Movie, java.lang.String)}.
 	 */
-	@Test
-	public void testFetch() {
-		Movie movie = new Movie();
-        movie.setTitle("Pulp Fiction");
-		NetflixInfoFetcher fetcher = new NetflixInfoFetcher();
-		MoviePage site = fetcher.fetch(movie, null);
+    @Test
+    public void testFetch() {
+        NetflixInfoFetcher fetcher = new NetflixInfoFetcher();
+        MoviePage site = fetcher.fetch("Pulp Fiction");
         assertNotNull("Score is null", site.getScore());
         assertNotNull("ID is null", site.getIdForSite());
         assertNotNull("ImgUrl is null", site.getImgUrl());
@@ -47,6 +45,6 @@ public class NetflixInfoFetcherTest {
         assertEquals(MovieService.NETFLIX, site.getService());
         System.out.println(site.getScore());
         System.out.println(site.getUrl());
-	}
+    }
 
 }

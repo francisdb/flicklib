@@ -49,11 +49,10 @@ public class ImdbParser extends AbstractJerichoParser {
     }
 
     @Override
-    public void parse(final String html, Source source, MoviePage movieSite) {
+    public void parse(final String html, Source source, MoviePage movie) {
 
         ImdbParserRegex regexParser = new ImdbParserRegex(html);
 
-        Movie movie = movieSite.getMovie();
         movie.setType(regexParser.getType());
         Element titleHeader = (Element) source.findAllElements(HTMLElementName.H1).get(0);
         String title = new ElementOnlyTextExtractor(titleHeader.getContent()).toString();
@@ -79,7 +78,7 @@ public class ImdbParser extends AbstractJerichoParser {
                 List<?> imgs = linkElement.getContent().findAllElements(HTMLElementName.IMG);
                 Element img = (Element) imgs.get(0);
                 String imgUrl = img.getAttributeValue("src");
-                movieSite.setImgUrl(imgUrl);
+                movie.setImgUrl(imgUrl);
             }
             String href = linkElement.getAttributeValue("href");
             if (href != null && href.contains("/Sections/Genres/")) {
@@ -103,9 +102,9 @@ public class ImdbParser extends AbstractJerichoParser {
                 String rating = next.getContent().getTextExtractor().toString();
                 // skip (awaiting 5 votes)
                 if (!rating.contains("awaiting")) {
-                    parseRatingString(movieSite, rating);
+                    parseRatingString(movie, rating);
                     next = source.findNextElement(next.getEndTag().getEnd());
-                    parseVotes(movieSite, next);
+                    parseVotes(movie, next);
                 }
             }
         }
@@ -135,9 +134,9 @@ public class ImdbParser extends AbstractJerichoParser {
                     Element element = boldOnes.get(0);
                     String rating = element.getTextExtractor().toString();
                     if (!rating.contains("awaiting")) {
-                        parseRatingString(movieSite, rating);
+                        parseRatingString(movie, rating);
                         Element next = source.findNextElement(element.getEndTag().getEnd());
-                        parseVotes(movieSite, next);
+                        parseVotes(movie, next);
                     }
                 }
             } /*else if (hText.contains("Genre")) {

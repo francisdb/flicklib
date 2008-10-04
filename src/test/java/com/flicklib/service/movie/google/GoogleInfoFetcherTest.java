@@ -36,11 +36,9 @@ public class GoogleInfoFetcherTest {
     @Test
     //@Ignore(value="Disabled for CI")
     public void testFetch() {
-        Movie movie = new Movie();
-        movie.setTitle("Pulp Fiction");
         GoogleParser googleParser = new GoogleParser();
         GoogleInfoFetcher instance = new GoogleInfoFetcher(googleParser, new HttpSourceLoader(null));
-        MoviePage site = instance.fetch(movie, null);
+        MoviePage site = instance.fetch("Pulp Fiction");
         assertNotNull("Google score is null", site.getScore());
     }
 

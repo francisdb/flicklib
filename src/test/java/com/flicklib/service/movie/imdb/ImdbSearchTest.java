@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.flicklib.domain.MoviePage;
+import com.flicklib.api.MovieSearchResult;
 import com.flicklib.service.HttpSourceLoader;
 
 /**
@@ -45,18 +45,18 @@ public class ImdbSearchTest {
     //@Ignore
     public void testGetResults_String() throws Exception {
         ImdbSearch instance = new ImdbSearch(new HttpSourceLoader(null), new ImdbParser());
-        List<MoviePage> result = instance.getResults("Pulp Fiction");
+        List<MovieSearchResult> result = instance.getResults("Pulp Fiction");
         assertTrue(result.size() > 0);
-        assertEquals("Pulp Fiction", result.get(0).getMovie().getTitle());
+        assertEquals("Pulp Fiction", result.get(0).getTitle());
         
         result = instance.getResults("Die Hard 4");
         assertTrue(result.size() > 0);
-        assertEquals("Live Free or Die Hard", result.get(0).getMovie().getTitle());
+        assertEquals("Live Free or Die Hard", result.get(0).getTitle());
         
         result = instance.getResults("Black Tie White Noise");
         assertTrue(result.size() > 0);
-        assertEquals(Integer.valueOf(1993), result.get(0).getMovie().getYear());
-        assertEquals("David Bowie: Black Tie White Noise", result.get(0).getMovie().getTitle());
+        assertEquals(Integer.valueOf(1993), result.get(0).getYear());
+        assertEquals("David Bowie: Black Tie White Noise", result.get(0).getTitle());
     }
 
     /**

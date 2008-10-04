@@ -21,6 +21,7 @@ import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.HTMLElementName;
 import au.id.jericho.lib.html.Source;
 import com.google.inject.Inject;
+import com.flicklib.api.MovieSearchResult;
 import com.flicklib.api.Parser;
 import com.flicklib.domain.Movie;
 import com.flicklib.domain.MovieService;
@@ -54,10 +55,10 @@ public class ImdbSearch {
         this.imdbParser = imdbParser;
     }
 
-    public List<MoviePage> parseResults(String source) throws IOException{
+    public List<MovieSearchResult> parseResults(String source) throws IOException{
         Source jerichoSource = new Source(source);
         jerichoSource.fullSequentialParse();
-        List<MoviePage> results = new ArrayList<MoviePage>();
+        List<MovieSearchResult> results = new ArrayList<MovieSearchResult>();
         Element titleElement = (Element) jerichoSource.findAllElements(HTMLElementName.TITLE).get(0);
         String title = titleElement.getContent().getTextExtractor().toString();
         if (title.contains("IMDb") && title.contains("Search")) {
@@ -70,15 +71,13 @@ public class ImdbSearch {
                 String tdContents = tableElement.getTextExtractor().toString();
                 List<?> linkElements = tableElement.findAllElements(HTMLElementName.A);
                 Element linkElement;
-                MoviePage movieSite;
-                Movie movie;
+                MovieSearchResult movieSite;
                 Iterator<?> i = linkElements.iterator();
                 Set<String> ids = new HashSet<String>();
                 while ((i.hasNext()) && (!tableElement.getTextExtractor().toString().startsWith("Media from")) && (!tableElement.getTextExtractor().toString().startsWith(" ")) && (!tableElement.getTextExtractor().toString().endsWith("Update your search preferences.")) && (!tableElement.getTextExtractor().toString().endsWith("...)"))) {
-                    movieSite = new MoviePage();
+                    movieSite = new MovieSearchResult();
                     movieSite.setService(MovieService.IMDB);
-                    movie = new Movie();
-                    movieSite.setMovie(movie);
+                    //movieSite.setMovie(movie);
                     linkElement = (Element) i.next();
                     String href = linkElement.getAttributeValue("href");
                     if (href != null && href.startsWith("/title/tt")) {
@@ -88,10 +87,10 @@ public class ImdbSearch {
                         }
                         movieSite.setUrl("http://www.imdb.com" + href);
                         movieSite.setIdForSite(href.replaceAll("[a-zA-Z:/.+=?]", "").trim());
-                        movie.setType(ImdbParserRegex.getType(tdContents, false));
+                        movieSite.setType(ImdbParserRegex.getType(tdContents, false));
                         title = linkElement.getTextExtractor().toString();
                         title = ImdbParserRegex.cleanTitle(title);
-                        movie.setTitle(linkElement.getTextExtractor().toString());
+                        movieSite.setTitle(linkElement.getTextExtractor().toString());
                         ElementOnlyTextExtractor extractor = new ElementOnlyTextExtractor(tableElement.getContent());
                         String titleYear = extractor.toString().trim();
                         // FIXME, duplicate of code in ImdbParser, to merge!
@@ -105,7 +104,7 @@ public class ImdbSearch {
                                 year = year.substring(0, slashIndex);
                             }
                             try {
-                                movie.setYear(Integer.valueOf(year));
+                                movieSite.setYear(Integer.valueOf(year));
                             } catch (NumberFormatException ex) {
                                 LOGGER.warn("Could not parse '" + year + "' to integer");
                             }
@@ -113,7 +112,7 @@ public class ImdbSearch {
                         
 
                         // only add if not allready in the list
-                        if (movie.getTitle().length() > 0 && !ids.contains(movieSite.getIdForSite())) {
+                        if (movieSite.getTitle().length() > 0 && !ids.contains(movieSite.getIdForSite())) {
                             ids.add(movieSite.getIdForSite());
                             results.add(movieSite);
                         }
@@ -146,15 +145,14 @@ public class ImdbSearch {
                     href = "/" + split[1] + "/" + split[2];
                     MoviePage movieSite = new MoviePage();
                     movieSite.setService(MovieService.IMDB);
-                    Movie movie = new Movie();
-                    movieSite.setMovie(movie);
+                    //movieSite.setMovie(movie);
                     movieSite.setUrl("http://www.imdb.com" + href);
                     movieSite.setIdForSite(href.replaceAll("[a-zA-Z:/.+=?]", "").trim());
                     //set title as the movies title since this is a perfect search result who's HTMLElementName.title will be the movie title.
                     
-                    movie.setTitle(title);
+                    movieSite.setTitle(title);
                     // only add if not allready in the list
-                    if (movie.getTitle().length() > 0 && !ids.contains(movieSite.getIdForSite())) {
+                    if (movieSite.getTitle().length() > 0 && !ids.contains(movieSite.getIdForSite())) {
                         //Only add to the set and results list if they are empty, i.e. only if the first result, since perfect result assumed. The rest of the identified links will be the IMDB recommendations for the particular perfect result.
                         if(ids.isEmpty() && results.isEmpty()) {
                             ids.add(movieSite.getIdForSite());
@@ -177,7 +175,7 @@ public class ImdbSearch {
      * @return the results found as List of MoviePage
      * @throws java.io.IOException
      */
-    public List<MoviePage> getResults(String search) throws IOException {
+    public List<MovieSearchResult> getResults(String search) throws IOException {
         String url = generateImdbTitleSearchUrl(search);
         LOGGER.info(url);
         String source = sourceLoader.load(url);

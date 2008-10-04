@@ -17,11 +17,12 @@
  */
 package com.flicklib.service.movie.imdb;
 
-import com.flicklib.domain.Movie;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.FileSourceLoader;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -39,7 +40,6 @@ public class ImdbParserTest {
     public void testParse() throws Exception{
         String source = new FileSourceLoader().load("imdb/Pulp Fiction (1994).html");
         MoviePage site = new MoviePage();
-        site.setMovie(new Movie());
         ImdbParser instance = new ImdbParser();
         instance.parse(source, site);
         //assertEquals(Integer.valueOf(89), site.getIdForSite());
@@ -54,7 +54,6 @@ public class ImdbParserTest {
         
         source = new FileSourceLoader().load("imdb/A Couple of White Chicks at the Hairdresser (2007).html");
         site = new MoviePage();
-        site.setMovie(new Movie());
         instance.parse(source, site);
         //assertEquals(Integer.valueOf(89), site.getIdForSite());
         assertEquals("A Couple of White Chicks at the Hairdresser", site.getMovie().getTitle());

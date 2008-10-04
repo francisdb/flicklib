@@ -17,36 +17,41 @@
  */
 package com.flicklib.service.movie.movieweb;
 
-import com.flicklib.api.MovieInfoFetcher;
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Source;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.flicklib.service.HttpSourceLoader;
-import com.flicklib.api.Parser;
-import com.flicklib.domain.Movie;
-import com.flicklib.domain.MovieService;
-import com.flicklib.domain.MoviePage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import au.id.jericho.lib.html.Element;
+import au.id.jericho.lib.html.HTMLElementName;
+import au.id.jericho.lib.html.Source;
+
+import com.flicklib.api.AbstractMovieInfoFetcher;
+import com.flicklib.api.MovieSearchResult;
+import com.flicklib.api.Parser;
+import com.flicklib.domain.Movie;
+import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieService;
+import com.flicklib.service.HttpSourceLoader;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
  * @author francisdb
  */
 @Singleton
-public class MovieWebInfoFetcher implements MovieInfoFetcher {
+public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieWebInfoFetcher.class);
 
-    private final Parser movieWebInfoParser;
-    private final HttpSourceLoader httpLoader;
+    private final Parser parser;
+    private final HttpSourceLoader sourceLoader;
 
     /**
      * Creates a new MovieWebInfoFetcher
@@ -55,18 +60,78 @@ public class MovieWebInfoFetcher implements MovieInfoFetcher {
      */
     @Inject
     public MovieWebInfoFetcher(final @MovieWeb Parser movieWebInfoParser, final HttpSourceLoader httpLoader) {
-        this.movieWebInfoParser = movieWebInfoParser;
-        this.httpLoader = httpLoader;
+        this.parser = movieWebInfoParser;
+        this.sourceLoader = httpLoader;
     }
 
     @Override
+    public MoviePage getMovieInfo(String id) throws IOException {
+        try {
+            if (id.startsWith("http://www.movieweb.com")) {
+                String source = sourceLoader.load(id);
+                MoviePage site = new MoviePage();
+                site.setIdForSite(id);
+                site.setUrl(id);
+                site.setService(MovieService.MOVIEWEB);
+                parser.parse(source, site);
+                
+                return site;
+            }
+        } catch (IOException ex) {
+            LOGGER.error("Loading from Flixter failed", ex);
+        }
+        return null;
+    }
+    
+    @Override
+    public List<MovieSearchResult> search(String title) throws IOException {
+        List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
+        String urlToLoad = createMovieWebSearchUrl(title);
+
+        String source = sourceLoader.load(urlToLoad);
+        Source jerichoSource = new Source(source);
+        //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
+        jerichoSource.fullSequentialParse();
+
+        //Element titleElement = (Element)source.findAllElements(HTMLElementName.TITLE).get(0);
+        //System.out.println(titleElement.getContent().extractText());
+
+        // <div id="bubble_allCritics" class="percentBubble" style="display:none;">     57%    </div>
+
+        String movieUrl = null;
+        List<?> aElements = jerichoSource.findAllElements(HTMLElementName.A);
+        for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
+            Element aElement = (Element) i.next();
+            String url = aElement.getAttributeValue("href");
+            if (url != null && url.endsWith("summary.php")) {
+                String movieName = aElement.getContent().getTextExtractor().toString();
+                if (movieName != null && movieName.trim().length() != 0) {
+
+                    movieUrl = "http://www.movieweb.com" + url;
+
+                    MovieSearchResult m = new MovieSearchResult();
+                    m.setIdForSite(movieUrl);
+                    m.setTitle(movieName);
+                    m.setService(MovieService.FLIXSTER);
+                    result.add(m);
+                    
+                    LOGGER.info("found title: " + movieName + " -> " + movieUrl);
+                }
+            }
+        }
+
+        return result;
+    }
+    
+    
+    @Deprecated
     public MoviePage fetch(Movie movie, String id) {
         MoviePage site = new MoviePage();
-        site.setMovie(movie);
+        //site.setMovie(movie);
         site.setService(MovieService.MOVIEWEB);
-        String urlToLoad = createMovieWebSearchUrl(movie);
+        String urlToLoad = createMovieWebSearchUrl(movie.getTitle());
         try {
-            String source = httpLoader.load(urlToLoad);
+            String source = sourceLoader.load(urlToLoad);
             Source jerichoSource = new Source(source);
             //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
             jerichoSource.fullSequentialParse();
@@ -94,8 +159,8 @@ public class MovieWebInfoFetcher implements MovieInfoFetcher {
                 LOGGER.warn("Movie not found on MovieWeb: "+movie.getTitle());
             }else{
                 site.setUrl(movieUrl);
-                source = httpLoader.load(movieUrl);
-                movieWebInfoParser.parse(source, site);
+                source = sourceLoader.load(movieUrl);
+                parser.parse(source, site);
             }
         } catch (IOException ex) {
             LOGGER.error("Loading from MovieWeb failed: "+urlToLoad, ex);
@@ -103,10 +168,10 @@ public class MovieWebInfoFetcher implements MovieInfoFetcher {
         return site;
     }
 
-    private String createMovieWebSearchUrl(Movie movie) {
+    private String createMovieWebSearchUrl(String title) {
         String encoded = "";
         try {
-            encoded = URLEncoder.encode(movie.getTitle(), "UTF-8");
+            encoded = URLEncoder.encode(title, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             LOGGER.error("Could not cencode UTF-8", ex);
         }

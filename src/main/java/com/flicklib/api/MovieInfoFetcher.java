@@ -17,8 +17,11 @@
  */
 package com.flicklib.api;
 
-import com.flicklib.domain.Movie;
+import java.io.IOException;
+import java.util.List;
+
 import com.flicklib.domain.MoviePage;
+
 
 /**
  *
@@ -31,6 +34,10 @@ public interface MovieInfoFetcher {
      * @param id possible known id for this site, null for none
      * @return the parsed moviePage
      */
-    MoviePage fetch(Movie movie, String id);
+    MoviePage fetch(String title);
+    
+    List<MovieSearchResult> search(String title) throws IOException;
+    
+    MoviePage getMovieInfo(String id) throws IOException;
     
 }

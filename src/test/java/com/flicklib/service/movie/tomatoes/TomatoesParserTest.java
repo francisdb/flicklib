@@ -37,7 +37,6 @@ public class TomatoesParserTest {
     public void testOfflineParse() throws Exception {
         String source = new FileSourceLoader().load("tomatoes/Pulp Fiction Movie Reviews, Pictures - Rotten Tomatoes.html");
         MoviePage site = new MoviePage();
-        site.setMovie(new Movie());
         TomatoesParser instance = new TomatoesParser();
         instance.parse(source, site);
         assertEquals(Integer.valueOf(96), site.getScore());
@@ -47,7 +46,6 @@ public class TomatoesParserTest {
     public void testOfflineParse2() throws Exception {
         String source = new FileSourceLoader().load("tomatoes/Waist Deep Movie Reviews, Pictures - Rotten Tomatoes.html");
         MoviePage site = new MoviePage();
-        site.setMovie(new Movie());
         TomatoesParser instance = new TomatoesParser();
         instance.parse(source, site);
         assertEquals(Integer.valueOf(26), site.getScore());

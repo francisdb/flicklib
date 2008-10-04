@@ -17,11 +17,12 @@
  */
 package com.flicklib.service.movie.flixter;
 
-import com.flicklib.domain.Movie;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.FileSourceLoader;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -38,7 +39,6 @@ public class FlixterParserTest {
     public void testParse() throws Exception{
         String source = new FileSourceLoader().load("flixter/the-x-files-i-want-to-believe-the-x-files-2.html");
         MoviePage site = new MoviePage();
-        site.setMovie(new Movie());
         FlixterParser instance = new FlixterParser();
         instance.parse(source, site);
         assertEquals(Integer.valueOf(60), site.getScore());

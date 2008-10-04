@@ -17,7 +17,9 @@
  */
 package com.flicklib.service.movie.tomatoes;
 
+import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.api.MovieInfoFetcher;
+import com.flicklib.api.MovieSearchResult;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.flicklib.api.Parser;
@@ -25,7 +27,11 @@ import com.flicklib.domain.Movie;
 import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.SourceLoader;
+import com.flicklib.service.movie.imdb.Imdb;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,23 +41,61 @@ import org.slf4j.LoggerFactory;
  * @author fdb
  */
 @Singleton
-public class TomatoesInfoFetcher implements MovieInfoFetcher {
+public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TomatoesInfoFetcher.class);
 
     private final SourceLoader sourceLoader;
     private final Parser tomatoesParser;
+    private final MovieInfoFetcher imdbFetcher;
 
     @Inject
-    public TomatoesInfoFetcher(final @RottenTomatoes Parser tomatoesParser, final SourceLoader sourceLoader) {
+    public TomatoesInfoFetcher(final @RottenTomatoes Parser tomatoesParser, final SourceLoader sourceLoader, final @Imdb MovieInfoFetcher imdbFetcher) {
         this.sourceLoader = sourceLoader;
         this.tomatoesParser = tomatoesParser;
+        this.imdbFetcher = imdbFetcher;
+    }
+
+    
+    @Override
+    public MoviePage getMovieInfo(String id) throws IOException {
+        MoviePage site = new MoviePage();
+        site.setService(MovieService.TOMATOES);
+        site.setIdForSite(id);
+        String url = generateTomatoesUrl(id);
+        site.setUrl(url);
+        String source = sourceLoader.load(site.getUrl());
+        tomatoesParser.parse(source, site);
+
+        return site;
     }
 
     @Override
+    public List<MovieSearchResult> search(String title) throws IOException {
+        // use the imdb fetcher, to load IMDB id-s.
+        
+        List<MovieSearchResult> list = imdbFetcher.search(title);
+        List<MovieSearchResult> result = new ArrayList<MovieSearchResult>(list.size());
+        for (MovieSearchResult search: list) {
+            MovieSearchResult msr = new MovieSearchResult ();
+            msr.setService(MovieService.TOMATOES);
+            msr.setIdForSite(search.getIdForSite());
+            String url = generateTomatoesUrl(search.getIdForSite());
+            msr.setUrl(url);
+            msr.setTitle(search.getTitle());
+            msr.setYear(search.getYear());
+            
+            result.add(msr);
+        }
+        return result;
+    }
+    
+    
+    
+    @Deprecated
     public MoviePage fetch(Movie movie, String id) {
         MoviePage site = new MoviePage();
-        site.setMovie(movie);
+        //site.setMovie(movie);
         site.setService(MovieService.TOMATOES);
         if (id == null || "".equals(id)) {
             LOGGER.error("IMDB id missing", new IOException("No imdb id available, not implemented"));

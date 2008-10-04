@@ -31,46 +31,48 @@ import com.google.inject.name.Named;
 
 /**
  * Loads a http request
+ * 
  * @author francisdb
  */
 public class HttpSourceLoader implements SourceLoader {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpSourceLoader.class);
-    
+
     private final Integer timeout;
+    private HttpClient client;
 
     @Inject
-    public HttpSourceLoader(@Named(value="http.timeout") final Integer timeout) {
+    public HttpSourceLoader(@Named(value = "http.timeout") final Integer timeout) {
         this.timeout = timeout;
+        client = new HttpClient();
+        if (timeout != null) {
+            // wait max x sec
+            client.getParams().setSoTimeout(timeout);
+            // LOGGER.info("Timeout = "+client.getParams().getSoTimeout());
+        }
     }
 
     @Override
     public String load(String url) throws IOException {
-        HttpClient client = new HttpClient();
-        if(timeout != null){
-            // wait max x sec
-            client.getParams().setSoTimeout(timeout);
-            //LOGGER.info("Timeout = "+client.getParams().getSoTimeout());
-        }
         String source = null;
         GetMethod httpMethod = null;
         InputStream is = null;
-        try{
-            LOGGER.info("Loading "+url);
+        try {
+            LOGGER.info("Loading " + url);
             httpMethod = new GetMethod(url);
             client.executeMethod(httpMethod);
-            LOGGER.info("Finished loading at "+httpMethod.getURI().toString());
+            LOGGER.info("Finished loading at " + httpMethod.getURI().toString());
             is = httpMethod.getResponseBodyAsStream();
             source = IOTools.inputSreamToString(is);
-        }finally{
-            if(is != null){
-                try{
+        } finally {
+            if (is != null) {
+                try {
                     is.close();
-                }catch(IOException ex){
+                } catch (IOException ex) {
                     LOGGER.error("Could not close InputStream", is);
                 }
             }
-            if(httpMethod != null){
+            if (httpMethod != null) {
                 httpMethod.releaseConnection();
             }
         }

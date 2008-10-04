@@ -32,8 +32,9 @@ import org.restlet.resource.Representation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.api.MovieInfoFetcher;
-import com.flicklib.domain.Movie;
+import com.flicklib.api.MovieSearchResult;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieService;
 
@@ -41,14 +42,22 @@ import com.flicklib.domain.MovieService;
  *
  * @author francisdb
  */
-public class OmdbFetcher implements MovieInfoFetcher {
+public class OmdbFetcher extends AbstractMovieInfoFetcher {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieInfoFetcher.class);
 
+    
+
+    
     @Override
-    public MoviePage fetch(Movie movie, String id) {
+    public MoviePage getMovieInfo(String id) throws IOException {
+        return null;
+    }
+    
+    @Override
+    public List<MovieSearchResult> search(String title) throws IOException {
         MoviePage site = new MoviePage();
-        site.setMovie(movie);
+        //site.setMovie(movie);
         site.setService(MovieService.MOVIEWEB);
         // Outputting the content of a Web page
         // Prepare the request
@@ -71,7 +80,8 @@ public class OmdbFetcher implements MovieInfoFetcher {
         } catch (IOException ex) {
             LOGGER.error("Could not load rest",ex);
         }
-        return site;
+        return new ArrayList();
     }
+
 
 }

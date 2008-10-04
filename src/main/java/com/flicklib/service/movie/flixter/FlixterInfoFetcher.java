@@ -17,31 +17,36 @@
  */
 package com.flicklib.service.movie.flixter;
 
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Source;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.flicklib.api.MovieInfoFetcher;
-import com.flicklib.api.Parser;
-import com.flicklib.domain.Movie;
-import com.flicklib.domain.MovieService;
-import com.flicklib.domain.MoviePage;
-import com.flicklib.service.SourceLoader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import au.id.jericho.lib.html.Element;
+import au.id.jericho.lib.html.HTMLElementName;
+import au.id.jericho.lib.html.Source;
+
+import com.flicklib.api.AbstractMovieInfoFetcher;
+import com.flicklib.api.MovieSearchResult;
+import com.flicklib.api.Parser;
+import com.flicklib.domain.Movie;
+import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieService;
+import com.flicklib.service.SourceLoader;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
  * @author francisdb
  */
 @Singleton
-public class FlixterInfoFetcher implements MovieInfoFetcher {
+public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlixterInfoFetcher.class);
     private final SourceLoader sourceLoader;
@@ -59,12 +64,66 @@ public class FlixterInfoFetcher implements MovieInfoFetcher {
     }
 
     @Override
+    public List<MovieSearchResult> search(String title) throws IOException {
+        List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
+        
+        String source = sourceLoader.load(createFlixterSearchUrl(title));
+        Source jerichoSource = new Source(source);
+        //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
+        jerichoSource.fullSequentialParse();
+
+        // <a onmouseover="mB(event, 770678072);" title=" The X-Files: I Want to Believe (The X Files 2)" href="/movie/the-x-files-i-want-to-believe-the-x-files-2"  >
+        // The X-Files: I Want to Believe (The X Files 2)
+        // </a>
+
+        
+        List<?> aElements = jerichoSource.findAllElements(HTMLElementName.A);
+        for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
+            Element aElement = (Element) i.next();
+            String url = aElement.getAttributeValue("href");
+            if (url != null && url.startsWith("/movie/")) {
+                String movieName = aElement.getContent().getTextExtractor().toString();
+                if (movieName != null && movieName.trim().length() != 0) {
+                    String movieUrl = "http://www.flixster.com" + url;
+
+                    MovieSearchResult m = new MovieSearchResult();
+                    m.setIdForSite(movieUrl);
+                    m.setTitle(movieName);
+                    m.setService(MovieService.FLIXSTER);
+                    result.add(m);
+                    LOGGER.info("taking result: " + movieName + " -> " + movieUrl);
+                }
+            }
+        }
+        return result;
+    }
+    
+    @Override
+    public MoviePage getMovieInfo(String id) {
+        try {
+            if (id.startsWith("http://www.flixster.com")) {
+                String source = sourceLoader.load(id);
+                MoviePage site = new MoviePage();
+                site.setIdForSite(id);
+                site.setUrl(id);
+                site.setService(MovieService.FLIXSTER);
+                parser.parse(source, site);
+                
+                return site;
+            }
+        } catch (IOException ex) {
+            LOGGER.error("Loading from Flixter failed", ex);
+        }
+        return null;
+    }
+    
+    @Deprecated
     public MoviePage fetch(Movie movie, String id) {
         MoviePage site = new MoviePage();
-        site.setMovie(movie);
+        //site.setMovie(movie);
         site.setService(MovieService.FLIXSTER);
         try {
-            String source = sourceLoader.load(createFlixterSearchUrl(movie));
+            String source = sourceLoader.load(createFlixterSearchUrl(movie.getTitle()));
             Source jerichoSource = new Source(source);
             //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
             jerichoSource.fullSequentialParse();
@@ -100,10 +159,10 @@ public class FlixterInfoFetcher implements MovieInfoFetcher {
         return site;
     }
 
-    private String createFlixterSearchUrl(Movie movie) {
+    private String createFlixterSearchUrl(String title) {
         String encoded = "";
         try {
-            encoded = URLEncoder.encode(movie.getTitle(), "UTF-8");
+            encoded = URLEncoder.encode(title, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             LOGGER.error("Could not cencode UTF-8", ex);
         }

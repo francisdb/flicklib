@@ -53,6 +53,11 @@ public enum MovieService {
     FLIXSTER("Flixter", "http://www.flixter.com"),
     
     /**
+     * http://www.port.hu
+     */
+    PORTHU("Port.hu", "http://www.port.hu"),
+    
+    /**
      * http://www.netflix.com
      */
     NETFLIX("Netflix", "http://www.netflix.com");

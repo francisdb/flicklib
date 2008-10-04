@@ -18,6 +18,8 @@
 package com.flicklib.service.movie.omdb;
 
 import com.flicklib.domain.Movie;
+import com.flicklib.domain.MoviePage;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -34,7 +36,7 @@ public class OmdbFetcherTest {
     public void testFetch() {
         Movie movie = new Movie();
         OmdbFetcher instance = new OmdbFetcher();
-        instance.fetch(movie, null);
+        MoviePage moviePage = instance.fetch("Pulp Fiction");
         assertNotNull(movie);
     }
 

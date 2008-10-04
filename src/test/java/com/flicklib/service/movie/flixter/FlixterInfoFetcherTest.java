@@ -34,17 +34,14 @@ public class FlixterInfoFetcherTest {
      */
     @Test
     public void testFetch() {
-        Movie movie = new Movie();
-        movie.setTitle("The X-Files I Want to Believe");
         FlixterParser parser = new FlixterParser();
         FlixterInfoFetcher fetcher = new FlixterInfoFetcher(parser, new HttpSourceLoader(null));
-        MoviePage site = fetcher.fetch(movie, null);
+        MoviePage site = fetcher.fetch("The X-Files I Want to Believe");
         assertEquals("http://www.flixster.com/movie/the-x-files-i-want-to-believe-the-x-files-2", site.getUrl());
         assertNotNull("MovieWebStars is null", site.getScore());
-        movie = new Movie();
-        movie.setTitle("the good the bad and the ugly");
-        site = fetcher.fetch(movie, null);
-        assertEquals("The Good, the Bad and the Ugly", site.getMovie().getTitle());
+
+        site = fetcher.fetch("the good the bad and the ugly");
+        assertEquals("The Good, the Bad and the Ugly", site.getTitle());
         assertEquals("http://www.flixster.com/movie/the-good-the-bad-and-the-ugly", site.getUrl());
         
     }

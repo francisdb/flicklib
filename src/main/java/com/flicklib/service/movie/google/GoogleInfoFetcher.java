@@ -17,30 +17,35 @@
  */
 package com.flicklib.service.movie.google;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.HTMLElementName;
 import au.id.jericho.lib.html.Source;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.flicklib.api.MovieInfoFetcher;
+
+import com.flicklib.api.AbstractMovieInfoFetcher;
+import com.flicklib.api.MovieSearchResult;
 import com.flicklib.api.Parser;
 import com.flicklib.domain.Movie;
-import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieService;
 import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.tools.Param;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
  * @author francisdb
  */
 @Singleton
-public class GoogleInfoFetcher implements MovieInfoFetcher{
+public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(GoogleInfoFetcher.class);
     
@@ -58,12 +63,60 @@ public class GoogleInfoFetcher implements MovieInfoFetcher{
         this.httpLoader = httpLoader;
     }
     
+    @Override
+    public MoviePage getMovieInfo(String id) throws IOException {
+        if (id.startsWith("http://www.google.com/movies/reviews")) {
+            MoviePage site = new MoviePage ();
+            site.setService(MovieService.GOOGLE);
+            site.setUrl(id);
+            String sourceString = httpLoader.load(id);
+            googleParser.parse(sourceString, site);
+            return site;
+        }
+        return null;
+    }
+    
+    @Override
+    public List<MovieSearchResult> search(String title) throws IOException {
+        String params = Param.paramString("q", title);
+        String sourceString = httpLoader.load("http://www.google.com/movies"+params);
+        Source source = new Source(sourceString);
+        //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
+        source.fullSequentialParse();
+
+        //Element titleElement = (Element)source.findAllElements(HTMLElementName.TITLE).get(0);
+        //System.out.println(titleElement.getContent().extractText());
+
+        // <div id="bubble_allCritics" class="percentBubble" style="display:none;">     57%    </div>
+
+        List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
+        List<?> aElements = source.findAllElements(HTMLElementName.A);
+        for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
+            Element aElement = (Element) i.next();
+            String url = aElement.getAttributeValue("href");
+            // /movies/reviews?cid=b939f27b219eb36f&fq=Pulp+Fiction&hl=en
+            if (url != null && url.startsWith("/movies/reviews?cid=")) {
+                String movieUrl = null;
+                movieUrl = "http://www.google.com" + url;
+                String movieName = aElement.getContent().getTextExtractor().toString();
+                LOGGER.info("found result: " + movieName + " -> " + movieUrl);
+                
+                MovieSearchResult s = new MovieSearchResult();
+                s.setService(MovieService.GOOGLE);
+                s.setTitle(movieName);
+                s.setIdForSite(movieUrl);
+                s.setUrl(movieUrl);
+                result.add(s);
+            }
+        }
+        return result;
+    }
     
 
-    @Override
+    @Deprecated
     public MoviePage fetch(Movie movie, String id) {
         MoviePage site = new MoviePage();
-        site.setMovie(movie);
+        //site.setMovie(movie);
         site.setService(MovieService.GOOGLE);
         try {
             String params = Param.paramString("q", movie.getTitle());
