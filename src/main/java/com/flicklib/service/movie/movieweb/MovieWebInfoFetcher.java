@@ -112,7 +112,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
                     MovieSearchResult m = new MovieSearchResult();
                     m.setIdForSite(movieUrl);
                     m.setTitle(movieName);
-                    m.setService(MovieService.FLIXSTER);
+                    m.setService(MovieService.MOVIEWEB);
                     result.add(m);
                     
                     LOGGER.info("found title: " + movieName + " -> " + movieUrl);

@@ -133,7 +133,7 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
         /**
          * Rating in %
          */
-        private MoviePage moviePage;
+        private MoviePage moviePage = new MoviePage();
         private String tagToReadContentFrom;
 
         private List<MoviePage> result = new ArrayList<MoviePage>();
@@ -143,6 +143,7 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
 
         @Override
         public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
+            LOGGER.debug("element <"+name+" "+toString(attributes)+">");
             if ("catalog_title".equals(name)) {
                 moviePage = new MoviePage();
                 moviePage.setService(MovieService.NETFLIX);
@@ -162,6 +163,11 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
                 tagToReadContentFrom = name;
             } else if ("title".equals(name)) {
                 moviePage.setTitle(attributes.getValue("regular"));
+            } else if ("category".equals(name)) {
+                String scheme = attributes.getValue("scheme");
+                if ("http://api.netflix.com/categories/genres".equals(scheme)) {
+                    moviePage.addGenre(attributes.getValue("label"));
+                }
             }
         }
 
@@ -186,6 +192,14 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
                 moviePage = null;
             }
             tagToReadContentFrom = null;
+        }
+        
+        String toString(Attributes attributes) {
+            StringBuilder s = new StringBuilder();
+            for (int i=0;i<attributes.getLength();i++) {
+                s.append(attributes.getLocalName(i)).append("='").append(attributes.getValue(i)).append("' ");
+            }
+            return s.toString();
         }
     }
 

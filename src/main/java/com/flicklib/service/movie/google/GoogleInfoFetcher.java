@@ -99,17 +99,38 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
                 String movieUrl = null;
                 movieUrl = "http://www.google.com" + url;
                 String movieName = aElement.getContent().getTextExtractor().toString();
-                LOGGER.info("found result: " + movieName + " -> " + movieUrl);
-                
-                MovieSearchResult s = new MovieSearchResult();
-                s.setService(MovieService.GOOGLE);
-                s.setTitle(movieName);
-                s.setIdForSite(movieUrl);
-                s.setUrl(movieUrl);
-                result.add(s);
+                if (movieName!=null && movieName.trim().length()>0) {
+                    if (!isReviewTitle(movieName)) {
+                        LOGGER.info("found result: " + movieName + " -> " + movieUrl);
+                        
+                        MovieSearchResult s = new MovieSearchResult();
+                        s.setService(MovieService.GOOGLE);
+                        s.setTitle(movieName);
+                        s.setIdForSite(movieUrl);
+                        s.setUrl(movieUrl);
+                        result.add(s);
+                    }
+                }
             }
         }
         return result;
+    }
+    
+    private boolean isReviewTitle(String title) {
+        // filter out '73 reviews' style titles or '1 review'
+        String[] words = title.split(" ");
+        if (words.length==2) {
+            if (words[1].startsWith("review")) {
+                try {
+                    Integer.parseInt(words[0].trim());
+                    return true;
+                } catch(NumberFormatException e) {
+                    return false;
+                }
+            }
+        }
+        return false;
+        
     }
     
 
