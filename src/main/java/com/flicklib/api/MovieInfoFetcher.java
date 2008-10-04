@@ -24,7 +24,7 @@ import com.flicklib.domain.MoviePage;
 
 
 /**
- *
+ * Base interface for classes that fetch movie information from a service
  * @author fdb
  */
 public interface MovieInfoFetcher {
@@ -46,10 +46,10 @@ public interface MovieInfoFetcher {
     
     /**
      * Looks up the detailed movie info for a movieIdForSite
-     * @param movieIdForSite 
+     * @param idForSite the id the site is using for that movie
      * @return the moviepage
      * @throws IOException
      */
-    MoviePage getMovieInfo(String movieIdForSite) throws IOException;
+    MoviePage getMovieInfo(String idForSite) throws IOException;
     
 }
