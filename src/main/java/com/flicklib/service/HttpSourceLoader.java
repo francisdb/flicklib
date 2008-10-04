@@ -21,12 +21,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.flicklib.tools.IOTools;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 /**
@@ -34,20 +36,21 @@ import com.google.inject.name.Named;
  * 
  * @author francisdb
  */
+@Singleton
 public class HttpSourceLoader implements SourceLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpSourceLoader.class);
 
-    private final Integer timeout;
     private HttpClient client;
 
     @Inject
     public HttpSourceLoader(@Named(value = "http.timeout") final Integer timeout) {
-        this.timeout = timeout;
-        client = new HttpClient();
+    	// http://hc.apache.org/httpclient-3.x/performance.html#Concurrent_execution_of_HTTP_methods
+        client = new HttpClient(new MultiThreadedHttpConnectionManager());
         if (timeout != null) {
             // wait max x sec
             client.getParams().setSoTimeout(timeout);
+            //manager.getParams().setSoTimeout(timeout);
             // LOGGER.info("Timeout = "+client.getParams().getSoTimeout());
         }
     }
@@ -59,7 +62,7 @@ public class HttpSourceLoader implements SourceLoader {
         InputStream is = null;
         try {
             LOGGER.info("Loading " + url);
-            httpMethod = new GetMethod(url);
+            httpMethod = new GetMethod(url);     
             client.executeMethod(httpMethod);
             LOGGER.info("Finished loading at " + httpMethod.getURI().toString());
             is = httpMethod.getResponseBodyAsStream();
