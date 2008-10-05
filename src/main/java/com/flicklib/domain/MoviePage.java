@@ -51,6 +51,10 @@ public class MoviePage extends MovieSearchResult {
     public MoviePage() {
     }
 
+    public MoviePage(MovieService service) {
+        super(service);
+    }
+
     public Integer getScore() {
         return score;
     }

@@ -32,6 +32,13 @@ public class MovieSearchResult {
     private MovieService service;
     private MovieType type;
 
+    public MovieSearchResult() {
+    }
+
+    public MovieSearchResult(MovieService service) {
+        this.service = service;
+    }
+
     /**
      * @return the idForSite
      */
