@@ -25,11 +25,10 @@ import org.slf4j.LoggerFactory;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.service.movie.flixter.FlixterInfoFetcher;
 
 public abstract class AbstractMovieInfoFetcher implements MovieInfoFetcher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FlixterInfoFetcher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMovieInfoFetcher.class);
 
     public AbstractMovieInfoFetcher() {
     }
