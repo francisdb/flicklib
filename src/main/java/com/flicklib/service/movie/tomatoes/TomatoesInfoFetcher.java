@@ -19,11 +19,11 @@ package com.flicklib.service.movie.tomatoes;
 
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.api.MovieInfoFetcher;
-import com.flicklib.api.MovieSearchResult;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.flicklib.api.Parser;
 import com.flicklib.domain.Movie;
+import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.SourceLoader;

@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 import au.id.jericho.lib.html.Source;
 
 import com.flicklib.api.AbstractMovieInfoFetcher;
-import com.flicklib.api.MovieSearchResult;
 import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.SourceLoader;
 import com.google.inject.Inject;

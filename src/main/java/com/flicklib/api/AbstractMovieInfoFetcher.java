@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.service.movie.flixter.FlixterInfoFetcher;
 
 public abstract class AbstractMovieInfoFetcher implements MovieInfoFetcher {

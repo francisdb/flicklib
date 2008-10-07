@@ -33,8 +33,8 @@ import au.id.jericho.lib.html.HTMLElements;
 import au.id.jericho.lib.html.Source;
 
 import com.flicklib.api.AbstractMovieInfoFetcher;
-import com.flicklib.api.MovieSearchResult;
 import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.ElementOnlyTextExtractor;

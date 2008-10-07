@@ -15,10 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.flicklib.api;
+package com.flicklib.domain;
 
-import com.flicklib.domain.MovieService;
-import com.flicklib.domain.MovieType;
 
 public class MovieSearchResult {
 

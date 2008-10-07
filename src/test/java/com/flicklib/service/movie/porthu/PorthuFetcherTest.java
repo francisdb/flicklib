@@ -28,8 +28,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.flicklib.api.MovieSearchResult;
 import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.FileSourceLoader;
 import com.flicklib.service.movie.AliasingSourceLoader;

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieSearchResult;
 
 
 /**

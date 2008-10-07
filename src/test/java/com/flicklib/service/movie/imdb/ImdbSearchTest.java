@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.flicklib.api.MovieSearchResult;
+import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.service.HttpSourceLoader;
 
 /**

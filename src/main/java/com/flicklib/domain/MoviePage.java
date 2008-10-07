@@ -20,7 +20,6 @@ package com.flicklib.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.flicklib.api.MovieSearchResult;
 
 /**
  * 
