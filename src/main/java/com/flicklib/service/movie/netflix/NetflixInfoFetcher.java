@@ -74,7 +74,7 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
 
     @Override
     public MoviePage getMovieInfo(String id) throws IOException {
-        return null;
+        throw new RuntimeException("Not implemented");
     }
 
     @Override

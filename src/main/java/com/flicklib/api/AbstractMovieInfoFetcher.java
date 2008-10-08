@@ -41,8 +41,9 @@ public abstract class AbstractMovieInfoFetcher implements MovieInfoFetcher {
 			MovieSearchResult firstResult = search.get(0);
 			if (firstResult instanceof MoviePage) {
 				item = (MoviePage) firstResult;
+			}else{
+				item = getMovieInfo(firstResult.getIdForSite());
 			}
-			item = getMovieInfo(firstResult.getIdForSite());
 		}else{
 			LOGGER.warn("No movie found for title: '"+title+"' using "+this.getClass().getSimpleName());
 		}
