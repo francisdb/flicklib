@@ -7,7 +7,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
 /**
- * Demo implementation of netflix auth
+ * Demo implementation of netflix auth <br>
+ * get your key at: http://developer.netflix.com/
  * 
  * @author francisdb
  */

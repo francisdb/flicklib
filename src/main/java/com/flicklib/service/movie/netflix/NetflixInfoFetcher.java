@@ -79,6 +79,7 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
 
     @Override
     public List<? extends MovieSearchResult> search(String title) throws IOException {
+    	List<? extends MovieSearchResult> result = null;
         OAuthClient oAuthClient = new OAuthHttpClient(new NotPoolingHttpClientPool());
         Map<String, String> params = new HashMap<String, String>();
         params.put("term", title);
@@ -92,18 +93,15 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
             XMLReader rdr = XMLReaderFactory.createXMLReader();
             rdr.setContentHandler(saxUms);
             rdr.parse(new InputSource(message.getBodyAsStream()));
-            return saxUms.getResult();
-        } catch (IOException e) {
-            LOGGER.error("Problem while requesting data from netflix", e);
+            result = saxUms.getResult();
         } catch (OAuthException e) {
-            LOGGER.error("Problem while requesting data from netflix", e);
+            throw new IOException("Problem while requesting data from netflix", e);
         } catch (URISyntaxException e) {
-            LOGGER.error("Problem while requesting data from netflix", e);
+        	throw new IOException("Problem while requesting data from netflix", e);
         } catch (SAXException e) {
-            LOGGER.error("Problem while requesting data from netflix", e);
+        	throw new IOException("Problem while requesting data from netflix", e);
         }
-
-        return null;
+        return result;
     }
 
 
