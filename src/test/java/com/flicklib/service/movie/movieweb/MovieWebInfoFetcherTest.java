@@ -17,6 +17,8 @@
  */
 package com.flicklib.service.movie.movieweb;
 
+import java.io.IOException;
+
 import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.HttpSourceLoader;
@@ -32,9 +34,10 @@ public class MovieWebInfoFetcherTest {
 
     /**
      * Test of load method, of class MovieWebInfoFetcher.
+     * @throws IOException 
      */
     @Test
-    public void testFetch() {
+    public void testFetch() throws IOException {
         Movie movie = new Movie();
         movie.setTitle("Pulp Fiction");
         MovieWebParser parser = new MovieWebParser();

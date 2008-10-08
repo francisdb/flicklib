@@ -17,6 +17,8 @@
  */
 package com.flicklib.service.movie.omdb;
 
+import java.io.IOException;
+
 import com.flicklib.domain.MoviePage;
 
 import org.junit.Ignore;
@@ -31,10 +33,11 @@ public class OmdbFetcherTest {
 	
     /**
      * Test of fetch method, of class OmdbFetcher.
+     * @throws IOException 
      */
     @Test
     @Ignore
-    public void testFetch() {
+    public void testFetch() throws IOException {
         OmdbFetcher instance = new OmdbFetcher();
         MoviePage moviePage = instance.fetch("Pulp Fiction");
         assertNotNull(moviePage);

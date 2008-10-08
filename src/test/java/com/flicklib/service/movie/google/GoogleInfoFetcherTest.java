@@ -17,6 +17,8 @@
  */
 package com.flicklib.service.movie.google;
 
+import java.io.IOException;
+
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.HttpSourceLoader;
 import org.junit.Test;
@@ -31,10 +33,11 @@ public class GoogleInfoFetcherTest {
 
     /**
      * Test of fetch method, of class GoogleInfoFetcher.
+     * @throws IOException 
      */
     @Test
     //@Ignore(value="Disabled for CI")
-    public void testFetch() {
+    public void testFetch() throws IOException {
         GoogleParser googleParser = new GoogleParser();
         GoogleInfoFetcher instance = new GoogleInfoFetcher(googleParser, new HttpSourceLoader(null));
         MoviePage site = instance.fetch("Pulp Fiction");

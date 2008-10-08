@@ -26,19 +26,23 @@ import com.flicklib.domain.MovieSearchResult;
 
 /**
  * Base interface for classes that fetch movie information from a service
+ * 
  * @author fdb
  */
 public interface MovieInfoFetcher {
 	
     /**
      * Fetches movie info from a service and complements the movieInfo object
+     * 
      * @param title 
-     * @return the parsed moviePage
+     * @return the parsed moviePage or NULL if no such movie found
+     * @throws IOException 
      */
-    MoviePage fetch(String title);
+    MoviePage fetch(String title) throws IOException;
     
     /**
      * Performs a search on the service and returns results
+     * 
      * @param title
      * @return the result list, never null
      * @throws IOException
@@ -47,6 +51,7 @@ public interface MovieInfoFetcher {
     
     /**
      * Looks up the detailed movie info for a movieIdForSite
+     * 
      * @param idForSite the id the site is using for that movie
      * @return the moviepage
      * @throws IOException

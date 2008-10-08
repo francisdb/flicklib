@@ -28,26 +28,25 @@ import com.flicklib.domain.MovieSearchResult;
 
 public abstract class AbstractMovieInfoFetcher implements MovieInfoFetcher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMovieInfoFetcher.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMovieInfoFetcher.class);
 
-    public AbstractMovieInfoFetcher() {
-    }
+	public AbstractMovieInfoFetcher() {
+	}
 
-    @Override
-    public MoviePage fetch(String title) {
-        try {
-            List<? extends MovieSearchResult> search = this.search(title);
-            if (search.size() > 0) {
-                MovieSearchResult firstResult = search.get(0);
-                if (firstResult instanceof MoviePage) {
-                    return (MoviePage) firstResult;
-                }
-                return this.getMovieInfo(firstResult.getIdForSite());
-            }
-        } catch (IOException e) {
-            LOGGER.error("fetching by " + this.getClass().getName() + " failed:" + e.getMessage(), e);
-        }
-        return null;
-    }
+	@Override
+	public MoviePage fetch(String title) throws IOException {
+		MoviePage item = null;
+		List<? extends MovieSearchResult> search = this.search(title);
+		if (search.size() > 0) {
+			MovieSearchResult firstResult = search.get(0);
+			if (firstResult instanceof MoviePage) {
+				item = (MoviePage) firstResult;
+			}
+			item = getMovieInfo(firstResult.getIdForSite());
+		}else{
+			LOGGER.warn("No movie found for title: '"+title+"' using "+this.getClass().getSimpleName());
+		}
+		return item;
+	}
 
 }

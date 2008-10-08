@@ -20,6 +20,8 @@ package com.flicklib.service.movie.netflix;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
@@ -33,9 +35,10 @@ public class NetflixInfoFetcherTest {
 
 	/**
 	 * Test method for {@link com.flicklib.service.movie.netflix.NetflixInfoFetcher#fetch(String)}.
+	 * @throws IOException 
 	 */
     @Test
-    public void testFetch() {
+    public void testFetch() throws IOException {
     	// Please use your own key, request one at: http://developer.netflix.com
     	String apikey = "sam8gkjk5zc2sspw2m7p9n8u";
     	String sharedsecret = "aZufM9NU62";

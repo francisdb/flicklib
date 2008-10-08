@@ -65,23 +65,20 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
     }
 
     @Override
-    public MoviePage getMovieInfo(String id) throws IOException {
-        try {
-            if (id.startsWith("http://www.movieweb.com")) {
-                String source = sourceLoader.load(id);
-                MoviePage site = new MoviePage();
-                site.setIdForSite(id);
-                site.setUrl(id);
-                site.setService(MovieService.MOVIEWEB);
-                parser.parse(source, site);
-                
-                return site;
-            }
-        } catch (IOException ex) {
-            LOGGER.error("Loading from Flixter failed", ex);
-        }
-        return null;
-    }
+	public MoviePage getMovieInfo(String id) throws IOException {
+		MoviePage site = null;
+		if (id.startsWith("http://www.movieweb.com")) {
+			String source = sourceLoader.load(id);
+			site = new MoviePage();
+			site.setIdForSite(id);
+			site.setUrl(id);
+			site.setService(MovieService.MOVIEWEB);
+			parser.parse(source, site);
+		}else{
+			throw new IOException("Trying to get movie info for MovieWeb but the supplied id is not a movieweb id!");			
+		}
+		return site;
+	}
     
     @Override
     public List<MovieSearchResult> search(String title) throws IOException {
@@ -103,7 +100,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
         for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
             Element aElement = (Element) i.next();
             String url = aElement.getAttributeValue("href");
-            if (url != null && url.endsWith("summary.php")) {
+            if (url != null && url.startsWith("/movies/film/")) {
                 String movieName = aElement.getContent().getTextExtractor().toString();
                 if (movieName != null && movieName.trim().length() != 0) {
 

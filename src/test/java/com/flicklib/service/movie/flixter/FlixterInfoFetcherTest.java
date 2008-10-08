@@ -17,6 +17,8 @@
  */
 package com.flicklib.service.movie.flixter;
 
+import java.io.IOException;
+
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.HttpSourceLoader;
 import org.junit.Test;
@@ -30,9 +32,10 @@ public class FlixterInfoFetcherTest {
 
     /**
      * Test of fetch method, of class FlixterInfoFetcher.
+     * @throws IOException 
      */
     @Test
-    public void testFetch() {
+    public void testFetch() throws IOException {
         FlixterParser parser = new FlixterParser();
         FlixterInfoFetcher fetcher = new FlixterInfoFetcher(parser, new HttpSourceLoader(null));
         MoviePage site = fetcher.fetch("The X-Files I Want to Believe");
