@@ -36,7 +36,11 @@ public class NetflixInfoFetcherTest {
 	 */
     @Test
     public void testFetch() {
-        NetflixInfoFetcher fetcher = new NetflixInfoFetcher();
+    	// Please use your own key, request one at: http://developer.netflix.com
+    	String apikey = "sam8gkjk5zc2sspw2m7p9n8u";
+    	String sharedsecret = "aZufM9NU62";
+    	
+        NetflixInfoFetcher fetcher = new NetflixInfoFetcher(apikey, sharedsecret);
         MoviePage site = fetcher.fetch("Pulp Fiction");
         assertNotNull("Score is null", site.getScore());
         assertNotNull("ID is null", site.getIdForSite());
