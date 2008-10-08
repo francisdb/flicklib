@@ -133,8 +133,6 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                    <!-- temp in here for the hudson build on an inproper setup (hudson user has no LANG environment variable?) -->
-                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>
