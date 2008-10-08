@@ -7,9 +7,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
 /**
- * Demo implementation of netflix auth stuff
+ * Demo implementation of netflix auth
+ * 
  * @author francisdb
- *
  */
 public class NetFlixAuthModule extends AbstractModule {
 	
