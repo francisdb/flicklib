@@ -66,12 +66,17 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     @SuppressWarnings("unchecked")
     @Override
     public MoviePage getMovieInfo(String id) throws IOException {
-        MoviePage mp = new MoviePage(MovieService.PORTHU);
 
         String url = generateUrlForFilmID(id);
-        mp.setUrl(url);
         Source source = loadContent(url);
 
+        MoviePage mp = parseMovieInfoPage(source);
+        mp.setUrl(url);
+        return mp;
+    }
+
+    private MoviePage parseMovieInfoPage(Source source) {
+        MoviePage mp = new MoviePage(MovieService.PORTHU);
         {
             List<Element> titleElements = source.findAllElements("class", "blackbigtitle", false);
             if (titleElements.size() == 0) {
@@ -165,7 +170,17 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
         String url = generateUrlForTitleSearch(title);
 
-        Source jerichoSource = loadContent(url);
+        com.flicklib.service.Source flicklibSource = sourceLoader.loadSource(url);
+        Source jerichoSource = parseContent(flicklibSource.getContent());
+
+        if (isMoviePageUrl(flicklibSource.getURL())) {
+            MoviePage mp = parseMovieInfoPage(jerichoSource);
+            mp.setUrl(flicklibSource.getURL());
+            result.add(mp);
+            return result;
+        }
+        
+        
 
         List<Element> spans = (List<Element>) jerichoSource.findAllElements(HTMLElements.SPAN);
         for (int i = 0; i < spans.size(); i++) {
@@ -293,6 +308,8 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return null;
     }
 
+    
+    
     /**
      * load content from the given URL, and returns the parser object
      * 
@@ -302,6 +319,10 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
      */
     private Source loadContent(String url) throws IOException {
         String content = sourceLoader.load(url);
+        return parseContent(content);
+    }
+
+    private Source parseContent(String content) {
         Source source = new Source(content);
         source.fullSequentialParse();
         return source;
@@ -319,4 +340,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return "http://port.hu" + FILM_INFO_URL + "?i_where=2&i_film_id=" + id + "&i_city_id=" + TEST_CITY_ID + "&i_county_id=-1";
     }
 
+    protected boolean isMoviePageUrl(String url) {
+        return url.startsWith(url) || url.startsWith("http://port.hu"+FILM_INFO_URL);
+    }
 }
