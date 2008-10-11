@@ -32,6 +32,11 @@ public class FileSourceLoader implements SourceLoader {
         return getOrPost(url);
     }
     
+    @Override
+    public Source loadSource(String url) throws IOException {
+        return new Source(url, getOrPost(url));
+    }
+    
     private String getOrPost(String url) throws IOException {
         String source = null;
         InputStream fis = null;

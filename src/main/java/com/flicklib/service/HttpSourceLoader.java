@@ -18,7 +18,8 @@
 package com.flicklib.service;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
@@ -57,16 +58,25 @@ public class HttpSourceLoader implements SourceLoader {
 
     @Override
     public String load(String url) throws IOException {
-        String source = null;
+        return loadSource(url).getContent();
+    }
+    
+    @Override
+    public Source loadSource(String url) throws IOException {
         GetMethod httpMethod = null;
-        InputStream is = null;
+        Reader is = null;
         try {
             LOGGER.info("Loading " + url);
             httpMethod = new GetMethod(url);     
             client.executeMethod(httpMethod);
             LOGGER.info("Finished loading at " + httpMethod.getURI().toString());
-            is = httpMethod.getResponseBodyAsStream();
-            source = IOTools.inputSreamToString(is);
+            String responseCharset = httpMethod.getResponseCharSet();
+            if (responseCharset != null) {
+                is = new InputStreamReader(httpMethod.getResponseBodyAsStream(), responseCharset);
+            } else {
+                is = new InputStreamReader(httpMethod.getResponseBodyAsStream());
+            }
+            return new Source(httpMethod.getURI().toString(), IOTools.readerToString(is));
         } finally {
             if (is != null) {
                 try {
@@ -79,7 +89,6 @@ public class HttpSourceLoader implements SourceLoader {
                 httpMethod.releaseConnection();
             }
         }
-        return source;
     }
 
 }

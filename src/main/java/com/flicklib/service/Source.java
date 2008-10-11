@@ -1,7 +1,7 @@
 /*
  * This file is part of Flicklib.
  *
- * Copyright (C) Francis De Brabandere
+ * Copyright (C) Zsombor Gegesy
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,29 @@
  */
 package com.flicklib.service;
 
-import java.io.IOException;
+public class Source {
 
-/**
- *
- * @author francisdb
- */
-public interface SourceLoader {
-
+    final String url;
+    final String content;
+    
+    
+    
+    public Source(String url, String content) {
+        this.url = url;
+        this.content = content;
+    }
     /**
-     * Loads a http request and parses it to a jericho source
-     * @param url
-     * @return the page source as String
-     * @throws java.io.IOException
+     * @return the uri
      */
-    String load(String url) throws IOException;
-
+    public String getURL() {
+        return url;
+    }
     /**
-     * Loads a http request and parses it to a jericho source
-     * @param url
-     * @return the page source and the final URL (after the redirects followed).
-     * @throws java.io.IOException
+     * @return the content
      */
-    Source loadSource(String url) throws IOException;
-
+    public String getContent() {
+        return content;
+    }
+    
+    
 }

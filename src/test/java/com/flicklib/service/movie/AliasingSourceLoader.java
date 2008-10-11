@@ -24,6 +24,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
 
 public class AliasingSourceLoader implements SourceLoader {
@@ -44,6 +45,11 @@ public class AliasingSourceLoader implements SourceLoader {
 
     @Override
     public String load(String url) throws IOException {
+        return loadSource(url).getContent();
+    }
+    
+    @Override
+    public Source loadSource(String url) throws IOException {
         String result = mapping.get(url);
         if (result != null) {
             LOG.info("loading " + url + " from " + result);
@@ -51,6 +57,6 @@ public class AliasingSourceLoader implements SourceLoader {
         } else {
             LOG.info("loading " + url);
         }
-        return parent.load(url);
+        return parent.loadSource(url);
     }
 }
