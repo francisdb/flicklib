@@ -49,8 +49,10 @@ public class PorthuFetcherTest {
     @Before
     public void setUp() throws Exception {
         loader = new AliasingSourceLoader(new FileSourceLoader());
-        loader.putAlias("http://port.hu/pls/ci/cinema.film_creator?i_text=keresztapa&i_film_creator=1&i_city_id=3372", "porthu/filmsearch-response.html");
         loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=5609&i_city_id=3372&i_county_id=-1", "porthu/film_page.html");
+        loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=80364&i_city_id=3372&i_county_id=-1", "porthu/film_page2.html");
+        loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=1269&i_city_id=3372&i_county_id=-1", "porthu/film_page3.html");
+        loader.putAlias("http://port.hu/pls/ci/cinema.film_creator?i_text=keresztapa&i_film_creator=1&i_city_id=3372", "porthu/filmsearch-response.html");
         loader.putAlias("http://port.hu/pls/ci/cinema.film_creator?i_text=a+kiraly+osszes+embere&i_film_creator=1&i_city_id=3372",
                 "porthu/filmsearch-response2.html");
         fetcher = new PorthuFetcher(loader);
@@ -104,6 +106,31 @@ public class PorthuFetcherTest {
             assertEquals("score", Integer.valueOf(94), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(80), moviePage.getVotes());
 
+            moviePage = fetcher.getMovieInfo("80364");
+            assertNotNull("movie page", moviePage);
+            assertEquals("service type", MovieService.PORTHU, moviePage.getService());
+            assertEquals("title", "Parfüm: Egy gyilkos története", moviePage.getTitle());
+            assertEquals("alternate title", "Perfume: The Story of a Murderer", moviePage.getAlternateTitle());
+            assertEquals("year", Integer.valueOf(2006), moviePage.getYear());
+            assertNotNull("has plot", moviePage.getPlot());
+            assertTrue("plot", moviePage.getPlot().startsWith("1766-ban, a franciaországi Grasse városban a parfűmkészítő"));
+            assertEquals("director", "Tom Tykwer", moviePage.getDirector());
+            assertEquals("score", Integer.valueOf(80), moviePage.getScore());
+            assertEquals("votes", Integer.valueOf(114), moviePage.getVotes());
+            
+            moviePage = fetcher.getMovieInfo("1269");
+            assertNotNull("movie page", moviePage);
+            assertEquals("service type", MovieService.PORTHU, moviePage.getService());
+            assertEquals("title", "Star Trek 8. - Kapcsolatfelvétel", moviePage.getTitle());
+            assertEquals("alternate title", "Star Trek: First Contact", moviePage.getAlternateTitle());
+            assertEquals("year", Integer.valueOf(1996), moviePage.getYear());
+            assertNotNull("has plot", moviePage.getPlot());
+            assertTrue("plot", moviePage.getPlot().startsWith("A Star Trek filmek legújabb és magasan legjobb darabja"));
+            assertEquals("director", "Jonathan Frakes", moviePage.getDirector());
+            assertEquals("score", Integer.valueOf(100), moviePage.getScore());
+            assertEquals("votes", Integer.valueOf(4), moviePage.getVotes());
+
+            
         } catch (IOException e) {
             e.printStackTrace();
             fail(e.getMessage());

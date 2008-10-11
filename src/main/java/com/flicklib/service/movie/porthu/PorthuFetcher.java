@@ -61,7 +61,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     /**
      * match (x.y)/10 where x and y are numbers.
      */
-    private static final Pattern SCORE_PATTERN = Pattern.compile("(\\d\\.\\d)/10");
+    private static final Pattern SCORE_PATTERN = Pattern.compile("(\\d+(\\.\\d)?)/10");
 
     @Inject
     public PorthuFetcher(final SourceLoader sourceLoader) {
@@ -339,7 +339,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     private Integer getScore(String scoreText) {
         Matcher matcher = SCORE_PATTERN.matcher(scoreText);
         if (matcher.find()) {
-            if (matcher.groupCount() == 1) {
+            if (matcher.groupCount() == 2) {
                 float score = Float.parseFloat(matcher.group(1));
                 return Integer.valueOf((int) (score * 10));
             }
