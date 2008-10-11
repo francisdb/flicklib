@@ -35,7 +35,7 @@ public enum MovieService {
     /**
      * http://www.movieweb.com
      */
-    MOVIEWEB("MovieWeb", "http://www.movieweb.com/"),
+    MOVIEWEB("MovieWeb", "http://www.movieweb.com/", "MWeb"),
     
     /**
      * http://www.omdb.com
@@ -45,7 +45,7 @@ public enum MovieService {
     /**
      * http://www.google.com/movies
      */
-    GOOGLE("Google movies", "http://www.google.com/movies"),
+    GOOGLE("Google movies", "http://www.google.com/movies", "Google"),
     
     /**
      * http://www.flixster.com
@@ -64,10 +64,17 @@ public enum MovieService {
 
     private final String name;
     private final String url;
-
+    private final String shortName;
+    
     MovieService(final String name, final String url) {
         this.name = name;
         this.url = url;
+        this.shortName = name;
+    }
+    MovieService(final String name, final String url, final String shortName) {
+        this.name = name;
+        this.url = url;
+        this.shortName = shortName;
     }
 
     public String getName(){
@@ -76,6 +83,10 @@ public enum MovieService {
 
     public String getUrl(){
         return url;
+    }
+    
+    public String getShortName() {
+        return shortName;
     }
 
 }
