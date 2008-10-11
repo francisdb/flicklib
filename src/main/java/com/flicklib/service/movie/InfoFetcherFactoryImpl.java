@@ -28,6 +28,7 @@ import com.flicklib.service.movie.imdb.Imdb;
 import com.flicklib.service.movie.movieweb.MovieWeb;
 import com.flicklib.service.movie.netflix.Netflix;
 import com.flicklib.service.movie.omdb.Omdb;
+import com.flicklib.service.movie.porthu.PortHu;
 import com.flicklib.service.movie.tomatoes.RottenTomatoes;
 
 /**
@@ -44,6 +45,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
     private final MovieInfoFetcher flixterInfoFetcher;
     private final MovieInfoFetcher omdbInfoFetcher;
     private final MovieInfoFetcher netflixInfoFetcher;;
+    private final MovieInfoFetcher porthuInfoFetcher;;
 
     /**
      * Constructs a new InfoFetcherFactoryImpl
@@ -63,7 +65,8 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
             final @Google MovieInfoFetcher googleInfoFetcher,
             final @Flixster MovieInfoFetcher flixterInfoFetcher,
             final @Omdb MovieInfoFetcher omdbInfoFetcher,
-            final @Netflix MovieInfoFetcher netflixInfoFetcher) {
+            final @Netflix MovieInfoFetcher netflixInfoFetcher,
+            final @PortHu MovieInfoFetcher porthuFetcher) {
         this.imdbInfoFetcher = imdbInfoFetcher;
         this.movieWebInfoFetcher = movieWebInfoFetcher;
         this.tomatoesInfoFetcher = tomatoesInfoFetcher;
@@ -71,6 +74,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
         this.flixterInfoFetcher = flixterInfoFetcher;
         this.omdbInfoFetcher = omdbInfoFetcher;
         this.netflixInfoFetcher = netflixInfoFetcher;
+        this.porthuInfoFetcher = porthuFetcher;
     }
     
     
@@ -99,6 +103,9 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
                 break;
             case NETFLIX:
                 fetcher = netflixInfoFetcher;
+                break;
+            case PORTHU :
+                fetcher = porthuInfoFetcher;
                 break;
             default:
                 throw new AssertionError("Unknown service: "+service);
