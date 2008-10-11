@@ -135,5 +135,10 @@ public class MovieSearchResult {
     public MovieType getType() {
         return type;
     }
+    
+    @Override
+    public String toString() {
+        return "MovieSearchResult["+title+'/'+alternateTitle+'/'+idForSite+']';
+    }
 
 }
