@@ -92,7 +92,6 @@ public class ImdbSearch {
                         movieSite.setTitle(linkElement.getTextExtractor().toString());
                         ElementOnlyTextExtractor extractor = new ElementOnlyTextExtractor(tableElement.getContent());
                         String titleYear = extractor.toString().trim();
-                        // FIXME, duplicate of code in ImdbParser, to merge!
                         if (titleYear.length() > 0 && titleYear.contains(")")) {
                             int start = titleYear.indexOf("(");
                             int end = titleYear.indexOf(")");
