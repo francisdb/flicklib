@@ -44,11 +44,11 @@ import com.google.inject.Singleton;
 public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImdbInfoFetcher.class);
-    
+
     private final ImdbSearch imdbSearch;
     private final Parser imdbParser;
     private final SourceLoader loader;
-    private final Map<String,List<MovieSearchResult>> imdbSearchCache = new HashMap<String,List<MovieSearchResult>>();
+    private final Map<String, List<MovieSearchResult>> imdbSearchCache = new HashMap<String, List<MovieSearchResult>>();
 
     @Inject
     public ImdbInfoFetcher(ImdbSearch imdbSearch, final @Imdb Parser imdbParser, SourceLoader loader) {
@@ -60,11 +60,11 @@ public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
     @Override
     public synchronized List<MovieSearchResult> search(String title) throws IOException {
         List<MovieSearchResult> list = imdbSearchCache.get(title.toLowerCase().trim());
-        if (list==null) {
+        if (list == null) {
             list = imdbSearch.getResults(title);
             imdbSearchCache.put(title.toLowerCase().trim(), list);
-        }else{
-        	LOGGER.debug("Returning cached result for "+title);
+        } else {
+            LOGGER.debug("Returning cached result for " + title);
         }
         return list;
     }

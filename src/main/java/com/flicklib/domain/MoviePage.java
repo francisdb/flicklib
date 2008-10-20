@@ -86,10 +86,6 @@ public class MoviePage extends MovieSearchResult {
         this.plot = plot;
     }
 
-    public MoviePage getMovie() {
-        return this;
-    }
-
     /**
      * @return the runtime
      */

@@ -46,7 +46,7 @@ public class FlixterParser extends AbstractJerichoParser{
         for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
             Element aElement = (Element) i.next();
             if("headerLink".equals(aElement.getAttributeValue("class"))){
-                movieSite.getMovie().setTitle(aElement.getContent().getTextExtractor().toString().trim());
+                movieSite.setTitle(aElement.getContent().getTextExtractor().toString().trim());
             }
         }
         
