@@ -88,9 +88,9 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                 throw new RuntimeException("no <span class='blackbigtitle'> found!");
             }
             Element titleElement = titleElements.get(0);
-            mp.setTitle(titleElement.getContent().getTextExtractor().toString());
+            mp.setAlternateTitle(titleElement.getContent().getTextExtractor().toString());
 
-            mp.setAlternateTitle(getAlternateTitle(titleElement));
+            mp.setTitle(getAlternateTitle(titleElement));
         }
         {
             List<Element> spanElements = source.findAllElements("span");
@@ -204,10 +204,10 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                             String movieTitle = link.getContent().getTextExtractor().toString();
                             MovieSearchResult msr = new MovieSearchResult(MovieService.PORTHU);
                             msr.setUrl(href);
-                            msr.setTitle(movieTitle);
+                            msr.setAlternateTitle(movieTitle);
                             msr.setIdForSite(collectIdFromUrl(href));
 
-                            msr.setAlternateTitle(unbracket(new ElementOnlyTextExtractor(span.getContent()).toString()));
+                            msr.setTitle(unbracket(new ElementOnlyTextExtractor(span.getContent()).toString()));
                             
                             int distance = LevenshteinDistance.distance(movieTitle, title);
                             int distance2 = LevenshteinDistance.distance(msr.getAlternateTitle(), title);
@@ -384,7 +384,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
 
     protected String generateUrlForTitleSearch(String title) {
         try {
-            return "http://port.hu/pls/ci/cinema.film_creator?i_text=" + URLEncoder.encode(title, "UTF-8") + "&i_film_creator=1&i_city_id=" + TEST_CITY_ID;
+            return "http://port.hu/pls/ci/cinema.film_creator?i_text=" + URLEncoder.encode(title, "ISO-8859-2") + "&i_film_creator=1&i_city_id=" + TEST_CITY_ID;
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("Encoding problem with UTF-8? " + e.getMessage(), e);
         }

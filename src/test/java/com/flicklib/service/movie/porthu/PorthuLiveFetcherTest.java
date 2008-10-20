@@ -54,8 +54,8 @@ public class PorthuLiveFetcherTest {
             
             MoviePage moviePage = (MoviePage) searchResult;
             
-            Assert.assertEquals("title", "Indiana Jones és a kristálykoponya királysága", moviePage.getTitle());
-            Assert.assertEquals("alternate title", "Indiana Jones and the Kingdom of the Crystal Skull", moviePage.getAlternateTitle());
+            Assert.assertEquals("title", "Indiana Jones és a kristálykoponya királysága", moviePage.getAlternateTitle());
+            Assert.assertEquals("alternate title", "Indiana Jones and the Kingdom of the Crystal Skull", moviePage.getTitle());
             Assert.assertEquals("year", Integer.valueOf(2008), moviePage.getYear());
             Assert.assertNotNull("has plot", moviePage.getPlot());
 

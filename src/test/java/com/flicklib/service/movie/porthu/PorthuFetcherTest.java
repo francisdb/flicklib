@@ -83,7 +83,7 @@ public class PorthuFetcherTest {
         }
     }
 
-    void check(MovieSearchResult m, String title, String id, String alternateTitle, String description, int year) {
+    void check(MovieSearchResult m, String alternateTitle, String id, String title, String description, int year) {
         assertEquals("title", title, m.getTitle());
         assertEquals("id", id, m.getIdForSite());
         assertEquals("alternate title", alternateTitle, m.getAlternateTitle());
@@ -97,8 +97,8 @@ public class PorthuFetcherTest {
             MoviePage moviePage = fetcher.getMovieInfo("5609");
             assertNotNull("movie page", moviePage);
             assertEquals("service type", MovieService.PORTHU, moviePage.getService());
-            assertEquals("title", "A Keresztapa", moviePage.getTitle());
-            assertEquals("alternate title", "The Godfather", moviePage.getAlternateTitle());
+            assertEquals("title", "A Keresztapa", moviePage.getAlternateTitle());
+            assertEquals("alternate title", "The Godfather", moviePage.getTitle());
             assertEquals("year", Integer.valueOf(1972), moviePage.getYear());
             assertNotNull("has plot", moviePage.getPlot());
             assertTrue("plot", moviePage.getPlot().startsWith("A gengszterfilmek legnagyobbika, világhírű"));
@@ -109,8 +109,8 @@ public class PorthuFetcherTest {
             moviePage = fetcher.getMovieInfo("80364");
             assertNotNull("movie page", moviePage);
             assertEquals("service type", MovieService.PORTHU, moviePage.getService());
-            assertEquals("title", "Parfüm: Egy gyilkos története", moviePage.getTitle());
-            assertEquals("alternate title", "Perfume: The Story of a Murderer", moviePage.getAlternateTitle());
+            assertEquals("title", "Parfüm: Egy gyilkos története", moviePage.getAlternateTitle());
+            assertEquals("alternate title", "Perfume: The Story of a Murderer", moviePage.getTitle());
             assertEquals("year", Integer.valueOf(2006), moviePage.getYear());
             assertNotNull("has plot", moviePage.getPlot());
             assertTrue("plot", moviePage.getPlot().startsWith("1766-ban, a franciaországi Grasse városban a parfűmkészítő"));
@@ -121,8 +121,8 @@ public class PorthuFetcherTest {
             moviePage = fetcher.getMovieInfo("1269");
             assertNotNull("movie page", moviePage);
             assertEquals("service type", MovieService.PORTHU, moviePage.getService());
-            assertEquals("title", "Star Trek 8. - Kapcsolatfelvétel", moviePage.getTitle());
-            assertEquals("alternate title", "Star Trek: First Contact", moviePage.getAlternateTitle());
+            assertEquals("title", "Star Trek 8. - Kapcsolatfelvétel", moviePage.getAlternateTitle());
+            assertEquals("alternate title", "Star Trek: First Contact", moviePage.getTitle());
             assertEquals("year", Integer.valueOf(1996), moviePage.getYear());
             assertNotNull("has plot", moviePage.getPlot());
             assertTrue("plot", moviePage.getPlot().startsWith("A Star Trek filmek legújabb és magasan legjobb darabja"));
