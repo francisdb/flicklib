@@ -70,7 +70,6 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         this.sourceLoader = sourceLoader;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public MoviePage getMovieInfo(String id) throws IOException {
 
@@ -83,9 +82,11 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return mp;
     }
 
-    private MoviePage parseMovieInfoPage(Source source) {
+    
+	private MoviePage parseMovieInfoPage(Source source) {
         MoviePage mp = new MoviePage(MovieService.PORTHU);
         {
+        	@SuppressWarnings("unchecked")
             List<Element> titleElements = source.findAllElements("class", "blackbigtitle", false);
             if (titleElements.size() == 0) {
                 throw new RuntimeException("no <span class='blackbigtitle'> found!");
@@ -95,6 +96,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
             setEnglishAndOriginalTitle(mp, getOriginalAndEnglishTitle(titleElement),titleElement.getContent().getTextExtractor().toString());
         }
         {
+        	@SuppressWarnings("unchecked")
             List<Element> spanElements = source.findAllElements("span");
             int btxtCount = 0;
             for (int i = 0; i < spanElements.size(); i++) {
@@ -172,7 +174,6 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public List<MovieSearchResult> search(String title) throws IOException {
         List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
         String url = generateUrlForTitleSearch(title);
@@ -190,11 +191,13 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         MovieSearchResultComparator comparator = new MovieSearchResultComparator();
         TreeSet<MovieSearchResult> orderedSet = new TreeSet<MovieSearchResult>(comparator);
         
+        @SuppressWarnings("unchecked")
         List<Element> spans = (List<Element>) jerichoSource.findAllElements(HTMLElements.SPAN);
         for (int i = 0; i < spans.size(); i++) {
             Element span = spans.get(i);
 
             if ("btxt".equals(span.getAttributeValue("class"))) {
+                @SuppressWarnings("unchecked")
                 List<Element> childs = span.getContent().findAllElements();
                 if (childs.size() > 0) {
                     Element link = childs.get(0);
