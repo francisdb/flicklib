@@ -30,7 +30,7 @@ public enum MovieService {
     /**
      * http://www.rottentomatoes.com
      */
-    TOMATOES("Rotten Tomatoes", "http://www.rottentomatoes.com"),
+    TOMATOES("Rotten Tomatoes", "http://www.rottentomatoes.com", "Tomatoes"),
     
     /**
      * http://www.movieweb.com
