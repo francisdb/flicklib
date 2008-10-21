@@ -55,6 +55,7 @@ public class PorthuFetcherTest {
         loader.putAlias("http://port.hu/pls/ci/cinema.film_creator?i_text=keresztapa&i_film_creator=1&i_city_id=3372", "porthu/filmsearch-response.html");
         loader.putAlias("http://port.hu/pls/ci/cinema.film_creator?i_text=a+kiraly+osszes+embere&i_film_creator=1&i_city_id=3372",
                 "porthu/filmsearch-response2.html");
+        loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=75033&i_city_id=3372&i_county_id=-1", "porthu/film_page4.html");
         fetcher = new PorthuFetcher(loader);
     }
 
@@ -130,6 +131,22 @@ public class PorthuFetcherTest {
             assertEquals("score", Integer.valueOf(100), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(4), moviePage.getVotes());
 
+
+            moviePage = fetcher.getMovieInfo("75033");
+            assertNotNull("movie page", moviePage);
+            assertEquals("service type", MovieService.PORTHU, moviePage.getService());
+            assertEquals("title", "Terkel in Trouble", moviePage.getTitle());
+            assertEquals("alternate title", "Terhelt Terkel", moviePage.getAlternateTitle());
+            assertEquals("original title", "Terkel i knibe", moviePage.getOriginalTitle());
+            assertEquals("year", Integer.valueOf(2004), moviePage.getYear());
+            assertNotNull("has plot", moviePage.getPlot());
+            assertTrue("plot", moviePage.getPlot().startsWith("Végy egy göndör hajú, pattanásos tizenhét éves tinédzsert"));
+            assertEquals("director", "Kresten Vestbjerg Andersen", moviePage.getDirector());
+            assertEquals("score", Integer.valueOf(78), moviePage.getScore());
+            assertEquals("votes", Integer.valueOf(9), moviePage.getVotes());
+            assertEquals("runtime", Integer.valueOf(78), moviePage.getRuntime());
+
+            
             
         } catch (IOException e) {
             e.printStackTrace();

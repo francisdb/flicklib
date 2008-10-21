@@ -47,6 +47,8 @@ import com.google.inject.Inject;
 
 public class PorthuFetcher extends AbstractMovieInfoFetcher {
 
+    private static final Pattern RUNTIME_PATTERN = Pattern.compile("(\\d+) perc");
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PorthuFetcher.class);
 
     private static final String FILM_INFO_URL = "/pls/fi/films.film_page";
@@ -77,6 +79,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
 
         MoviePage mp = parseMovieInfoPage(source);
         mp.setUrl(url);
+        mp.setIdForSite(id);
         return mp;
     }
 
@@ -88,9 +91,8 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                 throw new RuntimeException("no <span class='blackbigtitle'> found!");
             }
             Element titleElement = titleElements.get(0);
-            mp.setAlternateTitle(titleElement.getContent().getTextExtractor().toString());
 
-            mp.setTitle(getAlternateTitle(titleElement));
+            setEnglishAndOriginalTitle(mp, getOriginalAndEnglishTitle(titleElement),titleElement.getContent().getTextExtractor().toString());
         }
         {
             List<Element> spanElements = source.findAllElements("span");
@@ -147,7 +149,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return null;
     }
 
-    private String getAlternateTitle(Element titleElement) {
+    private String getOriginalAndEnglishTitle(Element titleElement) {
         // // strange, this doesn't works, the span content is always
         // List<Element> alternateTitleSpan =
         // titleElement.getParentElement().findAllElements("class", "txt",
@@ -204,10 +206,10 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                             String movieTitle = link.getContent().getTextExtractor().toString();
                             MovieSearchResult msr = new MovieSearchResult(MovieService.PORTHU);
                             msr.setUrl(href);
-                            msr.setAlternateTitle(movieTitle);
                             msr.setIdForSite(collectIdFromUrl(href));
 
-                            msr.setTitle(unbracket(new ElementOnlyTextExtractor(span.getContent()).toString()));
+                            String basetitle = unbracket(new ElementOnlyTextExtractor(span.getContent()).toString());
+                            setEnglishAndOriginalTitle(msr, basetitle, movieTitle);
                             
                             int distance = LevenshteinDistance.distance(movieTitle, title);
                             int distance2 = LevenshteinDistance.distance(msr.getAlternateTitle(), title);
@@ -233,6 +235,22 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         }
         result.addAll(orderedSet);
         return result;
+    }
+
+    private void setEnglishAndOriginalTitle(MovieSearchResult msr, String basetitle, String alternateTitle) {
+        if (basetitle!=null) {
+            int perPos = basetitle.indexOf('/');
+            if (perPos!=-1) {
+                // original title/english title
+                msr.setOriginalTitle(basetitle.substring(0, perPos));
+                msr.setTitle(basetitle.substring(perPos+1));
+            } else {
+                msr.setTitle(basetitle);
+            }
+            msr.setAlternateTitle(alternateTitle);
+        } else {
+            msr.setTitle(unbracket(alternateTitle));
+        }
     }
 
     static class MovieSearchResultComparator implements Comparator<MovieSearchResult> {
@@ -289,6 +307,9 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     private void initDescriptionAndYear(String description, MovieSearchResult msr) {
         description = unbracket(description);
 
+        if (msr instanceof MoviePage) {
+            ((MoviePage)msr).setRuntime(getRuntime(description));
+        }
         msr.setYear(getYear(description));
         msr.setDescription(description);
     }
@@ -328,6 +349,16 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
 
     private Integer getYear(String description) {
         Matcher matcher = YEAR_END_PATTERN.matcher(description);
+        if (matcher.find()) {
+            if (matcher.groupCount() == 1) {
+                return Integer.parseInt(matcher.group(1));
+            }
+        }
+        return null;
+    }
+    
+    private Integer getRuntime(String description) {
+        Matcher matcher = RUNTIME_PATTERN.matcher(description);
         if (matcher.find()) {
             if (matcher.groupCount() == 1) {
                 return Integer.parseInt(matcher.group(1));

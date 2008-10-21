@@ -24,6 +24,7 @@ public class MovieSearchResult {
     private String idForSite;
     private String title;
     private String alternateTitle;
+    private String originalTitle;
     private Integer year;
     private String description;
 
@@ -61,6 +62,8 @@ public class MovieSearchResult {
     }
 
     /**
+     * The title in english.
+     * 
      * @return the title
      */
     public String getTitle() {
@@ -76,6 +79,8 @@ public class MovieSearchResult {
     }
 
     /**
+     * A translated title, based on the service localization.
+     * 
      * @return the alternateTitle
      */
     public String getAlternateTitle() {
@@ -88,6 +93,22 @@ public class MovieSearchResult {
      */
     public void setAlternateTitle(String alternateTitle) {
         this.alternateTitle = alternateTitle;
+    }
+    
+    /**
+     * The original title, it can be in any language.
+     * 
+     * @return the originalTitle
+     */
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    /**
+     * @param originalTitle the originalTitle to set
+     */
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
     }
 
     /**
