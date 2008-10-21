@@ -47,8 +47,6 @@ import com.google.inject.Inject;
 
 public class PorthuFetcher extends AbstractMovieInfoFetcher {
 
-    private static final Pattern RUNTIME_PATTERN = Pattern.compile("(\\d+) perc");
-
     private static final Logger LOGGER = LoggerFactory.getLogger(PorthuFetcher.class);
 
     private static final String FILM_INFO_URL = "/pls/fi/films.film_page";
@@ -59,6 +57,8 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     private static final Pattern FILM_ID_PATTERN = Pattern.compile("i_film_id=(\\d*)");
 
     private static final Pattern YEAR_END_PATTERN = Pattern.compile("(\\d+)\\z");
+
+    private static final Pattern RUNTIME_PATTERN = Pattern.compile("(\\d+) perc");
 
     /**
      * match (x.y)/10 where x and y are numbers.

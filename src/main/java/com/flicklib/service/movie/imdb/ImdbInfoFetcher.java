@@ -48,6 +48,9 @@ public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
     private final ImdbSearch imdbSearch;
     private final Parser imdbParser;
     private final SourceLoader loader;
+    /*
+     * FIXME this cache is a memory leak!
+     */
     private final Map<String, List<MovieSearchResult>> imdbSearchCache = new HashMap<String, List<MovieSearchResult>>();
 
     @Inject
