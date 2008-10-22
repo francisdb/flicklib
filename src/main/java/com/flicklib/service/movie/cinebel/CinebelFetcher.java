@@ -45,6 +45,7 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
     private static final String ROOT = "http://www.cinebel.be";
     /**
      * TODO add support for en and fr
+     * TODO add support for fetching info curently available in the movies (find count link and go to page)
      */
     private static final String LANG = "nl";
     
