@@ -18,6 +18,7 @@
 package com.flicklib.domain;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -37,9 +38,13 @@ public class Movie {
     private Integer runtime;
     private Set<String> genres;
     private Set<String> languages;
-
-    // TODO add cast
-    // private List<String> cast;
+    
+    /**
+     * Cast list (might be ordered)
+     */
+    private List<String> cast;
+    
+    
     /**
      * Constructs a new Movie
      */
@@ -152,8 +157,22 @@ public class Movie {
     public void setLanguages(Set<String> languages) {
         this.languages = languages;
     }
+    
+    /**
+	 * @return the cast
+	 */
+	public List<String> getCast() {
+		return cast;
+	}
 
-    public MovieType getType() {
+	/**
+	 * @param cast the cast to set
+	 */
+	public void setCast(List<String> cast) {
+		this.cast = cast;
+	}
+
+	public MovieType getType() {
         return type;
     }
 
