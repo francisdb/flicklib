@@ -1,6 +1,6 @@
 /*
  * This file is part of Flicklib.
- * 
+ *
  * Copyright (C) Francis De Brabandere
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
