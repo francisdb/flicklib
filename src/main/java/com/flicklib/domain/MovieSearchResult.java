@@ -159,7 +159,7 @@ public class MovieSearchResult {
     
     @Override
     public String toString() {
-        return "MovieSearchResult["+title+'/'+alternateTitle+'/'+idForSite+']';
+        return "MovieSearchResult["+title+'/'+alternateTitle+'/'+idForSite+'/'+url+']';
     }
 
 }

@@ -74,8 +74,7 @@ public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
 
     @Override
     public MoviePage getMovieInfo(String id) throws IOException {
-        MoviePage site = new MoviePage();
-        site.setService(MovieService.IMDB);
+        MoviePage site = new MoviePage(MovieService.IMDB);
         site.setUrl(ImdbUrlGenerator.generateImdbUrl(id));
         site.setIdForSite(id);
 

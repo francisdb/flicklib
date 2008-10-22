@@ -103,10 +103,9 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
         try {
             if (id.startsWith("http://www.flixster.com")) {
                 String source = sourceLoader.load(id);
-                MoviePage site = new MoviePage();
+                MoviePage site = new MoviePage(MovieService.FLIXSTER);
                 site.setIdForSite(id);
                 site.setUrl(id);
-                site.setService(MovieService.FLIXSTER);
                 parser.parse(source, site);
                 
                 return site;

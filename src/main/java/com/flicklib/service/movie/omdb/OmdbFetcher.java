@@ -56,9 +56,8 @@ public class OmdbFetcher extends AbstractMovieInfoFetcher {
     
     @Override
     public List<MovieSearchResult> search(String title) throws IOException {
-        MoviePage site = new MoviePage();
+        MoviePage site = new MoviePage(MovieService.MOVIEWEB);
         //site.setMovie(movie);
-        site.setService(MovieService.MOVIEWEB);
         // Outputting the content of a Web page
         // Prepare the request
         Request request = new Request(Method.GET, "http://www.omdb-beta.org/search/movies?query=test");

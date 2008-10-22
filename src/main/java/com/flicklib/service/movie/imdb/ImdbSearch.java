@@ -120,7 +120,7 @@ public class ImdbSearch {
             
         }else{
             LOGGER.info("Exact match returned");
-            MoviePage result = new MoviePage();
+            MoviePage result = new MoviePage(MovieService.IMDB);
             
             // FIXME, there should be a way to know at what url whe ended up (better way to parse imdb id)
             
@@ -141,8 +141,7 @@ public class ImdbSearch {
                     //href has to be split as href will be in from of /title/tt#######/some-other-dir-like-trailers
                     String[] split = href.split("/");
                     href = "/" + split[1] + "/" + split[2];
-                    MoviePage movieSite = new MoviePage();
-                    movieSite.setService(MovieService.IMDB);
+                    MoviePage movieSite = new MoviePage(MovieService.IMDB);
                     //movieSite.setMovie(movie);
                     movieSite.setUrl("http://www.imdb.com" + href);
                     movieSite.setIdForSite(href.replaceAll("[a-zA-Z:/.+=?]", "").trim());

@@ -60,7 +60,12 @@ public enum MovieService {
     /**
      * http://www.netflix.com
      */
-    NETFLIX("Netflix", "http://www.netflix.com");
+    NETFLIX("Netflix", "http://www.netflix.com"),
+    
+    /**
+     * http://www.cinebel.be
+     */
+    CINEBEL("Cinebel", "http://www.cinebel.com");
 
     private final String name;
     private final String url;

@@ -52,7 +52,6 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     private static final String FILM_INFO_URL = "/pls/fi/films.film_page";
     private static final String TEST_CITY_ID = "3372";
 
-    private SourceLoader sourceLoader;
 
     private static final Pattern FILM_ID_PATTERN = Pattern.compile("i_film_id=(\\d*)");
 
@@ -65,6 +64,11 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
      */
     private static final Pattern SCORE_PATTERN = Pattern.compile("(\\d+(\\.\\d)?)/10");
 
+    
+
+    private final SourceLoader sourceLoader;
+    
+    
     @Inject
     public PorthuFetcher(final SourceLoader sourceLoader) {
         this.sourceLoader = sourceLoader;

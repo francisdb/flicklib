@@ -129,13 +129,14 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
         /**
          * Rating in %
          */
-        private MoviePage moviePage = new MoviePage();
+        private MoviePage moviePage;
         private String tagToReadContentFrom;
 
         private final List<MoviePage> result;
 
         public SaxResultUnmarshaller() {
         	result = new ArrayList<MoviePage>();
+        	moviePage = new MoviePage(MovieService.NETFLIX);
         }
         
         public List<MoviePage> getResult() {
@@ -146,8 +147,7 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
         public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
             LOGGER.debug("element <"+name+" "+toString(attributes)+">");
             if ("catalog_title".equals(name)) {
-                moviePage = new MoviePage();
-                moviePage.setService(MovieService.NETFLIX);
+                moviePage = new MoviePage(MovieService.NETFLIX);
             }
             if ("id".equals(name)) {
                 tagToReadContentFrom = name;

@@ -59,8 +59,7 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
     
     @Override
     public MoviePage getMovieInfo(String id) throws IOException {
-        MoviePage site = new MoviePage();
-        site.setService(MovieService.TOMATOES);
+        MoviePage site = new MoviePage(MovieService.TOMATOES);
         site.setIdForSite(id);
         String url = generateTomatoesUrl(id);
         site.setUrl(url);

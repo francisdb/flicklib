@@ -15,20 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.flicklib.service.movie.porthu;
+package com.flicklib.service.movie.cinebel;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import com.google.inject.BindingAnnotation;
 
-/**
- * 
- * @author zsombor
- *
- */
 @BindingAnnotation
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PortHu {
+public @interface Cinebel {
 
 }

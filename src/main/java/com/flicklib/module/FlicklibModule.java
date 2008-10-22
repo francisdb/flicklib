@@ -24,6 +24,8 @@ import com.flicklib.api.SubtitlesLoader;
 import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.movie.InfoFetcherFactoryImpl;
+import com.flicklib.service.movie.cinebel.Cinebel;
+import com.flicklib.service.movie.cinebel.CinebelFetcher;
 import com.flicklib.service.movie.flixter.Flixster;
 import com.flicklib.service.movie.flixter.FlixterInfoFetcher;
 import com.flicklib.service.movie.flixter.FlixterParser;
@@ -77,6 +79,7 @@ public class FlicklibModule extends AbstractModule {
         bind(MovieInfoFetcher.class).annotatedWith(Omdb.class).to(OmdbFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Netflix.class).to(NetflixInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(PortHu.class).to(PorthuFetcher.class);
+        bind(MovieInfoFetcher.class).annotatedWith(Cinebel.class).to(CinebelFetcher.class);
 
         bindConstant().annotatedWith(Names.named("http.timeout")).to(20 * 1000);
     }

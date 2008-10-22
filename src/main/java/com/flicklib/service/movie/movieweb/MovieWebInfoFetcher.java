@@ -69,10 +69,9 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
 		MoviePage site = null;
 		if (id.startsWith("http://www.movieweb.com")) {
 			String source = sourceLoader.load(id);
-			site = new MoviePage();
+			site = new MoviePage(MovieService.MOVIEWEB);
 			site.setIdForSite(id);
 			site.setUrl(id);
-			site.setService(MovieService.MOVIEWEB);
 			parser.parse(source, site);
 		}else{
 			throw new IOException("Trying to get movie info for MovieWeb but the supplied id is not a movieweb id!");			

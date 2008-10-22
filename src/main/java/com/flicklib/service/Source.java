@@ -19,10 +19,8 @@ package com.flicklib.service;
 
 public class Source {
 
-    final String url;
-    final String content;
-    
-    
+    private final String url;
+    private final String content;
     
     public Source(String url, String content) {
         this.url = url;

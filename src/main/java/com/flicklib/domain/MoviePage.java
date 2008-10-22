@@ -54,11 +54,22 @@ public class MoviePage extends MovieSearchResult {
         super(service);
     }
 
+    /**
+     * Gets the score (0-100) 
+     * @return the score
+     */
     public Integer getScore() {
         return score;
     }
 
+    /**
+     * Sets the score (0-100) 
+     * @param score
+     */
     public void setScore(Integer score) {
+    	if(score != null && (score < 0 || score > 100)){
+    		throw new IllegalArgumentException("Score must be null or a value in the range 0-100");
+    	}
         this.score = score;
     }
 

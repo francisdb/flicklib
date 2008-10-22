@@ -1,22 +1,22 @@
-package com.flicklib.service.movie;
 /*
  * This file is part of Flicklib.
  * 
  * Copyright (C) Zsombor Gegesy
- * 
- * Flicklib is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * Movie Browser is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+package com.flicklib.service.movie;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,15 +27,22 @@ import org.slf4j.LoggerFactory;
 import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
 
+/**
+ * Wrapper class for easy url aliasing
+ * 
+ * @author gzsombor
+ *
+ */
 public class AliasingSourceLoader implements SourceLoader {
 
-    final static Logger LOG = LoggerFactory.getLogger(AliasingSourceLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AliasingSourceLoader.class);
 
-    SourceLoader parent;
-    Map<String, String> mapping = new HashMap<String, String>();
+    private final SourceLoader parent;
+    private final Map<String, String> mapping;
 
     public AliasingSourceLoader(SourceLoader parent) {
         super();
+        this.mapping = new HashMap<String, String>();
         this.parent = parent;
     }
 
@@ -52,10 +59,10 @@ public class AliasingSourceLoader implements SourceLoader {
     public Source loadSource(String url) throws IOException {
         String result = mapping.get(url);
         if (result != null) {
-            LOG.info("loading " + url + " from " + result);
+            LOGGER.info("loading " + url + " from " + result);
             url = result;
         } else {
-            LOG.info("loading " + url);
+            LOGGER.info("loading " + url);
         }
         return parent.loadSource(url);
     }

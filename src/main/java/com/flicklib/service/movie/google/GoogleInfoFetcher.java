@@ -66,8 +66,7 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
     @Override
     public MoviePage getMovieInfo(String id) throws IOException {
         if (id.startsWith("http://www.google.com/movies/reviews")) {
-            MoviePage site = new MoviePage ();
-            site.setService(MovieService.GOOGLE);
+            MoviePage site = new MoviePage (MovieService.GOOGLE);
             site.setUrl(id);
             String sourceString = httpLoader.load(id);
             googleParser.parse(sourceString, site);
