@@ -23,6 +23,7 @@ import java.io.Reader;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.RedirectException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +63,12 @@ public class HttpSourceLoader implements SourceLoader {
         Reader is = null;
         try {
             LOGGER.info("Loading " + url);
-            httpMethod = new GetMethod(url);     
-            client.executeMethod(httpMethod);
+            httpMethod = new GetMethod(url);   
+            try{
+            	client.executeMethod(httpMethod);
+            }catch(RedirectException ex){
+            	throw new IOException("Redirect problem: "+ex.getMessage(), ex);
+            }
             LOGGER.info("Finished loading at " + httpMethod.getURI().toString());
             String responseCharset = httpMethod.getResponseCharSet();
             if (responseCharset != null) {
