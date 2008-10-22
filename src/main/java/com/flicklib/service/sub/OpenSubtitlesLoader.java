@@ -59,8 +59,8 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
     public Set<Subtitle> search(String localFileName, String imdbId) throws IOException {
         String url = searchUrl(localFileName);
         int carryOn = 1;
-        String source = sourceLoader.load(url);
-        Source jerichoSource = new Source(source);
+        com.flicklib.service.Source source = sourceLoader.loadSource(url);
+        Source jerichoSource = new Source(source.getContent());
         jerichoSource.fullSequentialParse();
         Set<Subtitle> results = new HashSet<Subtitle>();
 
@@ -91,8 +91,8 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
                     }
                 }
 
-                source = sourceLoader.load(subsUrl);
-                jerichoSource = new Source(source);
+                source = sourceLoader.loadSource(subsUrl);
+                jerichoSource = new Source(source.getContent());
                 jerichoSource.fullSequentialParse();
                 results = loadSubtitlesPage(jerichoSource);
                 
@@ -102,8 +102,8 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
                 Iterator<?> k = pages.iterator();
                 while(k.hasNext()) {
                     String link = (String) k.next();
-                    source = sourceLoader.load(SITE + link);
-                    jerichoSource = new Source(source);
+                    source = sourceLoader.loadSource(SITE + link);
+                    jerichoSource = new Source(source.getContent());
                     jerichoSource.fullSequentialParse();
                     results.addAll(loadSubtitlesPage(jerichoSource));
                 }
@@ -117,8 +117,8 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
             Set<String> pages = new HashSet<String>();
             pages.addAll(getPageLinks(jerichoSource));
             for(String link:pages){
-                source = sourceLoader.load(SITE + link);
-                jerichoSource = new Source(source);
+                source = sourceLoader.loadSource(SITE + link);
+                jerichoSource = new Source(source.getContent());
                 jerichoSource.fullSequentialParse();
                 results.addAll(loadSubtitlesPage(jerichoSource));
             }

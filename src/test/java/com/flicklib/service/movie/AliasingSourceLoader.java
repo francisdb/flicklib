@@ -49,11 +49,6 @@ public class AliasingSourceLoader implements SourceLoader {
     public void putAlias(String from, String to) {
         mapping.put(from, to);
     }
-
-    @Override
-    public String load(String url) throws IOException {
-        return loadSource(url).getContent();
-    }
     
     @Override
     public Source loadSource(String url) throws IOException {

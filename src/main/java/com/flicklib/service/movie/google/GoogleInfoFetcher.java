@@ -68,8 +68,8 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
         if (id.startsWith("http://www.google.com/movies/reviews")) {
             MoviePage site = new MoviePage (MovieService.GOOGLE);
             site.setUrl(id);
-            String sourceString = httpLoader.load(id);
-            googleParser.parse(sourceString, site);
+            com.flicklib.service.Source source = httpLoader.loadSource(id);
+            googleParser.parse(source, site);
             return site;
         }
         return null;
@@ -78,8 +78,8 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
     @Override
     public List<MovieSearchResult> search(String title) throws IOException {
         String params = Param.paramString("q", title);
-        String sourceString = httpLoader.load("http://www.google.com/movies"+params);
-        Source source = new Source(sourceString);
+        com.flicklib.service.Source sourceString = httpLoader.loadSource("http://www.google.com/movies"+params);
+        Source source = new Source(sourceString.getContent());
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
         source.fullSequentialParse();
 
@@ -140,8 +140,8 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
         site.setService(MovieService.GOOGLE);
         try {
             String params = Param.paramString("q", movie.getTitle());
-            String sourceString = httpLoader.load("http://www.google.com/movies"+params);
-            Source source = new Source(sourceString);
+            com.flicklib.service.Source httpSource = httpLoader.loadSource("http://www.google.com/movies"+params);
+            Source source = new Source(httpSource.getContent());
             //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
             source.fullSequentialParse();
 
@@ -166,8 +166,8 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
                 throw new IOException("Movie not found on Google: "+movie.getTitle());
             }
             site.setUrl(movieUrl);
-            sourceString = httpLoader.load(movieUrl);
-            googleParser.parse(sourceString, site);
+            httpSource = httpLoader.loadSource(movieUrl);
+            googleParser.parse(httpSource, site);
         } catch (IOException ex) {
             LOGGER.error("Loading from Google failed", ex);
         }

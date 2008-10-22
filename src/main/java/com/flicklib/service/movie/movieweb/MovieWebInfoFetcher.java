@@ -68,7 +68,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
 	public MoviePage getMovieInfo(String id) throws IOException {
 		MoviePage site = null;
 		if (id.startsWith("http://www.movieweb.com")) {
-			String source = sourceLoader.load(id);
+			com.flicklib.service.Source source = sourceLoader.loadSource(id);
 			site = new MoviePage(MovieService.MOVIEWEB);
 			site.setIdForSite(id);
 			site.setUrl(id);
@@ -84,8 +84,8 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
         List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
         String urlToLoad = createMovieWebSearchUrl(title);
 
-        String source = sourceLoader.load(urlToLoad);
-        Source jerichoSource = new Source(source);
+        com.flicklib.service.Source source = sourceLoader.loadSource(urlToLoad);
+        Source jerichoSource = new Source(source.getContent());
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
         jerichoSource.fullSequentialParse();
 
@@ -127,8 +127,8 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
         site.setService(MovieService.MOVIEWEB);
         String urlToLoad = createMovieWebSearchUrl(movie.getTitle());
         try {
-            String source = sourceLoader.load(urlToLoad);
-            Source jerichoSource = new Source(source);
+            com.flicklib.service.Source source = sourceLoader.loadSource(urlToLoad);
+            Source jerichoSource = new Source(source.getContent());
             //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
             jerichoSource.fullSequentialParse();
 
@@ -155,7 +155,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
                 LOGGER.warn("Movie not found on MovieWeb: "+movie.getTitle());
             }else{
                 site.setUrl(movieUrl);
-                source = sourceLoader.load(movieUrl);
+                source = sourceLoader.loadSource(movieUrl);
                 parser.parse(source, site);
             }
         } catch (IOException ex) {

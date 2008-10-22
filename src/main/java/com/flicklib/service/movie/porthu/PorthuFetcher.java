@@ -184,11 +184,11 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         String url = generateUrlForTitleSearch(title);
 
         com.flicklib.service.Source flicklibSource = sourceLoader.loadSource(url);
-        Source jerichoSource = parseContent(flicklibSource.getContent());
+        Source jerichoSource = parseContent(flicklibSource);
 
-        if (isMoviePageUrl(flicklibSource.getURL())) {
+        if (isMoviePageUrl(flicklibSource.getUrl())) {
             MoviePage mp = parseMovieInfoPage(jerichoSource);
-            mp.setUrl(flicklibSource.getURL());
+            mp.setUrl(flicklibSource.getUrl());
             mp.setIdForSite(collectIdFromUrl(mp.getUrl()));
             result.add(mp);
             return result;
@@ -415,12 +415,12 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
      * @throws IOException
      */
     private Source loadContent(String url) throws IOException {
-        String content = sourceLoader.load(url);
+        com.flicklib.service.Source content = sourceLoader.loadSource(url);
         return parseContent(content);
     }
 
-    private Source parseContent(String content) {
-        Source source = new Source(content);
+    private Source parseContent(com.flicklib.service.Source content) {
+        Source source = new Source(content.getContent());
         source.fullSequentialParse();
         return source;
     }

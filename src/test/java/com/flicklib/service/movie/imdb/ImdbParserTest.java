@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.FileSourceLoader;
+import com.flicklib.service.Source;
 
 /**
  *
@@ -38,7 +39,7 @@ public class ImdbParserTest {
      */
     @Test
     public void testParse() throws Exception{
-        String source = new FileSourceLoader().load("imdb/Pulp Fiction (1994).html");
+        Source source = new FileSourceLoader().loadSource("imdb/Pulp Fiction (1994).html");
         MoviePage site = new MoviePage();
         ImdbParser instance = new ImdbParser();
         instance.parse(source, site);
@@ -52,7 +53,7 @@ public class ImdbParserTest {
         assertEquals(Integer.valueOf(298638), site.getVotes());
         // TODO test other fields
         
-        source = new FileSourceLoader().load("imdb/A Couple of White Chicks at the Hairdresser (2007).html");
+        source = new FileSourceLoader().loadSource("imdb/A Couple of White Chicks at the Hairdresser (2007).html");
         site = new MoviePage();
         instance.parse(source, site);
         //assertEquals(Integer.valueOf(89), site.getIdForSite());

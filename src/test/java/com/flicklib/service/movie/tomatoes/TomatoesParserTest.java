@@ -19,6 +19,8 @@ package com.flicklib.service.movie.tomatoes;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.FileSourceLoader;
+import com.flicklib.service.Source;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -34,7 +36,7 @@ public class TomatoesParserTest {
      */
     @Test
     public void testOfflineParse() throws Exception {
-        String source = new FileSourceLoader().load("tomatoes/Pulp Fiction Movie Reviews, Pictures - Rotten Tomatoes.html");
+        Source source = new FileSourceLoader().loadSource("tomatoes/Pulp Fiction Movie Reviews, Pictures - Rotten Tomatoes.html");
         MoviePage site = new MoviePage();
         TomatoesParser instance = new TomatoesParser();
         instance.parse(source, site);
@@ -43,7 +45,7 @@ public class TomatoesParserTest {
     
     @Test
     public void testOfflineParse2() throws Exception {
-        String source = new FileSourceLoader().load("tomatoes/Waist Deep Movie Reviews, Pictures - Rotten Tomatoes.html");
+        Source source = new FileSourceLoader().loadSource("tomatoes/Waist Deep Movie Reviews, Pictures - Rotten Tomatoes.html");
         MoviePage site = new MoviePage();
         TomatoesParser instance = new TomatoesParser();
         instance.parse(source, site);

@@ -26,6 +26,7 @@ import com.flicklib.domain.Movie;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MoviePage;
+import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.movie.imdb.Imdb;
 
@@ -63,7 +64,7 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
         site.setIdForSite(id);
         String url = generateTomatoesUrl(id);
         site.setUrl(url);
-        String source = sourceLoader.load(site.getUrl());
+        Source source = sourceLoader.loadSource(site.getUrl());
         tomatoesParser.parse(source, site);
 
         return site;
@@ -102,7 +103,7 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
             try {
                 String url = generateTomatoesUrl(id);
                 site.setUrl(url);
-                String source = sourceLoader.load(site.getUrl());
+                Source source = sourceLoader.loadSource(site.getUrl());
                 tomatoesParser.parse(source, site);
             } catch (IOException ex) {
                 LOGGER.error("Loading from rotten tomatoes failed", ex);

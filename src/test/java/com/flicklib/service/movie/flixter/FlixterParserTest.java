@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.FileSourceLoader;
+import com.flicklib.service.Source;
 
 /**
  *
@@ -37,7 +38,7 @@ public class FlixterParserTest {
      */
     @Test
     public void testParse() throws Exception{
-        String source = new FileSourceLoader().load("flixter/the-x-files-i-want-to-believe-the-x-files-2.html");
+        Source source = new FileSourceLoader().loadSource("flixter/the-x-files-i-want-to-believe-the-x-files-2.html");
         MoviePage site = new MoviePage();
         FlixterParser instance = new FlixterParser();
         instance.parse(source, site);

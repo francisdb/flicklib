@@ -78,8 +78,8 @@ public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
         site.setUrl(ImdbUrlGenerator.generateImdbUrl(id));
         site.setIdForSite(id);
 
-        String source = loader.load(site.getUrl());
-        Source jerichoSource = new Source(source);
+        com.flicklib.service.Source source = loader.loadSource(site.getUrl());
+        Source jerichoSource = new Source(source.getContent());
         jerichoSource.fullSequentialParse();
         imdbParser.parse(source, site);
 

@@ -67,8 +67,8 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
     public List<MovieSearchResult> search(String title) throws IOException {
         List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
         
-        String source = sourceLoader.load(createFlixterSearchUrl(title));
-        Source jerichoSource = new Source(source);
+        com.flicklib.service.Source source = sourceLoader.loadSource(createFlixterSearchUrl(title));
+        Source jerichoSource = new Source(source.getContent());
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
         jerichoSource.fullSequentialParse();
 
@@ -102,7 +102,7 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
     public MoviePage getMovieInfo(String id) {
         try {
             if (id.startsWith("http://www.flixster.com")) {
-                String source = sourceLoader.load(id);
+                com.flicklib.service.Source source = sourceLoader.loadSource(id);
                 MoviePage site = new MoviePage(MovieService.FLIXSTER);
                 site.setIdForSite(id);
                 site.setUrl(id);
@@ -122,8 +122,8 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
         //site.setMovie(movie);
         site.setService(MovieService.FLIXSTER);
         try {
-            String source = sourceLoader.load(createFlixterSearchUrl(movie.getTitle()));
-            Source jerichoSource = new Source(source);
+            com.flicklib.service.Source source = sourceLoader.loadSource(createFlixterSearchUrl(movie.getTitle()));
+            Source jerichoSource = new Source(source.getContent());
             //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
             jerichoSource.fullSequentialParse();
 
@@ -149,7 +149,7 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
                LOGGER.warn("Movie not found on Flixter: " + movie.getTitle());
             }else{
                 site.setUrl(movieUrl);
-                source = sourceLoader.load(movieUrl);
+                source = sourceLoader.loadSource(movieUrl);
                 parser.parse(source, site);
             }
         } catch (IOException ex) {

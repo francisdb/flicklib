@@ -20,21 +20,24 @@ package com.flicklib.service;
 import com.flicklib.tools.IOTools;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Loads a page source file from the class path
  * @author francisdb
  */
 public class FileSourceLoader implements SourceLoader {
-
-    @Override
-    public String load(String url) throws IOException {
-        return getOrPost(url);
-    }
-    
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileSourceLoader.class);
+	
     @Override
     public Source loadSource(String url) throws IOException {
-        return new Source(url, getOrPost(url));
+    	String contentType = null;
+    	contentType = URLConnection.guessContentTypeFromName(url);
+    	LOGGER.trace("Content-Type: "+contentType);
+        return new Source(url, getOrPost(url), contentType);
     }
     
     private String getOrPost(String url) throws IOException {

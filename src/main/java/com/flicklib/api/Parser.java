@@ -18,6 +18,7 @@
 package com.flicklib.api;
 
 import com.flicklib.domain.MoviePage;
+import com.flicklib.service.Source;
 
 
 /**
@@ -27,8 +28,8 @@ import com.flicklib.domain.MoviePage;
 public interface Parser {
     /**
      * Parses the html page source to info for the movie
-     * @param html
+     * @param source
      * @param movieSite 
      */
-    public void parse(String html, MoviePage movieSite);
+    public void parse(Source source, MoviePage movieSite);
 }

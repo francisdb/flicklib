@@ -28,11 +28,11 @@ import com.flicklib.domain.MoviePage;
 public abstract class AbstractJerichoParser implements Parser{
 
     @Override
-    public final void parse(String html, MoviePage movieSite) {
-        Source source = new Source(html);
+    public final void parse(com.flicklib.service.Source htmlSource, MoviePage movieSite) {
+        Source source = new Source(htmlSource.getContent());
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
         source.fullSequentialParse();
-        parse(html, source, movieSite);
+        parse(htmlSource.getContent(), source, movieSite);
     }
 
     /**

@@ -54,8 +54,8 @@ public class ImdbSearch {
         this.imdbParser = imdbParser;
     }
 
-    public List<MovieSearchResult> parseResults(String source) throws IOException{
-        Source jerichoSource = new Source(source);
+    public List<MovieSearchResult> parseResults(com.flicklib.service.Source source) throws IOException{
+        Source jerichoSource = new Source(source.getContent());
         jerichoSource.fullSequentialParse();
         List<MovieSearchResult> results = new ArrayList<MovieSearchResult>();
         Element titleElement = (Element) jerichoSource.findAllElements(HTMLElementName.TITLE).get(0);
@@ -175,7 +175,7 @@ public class ImdbSearch {
     public List<MovieSearchResult> getResults(String search) throws IOException {
         String url = generateImdbTitleSearchUrl(search);
         LOGGER.info(url);
-        String source = sourceLoader.load(url);
+        com.flicklib.service.Source source = sourceLoader.loadSource(url);
         return parseResults(source);
     }
 

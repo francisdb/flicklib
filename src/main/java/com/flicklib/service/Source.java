@@ -21,23 +21,51 @@ public class Source {
 
     private final String url;
     private final String content;
+    private final String contentType;
     
-    public Source(String url, String content) {
+    /**
+     * Creates a new Source
+     * @param url
+     * @param content
+     * @param contentType 
+     */
+    public Source(final String url, final String content, final String contentType) {
+    	this.url = url;
+        this.content = content;
+        this.contentType = contentType;
+	}
+    
+    /**
+     * Html source constructor
+     * @param url
+     * @param content
+     */
+    public Source(final String url, final String content) {
         this.url = url;
         this.content = content;
+        this.contentType = "text/html";
     }
-    /**
-     * @return the uri
-     */
-    public String getURL() {
-        return url;
-    }
+
     /**
      * @return the content
      */
     public String getContent() {
         return content;
     }
+
+	/**
+	 * @return the contentType
+	 */
+	public String getContentType() {
+		return contentType;
+	}
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
     
-    
+	
 }

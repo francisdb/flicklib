@@ -55,11 +55,6 @@ public class HttpSourceLoader implements SourceLoader {
             // LOGGER.info("Timeout = "+client.getParams().getSoTimeout());
         }
     }
-
-    @Override
-    public String load(String url) throws IOException {
-        return loadSource(url).getContent();
-    }
     
     @Override
     public Source loadSource(String url) throws IOException {
@@ -76,7 +71,9 @@ public class HttpSourceLoader implements SourceLoader {
             } else {
                 is = new InputStreamReader(httpMethod.getResponseBodyAsStream());
             }
-            return new Source(httpMethod.getURI().toString(), IOTools.readerToString(is));
+            String contentType = httpMethod.getResponseHeader("Content-Type").getValue();
+            // String contentType = URLConnection.guessContentTypeFromName(url)
+            return new Source(httpMethod.getURI().toString(), IOTools.readerToString(is), contentType);
         } finally {
             if (is != null) {
                 try {

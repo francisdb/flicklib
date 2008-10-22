@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.FileSourceLoader;
+import com.flicklib.service.Source;
 
 /**
  *
@@ -36,7 +37,7 @@ public class MovieWebParserTest {
      */
     @Test
     public void testParse() throws Exception {
-        String source = new FileSourceLoader().load("movieweb/pulp_fiction_summary.php.html");
+        Source source = new FileSourceLoader().loadSource("movieweb/pulp_fiction_summary.php.html");
         MoviePage site = new MoviePage();
         MovieWebParser instance = new MovieWebParser();
         instance.parse(source, site);

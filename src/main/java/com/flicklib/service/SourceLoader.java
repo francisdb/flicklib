@@ -28,14 +28,6 @@ public interface SourceLoader {
     /**
      * Loads a http request and parses it to a jericho source
      * @param url
-     * @return the page source as String
-     * @throws java.io.IOException
-     */
-    String load(String url) throws IOException;
-
-    /**
-     * Loads a http request and parses it to a jericho source
-     * @param url
      * @return the page source and the final URL (after the redirects followed).
      * @throws java.io.IOException
      */

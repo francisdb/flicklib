@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.FileSourceLoader;
+import com.flicklib.service.Source;
 
 /**
  *
@@ -36,7 +37,7 @@ public class GoogleParserTest {
      */
     @Test
     public void testParse() throws Exception {
-        String source = new FileSourceLoader().load("google/reviews.html");
+        Source source = new FileSourceLoader().loadSource("google/reviews.html");
         MoviePage site = new MoviePage();
         GoogleParser instance = new GoogleParser();
         instance.parse(source, site);
