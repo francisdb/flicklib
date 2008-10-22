@@ -123,6 +123,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
                 break;
             default:
             	LOGGER.warn("No fetcher defined for service "+service);
+            	// keep this exception in here!
                 throw new RuntimeException("Unknown service: "+service);
         }
         return fetcher;
