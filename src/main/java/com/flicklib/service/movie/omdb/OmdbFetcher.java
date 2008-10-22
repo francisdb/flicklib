@@ -36,7 +36,6 @@ import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.api.MovieInfoFetcher;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.domain.MovieService;
 
 /**
  *
@@ -51,12 +50,13 @@ public class OmdbFetcher extends AbstractMovieInfoFetcher {
     
     @Override
     public MoviePage getMovieInfo(String id) throws IOException {
-        return null;
+        //MoviePage site = new MoviePage(MovieService.MOVIEWEB);
+        throw new RuntimeException("Not implemented");
     }
     
     @Override
     public List<MovieSearchResult> search(String title) throws IOException {
-        MoviePage site = new MoviePage(MovieService.MOVIEWEB);
+
         //site.setMovie(movie);
         // Outputting the content of a Web page
         // Prepare the request
