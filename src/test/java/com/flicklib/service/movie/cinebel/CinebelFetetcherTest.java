@@ -66,20 +66,9 @@ public class CinebelFetetcherTest {
 		Assert.assertNotNull(page);
 		Assert.assertEquals("The Matrix", page.getTitle());
 		Assert.assertNotNull(page.getDescription());
-		System.out.println(page.getDescription());
+		Assert.assertNotNull(page.getPlot());
 		Assert.assertNotNull(page.getImgUrl());
 		Assert.assertNotNull(page.getScore());
-	}
-	
-	@Test
-	public void testGetMovieInfo2() throws IOException{
-		MoviePage page = fetcher.getMovieInfo("15723");
-		Assert.assertNotNull(page);
-		Assert.assertEquals("Loft (2005)", page.getTitle());
-		Assert.assertNotNull(page.getDescription());
-		System.out.println(page.getDescription());
-		Assert.assertNotNull(page.getImgUrl());
-		// score is null so we don't test it
 	}
 	
 }

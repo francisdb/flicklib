@@ -107,7 +107,9 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
         for(Element divElement: divElements){
         	if("synopsis".equals(divElement.getAttributeValue("id"))){
         		Element par = (Element) divElement.findAllElements(HTMLElementName.P).get(0);
-        		page.setDescription(par.getContent().getTextExtractor().toString());
+        		String synopsis = par.getContent().getTextExtractor().toString();
+        		page.setDescription(synopsis);
+        		page.setPlot(synopsis);
         	}
         }
         
