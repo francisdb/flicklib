@@ -17,11 +17,15 @@
  */
 package com.flicklib.service.movie;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.flicklib.api.InfoFetcherFactory;
 import com.flicklib.api.MovieInfoFetcher;
 import com.flicklib.domain.MovieService;
+import com.flicklib.service.movie.cinebel.Cinebel;
 import com.flicklib.service.movie.flixter.Flixster;
 import com.flicklib.service.movie.google.Google;
 import com.flicklib.service.movie.imdb.Imdb;
@@ -37,6 +41,8 @@ import com.flicklib.service.movie.tomatoes.RottenTomatoes;
  */
 @Singleton
 public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(InfoFetcherFactoryImpl.class);
     
     private final MovieInfoFetcher imdbInfoFetcher;
     private final MovieInfoFetcher movieWebInfoFetcher;
@@ -44,8 +50,9 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
     private final MovieInfoFetcher googleInfoFetcher;
     private final MovieInfoFetcher flixterInfoFetcher;
     private final MovieInfoFetcher omdbInfoFetcher;
-    private final MovieInfoFetcher netflixInfoFetcher;;
-    private final MovieInfoFetcher porthuInfoFetcher;;
+    private final MovieInfoFetcher netflixInfoFetcher;
+    private final MovieInfoFetcher porthuInfoFetcher;
+    private final MovieInfoFetcher cinebelInfoFetcher;
 
     /**
      * Constructs a new InfoFetcherFactoryImpl
@@ -57,6 +64,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
      * @param omdbInfoFetcher
      * @param netflixInfoFetcher 
      * @param porthuFetcher 
+     * @param cinebelFetcher 
      */
     @Inject
     public InfoFetcherFactoryImpl(
@@ -67,7 +75,8 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
             final @Flixster MovieInfoFetcher flixterInfoFetcher,
             final @Omdb MovieInfoFetcher omdbInfoFetcher,
             final @Netflix MovieInfoFetcher netflixInfoFetcher,
-            final @PortHu MovieInfoFetcher porthuFetcher) {
+            final @PortHu MovieInfoFetcher porthuFetcher,
+            final @Cinebel MovieInfoFetcher cinebelFetcher) {
         this.imdbInfoFetcher = imdbInfoFetcher;
         this.movieWebInfoFetcher = movieWebInfoFetcher;
         this.tomatoesInfoFetcher = tomatoesInfoFetcher;
@@ -76,6 +85,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
         this.omdbInfoFetcher = omdbInfoFetcher;
         this.netflixInfoFetcher = netflixInfoFetcher;
         this.porthuInfoFetcher = porthuFetcher;
+        this.cinebelInfoFetcher = cinebelFetcher;
     }
     
     
@@ -108,8 +118,12 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
             case PORTHU :
                 fetcher = porthuInfoFetcher;
                 break;
+            case CINEBEL :
+                fetcher = cinebelInfoFetcher;
+                break;
             default:
-                throw new AssertionError("Unknown service: "+service);
+            	LOGGER.warn("No fetcher defined for service "+service);
+                throw new RuntimeException("Unknown service: "+service);
         }
         return fetcher;
     }
