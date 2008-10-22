@@ -18,6 +18,7 @@ package com.flicklib.service.movie.porthu;
  * limitations under the License.
  */
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -260,8 +261,12 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         }
     }
 
-    static class MovieSearchResultComparator implements Comparator<MovieSearchResult> {
-        Map<MovieSearchResult,Integer> scoreMap = new HashMap<MovieSearchResult,Integer>();
+    private static class MovieSearchResultComparator implements Comparator<MovieSearchResult>, Serializable {
+        private final Map<MovieSearchResult,Integer> scoreMap;
+        
+        public MovieSearchResultComparator() {
+        	this.scoreMap = new HashMap<MovieSearchResult,Integer>();
+		}
         
         public void set(MovieSearchResult movie,Integer score) {
             this.scoreMap.put(movie, score);
