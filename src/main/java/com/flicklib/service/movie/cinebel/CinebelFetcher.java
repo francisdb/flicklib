@@ -43,6 +43,10 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(CinebelFetcher.class);
 	
     private static final String ROOT = "http://www.cinebel.be";
+    /**
+     * TODO add support for en and fr
+     */
+    private static final String LANG = "nl";
     
     private final SourceLoader sourceLoader;
     
@@ -132,11 +136,11 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 	        String href = linkElement.getAttributeValue("href");
 	        String cssClass = linkElement.getAttributeValue("class");
 	        String movieTitle = linkElement.getContent().getTextExtractor().toString();
-	        if ("blink".equals(cssClass) && href.startsWith("/nl/film") && href.endsWith(".htm")) {
+	        if ("blink".equals(cssClass) && href.startsWith("/"+LANG+"/film") && href.endsWith(".htm")) {
 	        	MovieSearchResult movieSite = new MovieSearchResult();
 	        	movieSite.setTitle(movieTitle);
 	        	movieSite.setUrl(ROOT + href);
-	        	String id = href.substring("/nl/film/".length(), href.indexOf('-'));
+	        	String id = href.substring(("/"+LANG+"/film/").length(), href.indexOf('-'));
 	        	movieSite.setIdForSite(id);
 	        	// TODO pick up the year
 	        	// movieSite.setYear(year);
@@ -150,7 +154,7 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 	
 	private String generateMovieUrl(final String id){
 		//http://www.cinebel.be/nl/film/102-.htm
-		return ROOT+"/nl/film/"+id+"-.htm";
+		return ROOT+"/"+LANG+"/film/"+id+"-.htm";
 	}
 
 	private String generateSearchUrl(final String title, final int maxResults) {
@@ -160,7 +164,7 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("utf-8 encoding not supported" ,e);
 		}
-		String url = ROOT+"/portal/faces/public/exo/search?portal:componentId=SearchContentPortlet&portal:type=render&portal:isSecure=false&lng=nl&query="+encoded+"&itemsPerPage="+maxResults+"&fuzzy=true&fieldToSearch=movieTitle&category=movie&movieWithSchedules=false";
+		String url = ROOT+"/portal/faces/public/exo/search?portal:componentId=SearchContentPortlet&portal:type=render&portal:isSecure=false&lng="+LANG+"&query="+encoded+"&itemsPerPage="+maxResults+"&fuzzy=true&fieldToSearch=movieTitle&category=movie&movieWithSchedules=false";
 		return url;
 	}
 
