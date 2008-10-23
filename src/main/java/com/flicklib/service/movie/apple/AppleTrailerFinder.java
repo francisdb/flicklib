@@ -38,7 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * TODO get rid of the restlet dependency
  * @author francisdb
  */
 public class AppleTrailerFinder implements TrailerFinder {
