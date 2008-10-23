@@ -20,11 +20,13 @@ package com.flicklib.service;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Map;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.RedirectException;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,5 +94,52 @@ public class HttpSourceLoader implements SourceLoader {
             }
         }
     }
+    
+    public Source post(String url, Map<String,String> parameters, Map<String,String> headers) throws IOException {
+        PostMethod httpMethod = null;
+        Reader is = null;
+        try {
+            LOGGER.info("Loading " + url);
+            httpMethod = new PostMethod(url);
+            if (parameters!=null) {
+                for (String key : parameters.keySet()) {
+                    httpMethod.addParameter(key, parameters.get(key));
+                }
+            }
+            if (headers!=null) {
+                for (String key : headers.keySet()) {
+                    httpMethod.addRequestHeader(key, headers.get(key));
+                }
+            }            
+            try{
+                client.executeMethod(httpMethod);
+            }catch(RedirectException ex){
+                throw new IOException("Redirect problem: "+ex.getMessage(), ex);
+            }
+            LOGGER.info("Finished loading at " + httpMethod.getURI().toString());
+            String responseCharset = httpMethod.getResponseCharSet();
+            if (responseCharset != null) {
+                is = new InputStreamReader(httpMethod.getResponseBodyAsStream(), responseCharset);
+            } else {
+                is = new InputStreamReader(httpMethod.getResponseBodyAsStream());
+            }
+            String contentType = httpMethod.getResponseHeader("Content-Type").getValue();
+            // String contentType = URLConnection.guessContentTypeFromName(url)
+            return new Source(httpMethod.getURI().toString(), IOTools.readerToString(is), contentType);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException ex) {
+                    LOGGER.error("Could not close InputStream", is);
+                }
+            }
+            if (httpMethod != null) {
+                httpMethod.releaseConnection();
+            }
+        }
+        
+    }
+    
 
 }

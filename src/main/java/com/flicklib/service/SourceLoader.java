@@ -18,6 +18,7 @@
 package com.flicklib.service;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  *
@@ -33,4 +34,14 @@ public interface SourceLoader {
      */
     Source loadSource(String url) throws IOException;
 
+    /**
+     * Post a http request and parses it to a jericho source
+     * 
+     * @param url
+     * @param parameters
+     * @param headers
+     * @return
+     * @throws IOException
+     */
+    Source post(String url, Map<String,String> parameters, Map<String,String> headers) throws IOException; 
 }

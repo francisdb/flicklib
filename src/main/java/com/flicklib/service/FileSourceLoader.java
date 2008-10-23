@@ -21,6 +21,7 @@ import com.flicklib.tools.IOTools;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,11 @@ public class FileSourceLoader implements SourceLoader {
     	contentType = URLConnection.guessContentTypeFromName(url);
     	LOGGER.trace("Content-Type: "+contentType);
         return new Source(url, getOrPost(url), contentType);
+    }
+    
+    @Override
+    public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
+        return loadSource(url);
     }
     
     private String getOrPost(String url) throws IOException {

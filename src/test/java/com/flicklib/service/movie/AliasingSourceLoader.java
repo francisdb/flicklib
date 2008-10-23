@@ -61,4 +61,14 @@ public class AliasingSourceLoader implements SourceLoader {
         }
         return parent.loadSource(url);
     }
+    
+    @Override
+    public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
+        StringBuilder s = new StringBuilder(url);
+        for (String key : parameters.keySet()) {
+            s.append("::").append(key).append('=').append(parameters.get(key));
+        }
+        return loadSource(s.toString());
+    }
+    
 }
