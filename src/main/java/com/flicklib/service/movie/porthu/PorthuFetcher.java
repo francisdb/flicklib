@@ -425,8 +425,9 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return parseContent(content);
     }
 
-    private void parseAjaxVoteObjectResponse(MoviePage mp, String id) throws IOException {
+	private void parseAjaxVoteObjectResponse(MoviePage mp, String id) throws IOException {
         Source voteObject = fetchVoteObject(id);
+        @SuppressWarnings("unchecked")
         List<Element> spanElements = voteObject.findAllElements("span");
         for (Element span : spanElements) {
             String content = span.getTextExtractor().toString();
