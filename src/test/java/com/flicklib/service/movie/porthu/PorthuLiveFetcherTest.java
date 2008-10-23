@@ -65,4 +65,23 @@ public class PorthuLiveFetcherTest {
         }
     }
     
+    @Test
+    public void testLiveMovieFetch() {
+        //73833
+        try {
+            MoviePage info = fetcher.getMovieInfo("73833");
+            Assert.assertEquals("title","Syriana", info.getTitle());
+            Assert.assertEquals("title","Sziriana", info.getAlternateTitle());
+            Assert.assertEquals("year", Integer.valueOf(2005), info.getYear());
+            //Assert.assertEquals("score", Integer.valueOf(74), info.getScore());
+            Assert.assertNotNull("score", info.getScore());
+            Assert.assertNotNull("votes", info.getVotes());
+            Assert.assertTrue("votes=>20", info.getVotes().intValue() >= 20);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+        
+    }
 }

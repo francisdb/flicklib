@@ -24,6 +24,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -53,7 +54,6 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     private static final String FILM_INFO_URL = "/pls/fi/films.film_page";
     private static final String TEST_CITY_ID = "3372";
 
-
     private static final Pattern FILM_ID_PATTERN = Pattern.compile("i_film_id=(\\d*)");
 
     private static final Pattern YEAR_END_PATTERN = Pattern.compile("(\\d+)\\z");
@@ -65,11 +65,8 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
      */
     private static final Pattern SCORE_PATTERN = Pattern.compile("(\\d+(\\.\\d)?)/10");
 
-    
-
     private final SourceLoader sourceLoader;
-    
-    
+
     @Inject
     public PorthuFetcher(final SourceLoader sourceLoader) {
         this.sourceLoader = sourceLoader;
@@ -81,27 +78,26 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         String url = generateUrlForFilmID(id);
         Source source = loadContent(url);
 
-        MoviePage mp = parseMovieInfoPage(source);
+        MoviePage mp = parseMovieInfoPage(source, id);
         mp.setUrl(url);
-        mp.setIdForSite(id);
         return mp;
     }
 
-    
-	private MoviePage parseMovieInfoPage(Source source) {
+    private MoviePage parseMovieInfoPage(Source source, String id) throws IOException {
         MoviePage mp = new MoviePage(MovieService.PORTHU);
+        mp.setIdForSite(id);
         {
-        	@SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked")
             List<Element> titleElements = source.findAllElements("class", "blackbigtitle", false);
             if (titleElements.size() == 0) {
                 throw new RuntimeException("no <span class='blackbigtitle'> found!");
             }
             Element titleElement = titleElements.get(0);
 
-            setEnglishAndOriginalTitle(mp, getOriginalAndEnglishTitle(titleElement),titleElement.getContent().getTextExtractor().toString());
+            setEnglishAndOriginalTitle(mp, getOriginalAndEnglishTitle(titleElement), titleElement.getContent().getTextExtractor().toString());
         }
         {
-        	@SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked")
             List<Element> spanElements = source.findAllElements("span");
             int btxtCount = 0;
             for (int i = 0; i < spanElements.size(); i++) {
@@ -130,11 +126,17 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                     }
                 }
             }
+            
+            if (mp.getScore()==null) {
+                // we have to fetch with ajax
+                parseAjaxVoteObjectResponse(mp, id);
+            }
         }
 
         mp.setPlot(getPlot(source));
         return mp;
     }
+
 
     @SuppressWarnings("unchecked")
     private String getPlot(Source source) {
@@ -187,15 +189,15 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         Source jerichoSource = parseContent(flicklibSource);
 
         if (isMoviePageUrl(flicklibSource.getUrl())) {
-            MoviePage mp = parseMovieInfoPage(jerichoSource);
+            String id = collectIdFromUrl(flicklibSource.getUrl());
+            MoviePage mp = parseMovieInfoPage(jerichoSource, id);
             mp.setUrl(flicklibSource.getUrl());
-            mp.setIdForSite(collectIdFromUrl(mp.getUrl()));
             result.add(mp);
             return result;
         }
         MovieSearchResultComparator comparator = new MovieSearchResultComparator();
         TreeSet<MovieSearchResult> orderedSet = new TreeSet<MovieSearchResult>(comparator);
-        
+
         @SuppressWarnings("unchecked")
         List<Element> spans = (List<Element>) jerichoSource.findAllElements(HTMLElements.SPAN);
         for (int i = 0; i < spans.size(); i++) {
@@ -218,11 +220,12 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
 
                             String basetitle = unbracket(new ElementOnlyTextExtractor(span.getContent()).toString());
                             setEnglishAndOriginalTitle(msr, basetitle, movieTitle);
-                            
+
                             int distance = LevenshteinDistance.distance(movieTitle, title);
                             int distance2 = LevenshteinDistance.distance(msr.getAlternateTitle(), title);
-                            LOGGER.info("found [distance:"+distance+
-                                    ", alternate distance:"+distance2+"]:"+movieTitle+'/'+msr.getAlternateTitle());
+                            LOGGER
+                                    .info("found [distance:" + distance + ", alternate distance:" + distance2 + "]:" + movieTitle + '/'
+                                            + msr.getAlternateTitle());
                             comparator.set(msr, Math.min(distance, distance2));
                             // next span has style 'txt' and contains the
                             // description
@@ -246,12 +249,12 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     }
 
     private void setEnglishAndOriginalTitle(MovieSearchResult msr, String basetitle, String alternateTitle) {
-        if (basetitle!=null) {
+        if (basetitle != null) {
             int perPos = basetitle.indexOf('/');
-            if (perPos!=-1) {
+            if (perPos != -1) {
                 // original title/english title
                 msr.setOriginalTitle(basetitle.substring(0, perPos));
-                msr.setTitle(basetitle.substring(perPos+1));
+                msr.setTitle(basetitle.substring(perPos + 1));
             } else {
                 msr.setTitle(basetitle);
             }
@@ -262,27 +265,32 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     }
 
     private static class MovieSearchResultComparator implements Comparator<MovieSearchResult>, Serializable {
-        private final Map<MovieSearchResult,Integer> scoreMap;
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
         
+        private final Map<MovieSearchResult, Integer> scoreMap;
+
         public MovieSearchResultComparator() {
-        	this.scoreMap = new HashMap<MovieSearchResult,Integer>();
-		}
-        
-        public void set(MovieSearchResult movie,Integer score) {
+            this.scoreMap = new HashMap<MovieSearchResult, Integer>();
+        }
+
+        public void set(MovieSearchResult movie, Integer score) {
             this.scoreMap.put(movie, score);
         }
-        
+
         @Override
         public int compare(MovieSearchResult o1, MovieSearchResult o2) {
-            Integer d1= scoreMap.get(o1);
-            Integer d2= scoreMap.get(o2);
+            Integer d1 = scoreMap.get(o1);
+            Integer d2 = scoreMap.get(o2);
             int value = safeCompare(d1, d2);
-            if (value!=0) {
+            if (value != 0) {
                 return value;
             }
             // both null, or both not-null, but both has the same score.
             value = o1.getTitle().compareTo(o2.getTitle());
-            if (value!=0) {
+            if (value != 0) {
                 return value;
             }
             // they have the same title ...
@@ -290,24 +298,24 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
             value = -safeCompare(o1.getYear(), o2.getYear());
             return value;
         }
+
         private int safeCompare(Integer d1, Integer d2) {
-            if (d1!=null) {
-                if (d2!=null) {
+            if (d1 != null) {
+                if (d2 != null) {
                     return d1.compareTo(d2);
                 } else {
                     return -1;
                 }
             } else {
-                if (d2!=null) {
+                if (d2 != null) {
                     return 1;
                 }
             }
             return 0;
         }
-        
+
     }
-    
-    
+
     /**
      * initialize the description and year field based on a generic, plain
      * description: 'színes magyarul beszélő amerikai gengszterfilm, 171 perc,
@@ -320,7 +328,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         description = unbracket(description);
 
         if (msr instanceof MoviePage) {
-            ((MoviePage)msr).setRuntime(getRuntime(description));
+            ((MoviePage) msr).setRuntime(getRuntime(description));
         }
         msr.setYear(getYear(description));
         msr.setDescription(description);
@@ -368,7 +376,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         }
         return null;
     }
-    
+
     private Integer getRuntime(String description) {
         Matcher matcher = RUNTIME_PATTERN.matcher(description);
         if (matcher.find()) {
@@ -405,8 +413,6 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return null;
     }
 
-    
-    
     /**
      * load content from the given URL, and returns the parser object
      * 
@@ -416,6 +422,38 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
      */
     private Source loadContent(String url) throws IOException {
         com.flicklib.service.Source content = sourceLoader.loadSource(url);
+        return parseContent(content);
+    }
+
+    private void parseAjaxVoteObjectResponse(MoviePage mp, String id) throws IOException {
+        Source voteObject = fetchVoteObject(id);
+        List<Element> spanElements = voteObject.findAllElements("span");
+        for (Element span : spanElements) {
+            String content = span.getTextExtractor().toString();
+            String classAttr = span.getAttributeValue("class");
+            if ("btxt".equals(classAttr)) {
+                mp.setScore(getScore(content));
+            }
+            if ("rtxt".equals(classAttr)) {
+                mp.setVotes(getVotes(content));
+            }
+        }
+
+    }
+
+    private Source fetchVoteObject(String id) throws IOException {
+        Map<String,String> params = new LinkedHashMap<String,String>();
+        //i_object_id=73833&i_area_id=6&i_is_separator=0
+        params.put("i_object_id", id);
+        params.put("i_area_id","6");
+        params.put("i_is_separator", "0");
+        
+        Map<String,String> headers = new LinkedHashMap<String,String>();
+        headers.put("X-Requested-With", "XMLHttpRequest");
+        headers.put("X-Prototype-Version", "1.6.0.2");
+        headers.put("Referer", generateUrlForFilmID(id));
+        
+        com.flicklib.service.Source content = sourceLoader.post("http://port.hu/pls/fi/VOTE.print_vote_box?", params, headers);
         return parseContent(content);
     }
 
@@ -438,6 +476,6 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     }
 
     protected boolean isMoviePageUrl(String url) {
-        return FILM_INFO_URL.startsWith(url) || url.startsWith("http://port.hu"+FILM_INFO_URL);
+        return FILM_INFO_URL.startsWith(url) || url.startsWith("http://port.hu" + FILM_INFO_URL);
     }
 }

@@ -20,6 +20,7 @@ package com.flicklib.service.movie.porthu;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,6 +53,8 @@ public class PorthuFetcherTest {
         loader.putAlias("http://port.hu/pls/ci/cinema.film_creator?i_text=a+kiraly+osszes+embere&i_film_creator=1&i_city_id=3372",
                 "porthu/filmsearch-response2.html");
         loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=75033&i_city_id=3372&i_county_id=-1", "porthu/film_page4.html");
+        loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=73833&i_city_id=3372&i_county_id=-1", "porthu/film_page5.html");
+        loader.putAlias("http://port.hu/pls/fi/VOTE.print_vote_box?::i_object_id=73833::i_area_id=6::i_is_separator=0", "porthu/vote_object.html");
         fetcher = new PorthuFetcher(loader);
     }
 
@@ -142,7 +145,13 @@ public class PorthuFetcherTest {
             assertEquals("votes", Integer.valueOf(9), moviePage.getVotes());
             assertEquals("runtime", Integer.valueOf(78), moviePage.getRuntime());
 
-            
+            MoviePage info = fetcher.getMovieInfo("73833");
+            Assert.assertEquals("title","Syriana", info.getTitle());
+            Assert.assertEquals("title","Sziriana", info.getAlternateTitle());
+            Assert.assertEquals("year", Integer.valueOf(2005), info.getYear());
+            Assert.assertEquals("score", Integer.valueOf(74), info.getScore());
+            Assert.assertEquals("votes", Integer.valueOf(20), info.getVotes());
+
             
         } catch (IOException e) {
             e.printStackTrace();
