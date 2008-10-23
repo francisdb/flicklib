@@ -40,7 +40,7 @@ public interface SourceLoader {
      * @param url
      * @param parameters
      * @param headers
-     * @return
+     * @return the page source
      * @throws IOException
      */
     Source post(String url, Map<String,String> parameters, Map<String,String> headers) throws IOException; 
