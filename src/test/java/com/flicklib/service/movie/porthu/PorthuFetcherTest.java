@@ -19,6 +19,7 @@ package com.flicklib.service.movie.porthu;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -105,6 +106,7 @@ public class PorthuFetcherTest {
             assertEquals("director", "Francis Ford Coppola", moviePage.getDirector());
             assertEquals("score", Integer.valueOf(94), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(80), moviePage.getVotes());
+            assertGenres(moviePage.getGenres(), "amerikai", "gengszterfilm");
 
             moviePage = fetcher.getMovieInfo("80364");
             assertNotNull("movie page", moviePage);
@@ -117,6 +119,7 @@ public class PorthuFetcherTest {
             assertEquals("director", "Tom Tykwer", moviePage.getDirector());
             assertEquals("score", Integer.valueOf(80), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(114), moviePage.getVotes());
+            assertGenres(moviePage.getGenres(), "német", "francia", "spanyol", "filmdráma");
             
             moviePage = fetcher.getMovieInfo("1269");
             assertNotNull("movie page", moviePage);
@@ -129,6 +132,7 @@ public class PorthuFetcherTest {
             assertEquals("director", "Jonathan Frakes", moviePage.getDirector());
             assertEquals("score", Integer.valueOf(100), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(4), moviePage.getVotes());
+            assertGenres(moviePage.getGenres(), "amerikai", "akciófilm");
 
 
             moviePage = fetcher.getMovieInfo("75033");
@@ -144,13 +148,15 @@ public class PorthuFetcherTest {
             assertEquals("score", Integer.valueOf(78), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(9), moviePage.getVotes());
             assertEquals("runtime", Integer.valueOf(78), moviePage.getRuntime());
+            assertGenres(moviePage.getGenres(), "dán", "animációsfilm");
 
-            MoviePage info = fetcher.getMovieInfo("73833");
-            Assert.assertEquals("title","Syriana", info.getTitle());
-            Assert.assertEquals("title","Sziriana", info.getAlternateTitle());
-            Assert.assertEquals("year", Integer.valueOf(2005), info.getYear());
-            Assert.assertEquals("score", Integer.valueOf(74), info.getScore());
-            Assert.assertEquals("votes", Integer.valueOf(20), info.getVotes());
+            moviePage = fetcher.getMovieInfo("73833");
+            Assert.assertEquals("title","Syriana", moviePage.getTitle());
+            Assert.assertEquals("title","Sziriana", moviePage.getAlternateTitle());
+            Assert.assertEquals("year", Integer.valueOf(2005), moviePage.getYear());
+            Assert.assertEquals("score", Integer.valueOf(74), moviePage.getScore());
+            Assert.assertEquals("votes", Integer.valueOf(20), moviePage.getVotes());
+            assertGenres(moviePage.getGenres(), "amerikai", "filmdráma");
 
             
         } catch (IOException e) {
@@ -158,6 +164,13 @@ public class PorthuFetcherTest {
             fail(e.getMessage());
         }
 
+    }
+
+    private void assertGenres(Set<String> genres, String... expected) {
+        for (String g : expected) {
+            assertTrue("genres contains "+g, genres.contains(g));
+        }
+        
     }
 
 }

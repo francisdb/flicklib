@@ -24,9 +24,11 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -327,8 +329,31 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     private void initDescriptionAndYear(String description, MovieSearchResult msr) {
         description = unbracket(description);
 
+        
+        
         if (msr instanceof MoviePage) {
-            ((MoviePage) msr).setRuntime(getRuntime(description));
+            MoviePage m = (MoviePage) msr;
+            m.setRuntime(getRuntime(description));
+
+            Set<String> skipWordList = new HashSet<String>();
+            skipWordList.add("színes");
+            skipWordList.add("magyarul");
+            skipWordList.add("beszélő");
+            skipWordList.add("perc");
+            
+            // concatenate 'animációs film ' to 'animációsfilm' 
+            String[] strings = description.replaceAll(" film[ ,]", "film ").split("[ \\-,]");
+            for (String word : strings) {
+                if (word.length()>0 && !skipWordList.contains(word)) {
+                    try {
+                        Integer.parseInt(word);
+                        // it's a number, skip
+                    } catch (NumberFormatException e) {
+                        LOGGER.debug("found genre:"+word);
+                        m.addGenre(word);
+                    }
+                }
+            }
         }
         msr.setYear(getYear(description));
         msr.setDescription(description);
