@@ -44,7 +44,7 @@ public class GoogleParser extends AbstractJerichoParser{
             //3.9&nbsp;/&nbsp;5
             String content = nobrElement.getTextExtractor().toString();
             if(content.contains(" / ")){
-            	System.out.println("  "+content);
+            	LOGGER.trace("  "+content);
             	content = content.replace(" ", "");
 	            content = content.replace("&nbsp;", "");
 	            if(!content.contains("/")){
