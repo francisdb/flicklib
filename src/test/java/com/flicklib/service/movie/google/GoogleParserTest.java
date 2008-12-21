@@ -41,7 +41,7 @@ public class GoogleParserTest {
         MoviePage site = new MoviePage();
         GoogleParser instance = new GoogleParser();
         instance.parse(source, site);
-        assertEquals(Integer.valueOf(78), site.getScore());
+        assertEquals(Integer.valueOf(96), site.getScore());
     }
 
 }

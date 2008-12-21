@@ -42,16 +42,20 @@ public class GoogleParser extends AbstractJerichoParser{
         for (Iterator<?> i = nobrElements.iterator(); i.hasNext();) {
             Element nobrElement = (Element) i.next();
             //3.9&nbsp;/&nbsp;5
-            String score = nobrElement.getTextExtractor().toString();
-            score = score.replace("&nbsp;", "");
-            if(!score.contains("/")){
-                LOGGER.error("Could not find score on imdb page: "+score);
+            String content = nobrElement.getTextExtractor().toString();
+            if(content.contains(" / ")){
+            	System.out.println("  "+content);
+            	content = content.replace(" ", "");
+	            content = content.replace("&nbsp;", "");
+	            if(!content.contains("/")){
+	                LOGGER.error("Could not find score on imdb page: "+content);
+	            }
+	            content = content.substring(0, content.indexOf('/'));
+	            Double doubleScore = Double.valueOf(content);
+	            doubleScore = doubleScore  * 20.0;
+	            Integer intScore = (int) Math.round(doubleScore);
+	            movieSite.setScore(intScore);
             }
-            score = score.substring(0, score.indexOf('/'));
-            Double doubleScore = Double.valueOf(score);
-            doubleScore = doubleScore  * 20.0;
-            Integer intScore = (int) Math.round(doubleScore);
-            movieSite.setScore(intScore);
         }
     }
 
