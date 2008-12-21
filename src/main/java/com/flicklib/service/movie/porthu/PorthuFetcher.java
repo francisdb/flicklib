@@ -502,6 +502,6 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     }
 
     protected boolean isMoviePageUrl(String url) {
-        return FILM_INFO_URL.startsWith(url) || url.startsWith("http://port.hu" + FILM_INFO_URL);
+        return FILM_INFO_URL.startsWith(url) || (url.startsWith("http://port.hu") && url.indexOf(FILM_INFO_URL)!=-1);
     }
 }
