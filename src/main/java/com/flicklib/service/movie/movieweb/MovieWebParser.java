@@ -46,7 +46,7 @@ public class MovieWebParser extends AbstractJerichoParser{
             Element divElement = (Element) i.next();
             TextExtractor extractor = new ElementOnlyTextExtractor(divElement.getContent());
             String content = extractor.toString();
-            if (content.startsWith("MovieWeb Users:")) {
+            if (content.startsWith("Average Rating:")) {
                 List<?> childs = divElement.getChildElements();
                 if (childs.size() > 0) {
                     String score = ((Element) childs.get(0)).getContent().getTextExtractor().toString().trim();

@@ -84,6 +84,10 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
             if (url != null && url.startsWith("/movie/")) {
                 String movieName = aElement.getContent().getTextExtractor().toString();
                 if (movieName != null && movieName.trim().length() != 0) {
+                    int jsessIdIndex = url.indexOf(";jsessionid=");
+                    if (jsessIdIndex!=-1) {
+                        url = url.substring(0, jsessIdIndex);
+                    }
                     String movieUrl = "http://www.flixster.com" + url;
 
                     MovieSearchResult m = new MovieSearchResult();

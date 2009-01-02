@@ -48,7 +48,7 @@ public class OpenSubtitlesLoaderTest {
         for(Subtitle sub:result){
             LOGGER.info(sub.getFileName());
         }
-        result = loader.search("The.Science.of.Sleep.LIMITED.DVDRip.XViD.-iMBT.avi", null);
+        result = loader.search("The.Science.of.Sleep.LIMITED.DVDRip.XViD", null);
         assertTrue(result.size() > 0);
         for(Subtitle sub:result){
             LOGGER.info(sub.getFileName());
