@@ -213,7 +213,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                     LOGGER.trace("link : " + link);
                     if ("a".equals(link.getName())) {
                         String href = link.getAttributeValue("href");
-                        if (href.startsWith(FILM_INFO_URL)) {
+                        if (href.indexOf(FILM_INFO_URL)!=-1) {
                             LOGGER.info("film url :" + href);
                             String movieTitle = link.getContent().getTextExtractor().toString();
                             MovieSearchResult msr = new MovieSearchResult(MovieService.PORTHU);
