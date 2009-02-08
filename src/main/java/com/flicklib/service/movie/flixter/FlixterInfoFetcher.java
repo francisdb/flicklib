@@ -169,6 +169,6 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
         } catch (UnsupportedEncodingException ex) {
             LOGGER.error("Could not cencode UTF-8", ex);
         }
-        return "http://www.flixster.com/movies.do?movieAction=doMovieSearch&x=0&y=0&search=" + encoded;
+        return "http://www.flixster.com/search?q=" + encoded;
     }
 }
