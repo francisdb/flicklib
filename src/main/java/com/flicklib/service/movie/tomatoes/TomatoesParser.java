@@ -45,7 +45,7 @@ public class TomatoesParser extends AbstractJerichoParser {
             String id = divElement.getAttributeValue("id");
             if (id != null && "tomatometer_score".equals(id)) {
                 String userRating = divElement.getContent().getTextExtractor().toString().trim();
-                if (!"".equals(userRating)) {
+                if (!"".equals(userRating) && !"N/A".equals(userRating)) {
                     userRating = userRating.replace("%", "");
                     userRating = userRating.trim();
                     try {
