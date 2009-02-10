@@ -4,7 +4,7 @@
 	<groupId>com.flicklib</groupId>
 	<artifactId>flicklib</artifactId>
 	<packaging>jar</packaging>
-	<version>0.2</version>
+	<version>0.3-SNAPSHOT</version>
 	<name>flicklib</name>
 	<description>Java library for fetching movie information from the web</description>
 	<url>http://www.flicklib.com</url>
