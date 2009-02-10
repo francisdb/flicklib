@@ -18,12 +18,7 @@
 package com.flicklib.service.movie.imdb;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import au.id.jericho.lib.html.Source;
 
@@ -43,7 +38,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImdbInfoFetcher.class);
+    //private static final Logger LOGGER = LoggerFactory.getLogger(ImdbInfoFetcher.class);
 
     private final ImdbSearch imdbSearch;
     private final Parser imdbParser;
