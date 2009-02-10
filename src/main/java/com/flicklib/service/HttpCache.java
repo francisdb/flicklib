@@ -24,7 +24,7 @@ public class HttpCache {
 		manager = new CacheManager(url);
 		manager.addCache("httpCache");
 		cache = manager.getCache("httpCache");
-		logger.debug("started cache.");
+		logger.debug("Started cache, " + cache.getSize()+" pages cached.");
 		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 		    @Override

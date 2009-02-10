@@ -20,7 +20,7 @@
     <diskStore path="user.home/.moviebrowser/sitecache"/>
     <!-- 604800 sec = 7 days -->
     <defaultCache
-            maxElementsInMemory="200"
+            maxElementsInMemory="100"
             eternal="false"
             timeToIdleSeconds="300"
             timeToLiveSeconds="604800"
