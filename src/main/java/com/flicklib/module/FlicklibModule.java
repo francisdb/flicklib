@@ -56,6 +56,9 @@ import com.google.inject.name.Names;
  * @author francisdb
  */
 public class FlicklibModule extends AbstractModule {
+	
+	public static final String HTTP_TIMEOUT = "http.timeout";
+	public static final String HTTP_CACHE = "http.cache";
 
     @Override
     protected void configure() {
@@ -81,6 +84,7 @@ public class FlicklibModule extends AbstractModule {
         bind(MovieInfoFetcher.class).annotatedWith(PortHu.class).to(PorthuFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Cinebel.class).to(CinebelFetcher.class);
 
-        bindConstant().annotatedWith(Names.named("http.timeout")).to(20 * 1000);
+        bindConstant().annotatedWith(Names.named(HTTP_TIMEOUT)).to(20 * 1000);
+        bindConstant().annotatedWith(Names.named(HTTP_CACHE)).to(Boolean.TRUE);
     }
 }

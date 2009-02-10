@@ -43,7 +43,7 @@ public class OpenSubtitlesLoaderTest {
      */
     @Test
     public void testSearch() throws Exception {
-        SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(null));
+        SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(null, false));
         Set<Subtitle> result = loader.search("The Science of Sleep", null);
         assertTrue(result.size() > 0);
         for(Subtitle sub:result){
@@ -54,7 +54,7 @@ public class OpenSubtitlesLoaderTest {
     @Test
     @Ignore(value="The opensubtitles site search is failing for this, used to work though and the file is still there...")
     public void testSearch2() throws Exception {
-    	SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(null));
+    	SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(null, false));
     	Set<Subtitle> result = loader.search("The.Science.of.Sleep.LIMITED.DVDRip.XViD.-iMBT.avi", null);
         result = loader.search("The.Science.of.Sleep.LIMITED.DVDRip.XViD", null);
         assertTrue(result.size() > 0);

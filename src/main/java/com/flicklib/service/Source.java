@@ -17,7 +17,11 @@
  */
 package com.flicklib.service;
 
-public class Source {
+import java.io.Serializable;
+
+public class Source implements Serializable{
+	
+	public static final long serialVersionUID = 1L;
 
     private final String url;
     private final String content;

@@ -30,6 +30,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.flicklib.module.FlicklibModule;
 import com.flicklib.tools.IOTools;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -45,10 +46,14 @@ public class HttpSourceLoader implements SourceLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpSourceLoader.class);
 
-    private HttpClient client;
+    private final HttpClient client;
+    
+    private final HttpCache cache;
 
     @Inject
-    public HttpSourceLoader(@Named(value = "http.timeout") final Integer timeout) {
+    public HttpSourceLoader(
+    		@Named(value = FlicklibModule.HTTP_TIMEOUT) final Integer timeout, 
+    		@Named(value = FlicklibModule.HTTP_CACHE) final Boolean useCache) {
     	// http://hc.apache.org/httpclient-3.x/performance.html#Concurrent_execution_of_HTTP_methods
         client = new HttpClient(new MultiThreadedHttpConnectionManager());
         if (timeout != null) {
@@ -57,10 +62,30 @@ public class HttpSourceLoader implements SourceLoader {
             //manager.getParams().setSoTimeout(timeout);
             // LOGGER.info("Timeout = "+client.getParams().getSoTimeout());
         }
+        if(useCache){
+        	cache = new HttpCache();
+        }else{
+        	cache = null;
+        }
     }
+   
     
     @Override
     public Source loadSource(String url) throws IOException {
+        Source source = null;
+        if(cache != null){
+        	source = cache.get(url);
+        }
+        if(source == null){
+        	source = load(url);
+        	if(cache != null){
+        		cache.put(url, source);
+        	}
+        }
+        return source;
+    }
+    
+    private Source load(String url) throws IOException {
         GetMethod httpMethod = null;
         Reader is = null;
         try {

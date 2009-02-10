@@ -39,7 +39,7 @@ public class PorthuLiveFetcherTest {
     
     @Before
     public void setUp() throws Exception {
-        loader = new HttpSourceLoader(60000);
+        loader = new HttpSourceLoader(60000, false);
         fetcher = new PorthuFetcher(loader);
     }
     

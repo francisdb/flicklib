@@ -39,7 +39,7 @@ public class GoogleInfoFetcherTest {
     //@Ignore(value="Disabled for CI")
     public void testFetch() throws IOException {
         GoogleParser googleParser = new GoogleParser();
-        GoogleInfoFetcher instance = new GoogleInfoFetcher(googleParser, new HttpSourceLoader(null));
+        GoogleInfoFetcher instance = new GoogleInfoFetcher(googleParser, new HttpSourceLoader(null, false));
         MoviePage site = instance.fetch("Pulp Fiction");
         assertNotNull("Google score is null", site.getScore());
     }
