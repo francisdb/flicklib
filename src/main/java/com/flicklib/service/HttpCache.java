@@ -29,6 +29,7 @@ public class HttpCache {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 		    @Override
 			public void run() { 
+				logger.debug(cache.getStatistics().toString());
 		    	manager.shutdown();
 		    	logger.debug("shut down cache.");
 		    }
