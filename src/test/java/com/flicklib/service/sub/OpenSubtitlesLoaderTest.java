@@ -42,6 +42,7 @@ public class OpenSubtitlesLoaderTest {
      * @throws Exception 
      */
     @Test
+    @Ignore(value="temp ignoring as their site is down")
     public void testSearch() throws Exception {
         SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(null, false));
         Set<Subtitle> result = loader.search("The Science of Sleep", null);
