@@ -26,6 +26,7 @@ import com.flicklib.service.SourceLoader;
 import com.flicklib.service.movie.InfoFetcherFactoryImpl;
 import com.flicklib.service.movie.cinebel.Cinebel;
 import com.flicklib.service.movie.cinebel.CinebelFetcher;
+import com.flicklib.service.movie.cinebel.CinebelParser;
 import com.flicklib.service.movie.flixter.Flixster;
 import com.flicklib.service.movie.flixter.FlixterInfoFetcher;
 import com.flicklib.service.movie.flixter.FlixterParser;
@@ -73,6 +74,7 @@ public class FlicklibModule extends AbstractModule {
         bind(Parser.class).annotatedWith(RottenTomatoes.class).to(TomatoesParser.class);
         bind(Parser.class).annotatedWith(Google.class).to(GoogleParser.class);
         bind(Parser.class).annotatedWith(Flixster.class).to(FlixterParser.class);
+        bind(Parser.class).annotatedWith(Cinebel.class).to(CinebelParser.class);
 
         bind(MovieInfoFetcher.class).annotatedWith(Imdb.class).to(ImdbInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(MovieWeb.class).to(MovieWebInfoFetcher.class);

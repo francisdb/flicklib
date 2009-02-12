@@ -17,8 +17,11 @@
  */
 package com.flicklib.service.movie.tomatoes;
 
+import au.id.jericho.lib.html.Element;
+import au.id.jericho.lib.html.HTMLElementName;
+import au.id.jericho.lib.html.Source;
+
 import com.flicklib.api.AbstractMovieInfoFetcher;
-import com.flicklib.api.MovieInfoFetcher;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.flicklib.api.Parser;
@@ -26,12 +29,13 @@ import com.flicklib.domain.Movie;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MoviePage;
-import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
-import com.flicklib.service.movie.imdb.Imdb;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -48,25 +52,21 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 
     private final SourceLoader sourceLoader;
     private final Parser tomatoesParser;
-    private final MovieInfoFetcher imdbFetcher;
 
     @Inject
-    public TomatoesInfoFetcher(final @RottenTomatoes Parser tomatoesParser, final SourceLoader sourceLoader, final @Imdb MovieInfoFetcher imdbFetcher) {
+    public TomatoesInfoFetcher(final @RottenTomatoes Parser tomatoesParser, final SourceLoader sourceLoader) {
         this.sourceLoader = sourceLoader;
         this.tomatoesParser = tomatoesParser;
-        this.imdbFetcher = imdbFetcher;
     }
 
     
     @Override
     public MoviePage getMovieInfo(String id) throws IOException {
         MoviePage site = new MoviePage(MovieService.TOMATOES);
-        site.setIdForSite(id);
         String url = generateTomatoesUrl(id);
         site.setUrl(url);
-        Source source = sourceLoader.loadSource(site.getUrl());
+        com.flicklib.service.Source source = sourceLoader.loadSource(site.getUrl());
         tomatoesParser.parse(source, site);
-
         return site;
     }
 
@@ -74,36 +74,76 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
     public List<MovieSearchResult> search(String title) throws IOException {
         // use the imdb fetcher, to load IMDB id-s.
         
-        List<? extends MovieSearchResult> list = imdbFetcher.search(title);
-        List<MovieSearchResult> result = new ArrayList<MovieSearchResult>(list.size());
-        for (MovieSearchResult search: list) {
-            MovieSearchResult msr = new MovieSearchResult ();
-            msr.setService(MovieService.TOMATOES);
-            msr.setIdForSite(search.getIdForSite());
-            String url = generateTomatoesUrl(search.getIdForSite());
-            msr.setUrl(url);
-            msr.setTitle(search.getTitle());
-            msr.setYear(search.getYear());
-            
-            result.add(msr);
+    	List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
+        
+        com.flicklib.service.Source source = sourceLoader.loadSource(createTomatoesSearchUrl(title));
+        Source jerichoSource = new Source(source.getContent());
+        //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
+        jerichoSource.fullSequentialParse();
+        
+        List<?> divElements = jerichoSource.findAllElements(HTMLElementName.DIV);
+        for (Iterator<?> i = divElements.iterator(); i.hasNext();) {
+            Element divElement = (Element) i.next();
+            //<div id="search_results_main" class="content clearfix">
+            if("search_results_main".equals(divElement.getAttributeValue("id"))){
+            	List<?> trElements = divElement.findAllElements(HTMLElementName.TR);
+            	for (Iterator<?> j = trElements.iterator(); j.hasNext();) {
+                    Element trElement = (Element) j.next();
+                    
+                    MovieSearchResult m = new MovieSearchResult();
+                    
+                    
+	            	List<?> aElements = trElement.findAllElements(HTMLElementName.A);
+	            	for (Iterator<?> k = aElements.iterator(); k.hasNext();) {
+	                    Element aElement = (Element) k.next();
+	                    String url = aElement.getAttributeValue("href");
+	                    if (url != null && url.startsWith("/m/")) {
+			                String movieName = aElement.getContent().getTextExtractor().toString();
+			                if (movieName != null && movieName.trim().length() != 0) {
+			                    String movieUrl = MovieService.TOMATOES.getUrl() + url;
+			                    m.setUrl(movieUrl);
+			                    m.setIdForSite(url.replace("/m/", ""));
+			                    m.setTitle(movieName);
+			                    m.setService(MovieService.TOMATOES);
+			                    result.add(m);
+			                    LOGGER.trace("taking result: " + movieName + " -> " + movieUrl);
+			                }
+	                    }
+	            	}
+	            	
+	            	List<?> strongElements = trElement.findAllElements(HTMLElementName.STRONG);
+	            	for (Iterator<?> k = strongElements.iterator(); k.hasNext();) {
+	                    Element strongElement = (Element) k.next();
+	                    String year = strongElement.getContent().getTextExtractor().toString();
+	                    if(year.trim().length() > 0){
+	                    	m.setYear(Integer.valueOf(year));
+	                    }
+	            	}
+            	}            	
+            }
         }
         return result;
     }
     
     
-    
+    /**
+     * @deprecated not part of the interface
+     * @param movie
+     * @param imdbId
+     * @return the MoviePage
+     */
     @Deprecated
-    public MoviePage fetch(Movie movie, String id) {
+    public MoviePage fetch(Movie movie, String imdbId) {
         MoviePage site = new MoviePage();
         //site.setMovie(movie);
         site.setService(MovieService.TOMATOES);
-        if (id == null || "".equals(id)) {
+        if (imdbId == null || "".equals(imdbId)) {
             LOGGER.error("IMDB id missing", new IOException("No imdb id available, not implemented"));
         }else{
             try {
-                String url = generateTomatoesUrl(id);
+                String url = generateTomatoesUrlForImdb(imdbId);
                 site.setUrl(url);
-                Source source = sourceLoader.loadSource(site.getUrl());
+                com.flicklib.service.Source source = sourceLoader.loadSource(site.getUrl());
                 tomatoesParser.parse(source, site);
             } catch (IOException ex) {
                 LOGGER.error("Loading from rotten tomatoes failed", ex);
@@ -112,12 +152,31 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
         return site;
     }
 
+    private String createTomatoesSearchUrl(String title) {
+        String encoded = "";
+        try {
+            encoded = URLEncoder.encode(title, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            LOGGER.error("Could not cencode UTF-8", ex);
+        }
+        return MovieService.TOMATOES.getUrl()+"/search/full_search.php?search=" + encoded;
+    }
+    
     /**
      *
      * @param movie 
      * @return the tomatoes url
      */
-    private String generateTomatoesUrl(String imdbId) {
-        return "http://www.rottentomatoes.com/alias?type=imdbid&s=" + imdbId;
+    private String generateTomatoesUrlForImdb(String imdbId) {
+        return MovieService.TOMATOES.getUrl()+"/alias?type=imdbid&s=" + imdbId;
     }
+    
+    /**
+    *
+    * @param movie 
+    * @return the tomatoes url
+    */
+   private String generateTomatoesUrl(String id) {
+       return MovieService.TOMATOES.getUrl()+"/m/" + id;
+   }
 }

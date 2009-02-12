@@ -88,7 +88,7 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
                     if (jsessIdIndex!=-1) {
                         url = url.substring(0, jsessIdIndex);
                     }
-                    String movieUrl = "http://www.flixster.com" + url;
+                    String movieUrl = MovieService.FLIXSTER.getUrl() + url;
 
                     MovieSearchResult m = new MovieSearchResult();
                     m.setIdForSite(movieUrl);
@@ -105,7 +105,7 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
     @Override
     public MoviePage getMovieInfo(String id) {
         try {
-            if (id.startsWith("http://www.flixster.com")) {
+            if (id.startsWith(MovieService.FLIXSTER.getUrl())) {
                 com.flicklib.service.Source source = sourceLoader.loadSource(id);
                 MoviePage site = new MoviePage(MovieService.FLIXSTER);
                 site.setIdForSite(id);
@@ -144,8 +144,8 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
                     String movieName = aElement.getContent().getTextExtractor().toString();
                     if (movieUrl == null && movieName != null && movieName.trim().length() != 0) {
 
-                        movieUrl = "http://www.flixster.com" + url;
-                        LOGGER.info("taking first result: " + movieName + " -> " + movieUrl);
+                        movieUrl = MovieService.FLIXSTER.getUrl() + url;
+                        LOGGER.trace("taking first result: " + movieName + " -> " + movieUrl);
                     }
                 }
             }
@@ -163,12 +163,12 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
     }
 
     private String createFlixterSearchUrl(String title) {
-        String encoded = "";
+        String encoded = title.replace(" ", "%20");
         try {
-            encoded = URLEncoder.encode(title, "UTF-8");
+            encoded = URLEncoder.encode(encoded, "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             LOGGER.error("Could not cencode UTF-8", ex);
         }
-        return "http://www.flixster.com/search?q=" + encoded;
+        return MovieService.FLIXSTER.getUrl()+"/search?q=" + encoded;
     }
 }

@@ -29,7 +29,7 @@ public interface Parser {
     /**
      * Parses the html page source to info for the movie
      * @param source
-     * @param movieSite 
+     * @param moviePage
      */
-    public void parse(Source source, MoviePage movieSite);
+    public void parse(Source source, MoviePage moviePage);
 }

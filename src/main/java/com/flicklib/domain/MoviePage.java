@@ -164,5 +164,10 @@ public class MoviePage extends MovieSearchResult {
     public void addLanguage(String language) {
         this.languages.add(language);
     }
+    
+    @Override
+    public String toString() {
+    	return getClass().getSimpleName()+" / "+getService()+" / "+getUrl();
+    }
 
 }

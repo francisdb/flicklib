@@ -51,6 +51,17 @@ public interface MovieInfoFetcher {
     List<? extends MovieSearchResult> search(String title) throws IOException;
     
     /**
+     * Performs a search on the service and returns results. If more then basic info was available during the search
+     * the returned list will contain {@link MoviePage}s
+     * 
+     * @param title
+     * @param year the year if available (use null for unknown)
+     * @return the result list, never null
+     * @throws IOException
+     */
+    List<? extends MovieSearchResult> search(String title, String year) throws IOException;
+    
+    /**
      * Looks up the detailed movie info for a movieIdForSite
      * 
      * @param idForSite the id the site is using for that movie

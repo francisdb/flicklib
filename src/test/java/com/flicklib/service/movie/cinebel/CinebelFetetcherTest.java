@@ -41,7 +41,7 @@ public class CinebelFetetcherTest {
 	@Before
 	public void setup(){
 		SourceLoader loader = new HttpSourceLoader(30000, false);
-		fetcher = new CinebelFetcher(loader);
+		fetcher = new CinebelFetcher(loader, new CinebelParser());
 	}
 
 	@Test

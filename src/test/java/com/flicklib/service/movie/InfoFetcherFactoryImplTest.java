@@ -74,6 +74,11 @@ public class InfoFetcherFactoryImplTest {
 		public List<? extends MovieSearchResult> search(String title) throws IOException {
 			return null;
 		}
+
+		@Override
+		public List<? extends MovieSearchResult> search(String title, String year) throws IOException {
+			return null;
+		}
 	}
 
 }

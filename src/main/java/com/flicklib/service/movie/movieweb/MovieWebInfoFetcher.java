@@ -67,7 +67,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
     @Override
 	public MoviePage getMovieInfo(String id) throws IOException {
 		MoviePage site = null;
-		if (id.startsWith("http://www.movieweb.com")) {
+		if (id.startsWith(MovieService.MOVIEWEB.getUrl())) {
 			com.flicklib.service.Source source = sourceLoader.loadSource(id);
 			site = new MoviePage(MovieService.MOVIEWEB);
 			site.setIdForSite(id);

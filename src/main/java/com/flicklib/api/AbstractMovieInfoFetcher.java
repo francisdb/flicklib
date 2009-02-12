@@ -34,6 +34,11 @@ public abstract class AbstractMovieInfoFetcher implements MovieInfoFetcher {
 	}
 
 	@Override
+	public List<? extends MovieSearchResult> search(String title, String year) throws IOException {
+		return search(title);
+	}
+	
+	@Override
 	public MoviePage fetch(String title) throws IOException {
 		MoviePage item = null;
 		List<? extends MovieSearchResult> search = this.search(title);

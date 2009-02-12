@@ -39,11 +39,15 @@ public class FlixterInfoFetcherTest {
         FlixterParser parser = new FlixterParser();
         FlixterInfoFetcher fetcher = new FlixterInfoFetcher(parser, new HttpSourceLoader(null, false));
         MoviePage site = fetcher.fetch("The X-Files I Want to Believe");
-        assertTrue(site.getUrl().contains("http://www.flixster.com/movie/the-x-files-i-want-to-believe-the-x-files-2"));
+        System.out.println(site.getUrl());
+        // seems they have two domains or a bad url in the db
+        //http://www.flixter.com/movie/the-x-files-i-want-to-believe-the-x-files-2
+        //http://www.flixster.com/movie/the-x-files-i-want-to-believe-the-x-files-2
+        assertTrue(site.getUrl().contains("/movie/the-x-files-i-want-to-believe-the-x-files-2"));
         assertNotNull("MovieWebStars is null", site.getScore());
 
         site = fetcher.fetch("pulp fiction");
-        assertTrue(site.getUrl().contains("http://www.flixster.com/movie/pulp-fiction"));
+        assertTrue(site.getUrl().contains("/movie/pulp-fiction"));
         assertEquals("Pulp Fiction", site.getTitle());
         
     }

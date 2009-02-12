@@ -39,9 +39,16 @@ public class TomatoesParser extends AbstractJerichoParser {
 
     @Override
     public void parse(final String html, Source source, MoviePage movieSite) {
+    	if(movieSite.getUrl() != null){
+    		movieSite.setIdForSite(movieSite.getUrl().replace("http://www.rottentomatoes.com/m/", ""));
+    	}
+    	
         List<?> divElements = source.findAllElements(HTMLElementName.DIV);
         for (Iterator<?> i = divElements.iterator(); i.hasNext();) {
             Element divElement = (Element) i.next();
+            
+            // TODO add id for site
+            
             String id = divElement.getAttributeValue("id");
             if (id != null && "tomatometer_score".equals(id)) {
                 String userRating = divElement.getContent().getTextExtractor().toString().trim();

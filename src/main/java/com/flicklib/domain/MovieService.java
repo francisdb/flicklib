@@ -35,7 +35,7 @@ public enum MovieService {
     /**
      * http://www.movieweb.com
      */
-    MOVIEWEB("MovieWeb", "http://www.movieweb.com/", "MWeb"),
+    MOVIEWEB("MovieWeb", "http://www.movieweb.com", "MWeb"),
     
     /**
      * http://www.omdb.com
@@ -76,20 +76,33 @@ public enum MovieService {
         this.url = url;
         this.shortName = name;
     }
+    
     MovieService(final String name, final String url, final String shortName) {
         this.name = name;
         this.url = url;
         this.shortName = shortName;
     }
 
+    /**
+     * Gets the full name for this service
+     * @return the name
+     */
     public String getName(){
         return name;
     }
 
+    /**
+     * Gets the main site url without trailing slash
+     * @return the url
+     */
     public String getUrl(){
         return url;
     }
     
+    /**
+     * Gets the short name for this service
+     * @return the short name
+     */
     public String getShortName() {
         return shortName;
     }
