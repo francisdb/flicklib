@@ -116,7 +116,11 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 	                    Element strongElement = (Element) k.next();
 	                    String year = strongElement.getContent().getTextExtractor().toString();
 	                    if(year.trim().length() > 0){
-	                    	m.setYear(Integer.valueOf(year));
+	                    	try{
+	                    		m.setYear(Integer.valueOf(year));
+	                    	}catch(NumberFormatException ex){
+	                    		LOGGER.error(ex.getMessage());
+	                    	}
 	                    }
 	            	}
             	}            	
