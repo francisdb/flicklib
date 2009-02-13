@@ -28,8 +28,8 @@ import com.flicklib.service.movie.cinebel.Cinebel;
 import com.flicklib.service.movie.cinebel.CinebelFetcher;
 import com.flicklib.service.movie.cinebel.CinebelParser;
 import com.flicklib.service.movie.flixter.Flixster;
-import com.flicklib.service.movie.flixter.FlixterInfoFetcher;
-import com.flicklib.service.movie.flixter.FlixterParser;
+import com.flicklib.service.movie.flixter.FlixsterInfoFetcher;
+import com.flicklib.service.movie.flixter.FlixsterParser;
 import com.flicklib.service.movie.google.Google;
 import com.flicklib.service.movie.google.GoogleInfoFetcher;
 import com.flicklib.service.movie.google.GoogleParser;
@@ -73,14 +73,14 @@ public class FlicklibModule extends AbstractModule {
         bind(Parser.class).annotatedWith(Imdb.class).to(ImdbParser.class);
         bind(Parser.class).annotatedWith(RottenTomatoes.class).to(TomatoesParser.class);
         bind(Parser.class).annotatedWith(Google.class).to(GoogleParser.class);
-        bind(Parser.class).annotatedWith(Flixster.class).to(FlixterParser.class);
+        bind(Parser.class).annotatedWith(Flixster.class).to(FlixsterParser.class);
         bind(Parser.class).annotatedWith(Cinebel.class).to(CinebelParser.class);
 
         bind(MovieInfoFetcher.class).annotatedWith(Imdb.class).to(ImdbInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(MovieWeb.class).to(MovieWebInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(RottenTomatoes.class).to(TomatoesInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Google.class).to(GoogleInfoFetcher.class);
-        bind(MovieInfoFetcher.class).annotatedWith(Flixster.class).to(FlixterInfoFetcher.class);
+        bind(MovieInfoFetcher.class).annotatedWith(Flixster.class).to(FlixsterInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Omdb.class).to(OmdbFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Netflix.class).to(NetflixInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(PortHu.class).to(PorthuFetcher.class);

@@ -50,7 +50,7 @@ public enum MovieService {
     /**
      * http://www.flixster.com
      */
-    FLIXSTER("Flixter", "http://www.flixter.com"),
+    FLIXSTER("Flixster", "http://www.flixster.com"),
     
     /**
      * http://www.port.hu

@@ -46,19 +46,19 @@ import com.google.inject.Singleton;
  * @author francisdb
  */
 @Singleton
-public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
+public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FlixterInfoFetcher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlixsterInfoFetcher.class);
     private final SourceLoader sourceLoader;
     private final Parser parser;
 
     /**
-     * Constructs a new FlixterInfoFetcher
+     * Constructs a new FlixsterInfoFetcher
      * @param parser
      * @param sourceLoader
      */
     @Inject
-    public FlixterInfoFetcher(final @Flixster Parser parser, final SourceLoader sourceLoader) {
+    public FlixsterInfoFetcher(final @Flixster Parser parser, final SourceLoader sourceLoader) {
         this.sourceLoader = sourceLoader;
         this.parser = parser;
     }
@@ -163,7 +163,8 @@ public class FlixterInfoFetcher extends AbstractMovieInfoFetcher {
     }
 
     private String createFlixterSearchUrl(String title) {
-        String encoded = title.replace(" ", "%20");
+        //String encoded = title.replace(" ", "%20");
+        String encoded = title;
         try {
             encoded = URLEncoder.encode(encoded, "UTF-8");
         } catch (UnsupportedEncodingException ex) {

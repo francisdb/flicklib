@@ -31,23 +31,20 @@ import static org.junit.Assert.*;
 public class FlixterInfoFetcherTest {
 
     /**
-     * Test of fetch method, of class FlixterInfoFetcher.
+     * Test of fetch method, of class FlixsterInfoFetcher.
      * @throws IOException 
      */
     @Test
     public void testFetch() throws IOException {
-        FlixterParser parser = new FlixterParser();
-        FlixterInfoFetcher fetcher = new FlixterInfoFetcher(parser, new HttpSourceLoader(null, false));
+        FlixsterParser parser = new FlixsterParser();
+        FlixsterInfoFetcher fetcher = new FlixsterInfoFetcher(parser, new HttpSourceLoader(null, false));
         MoviePage site = fetcher.fetch("The X-Files I Want to Believe");
         System.out.println(site.getUrl());
-        // seems they have two domains or a bad url in the db
-        //http://www.flixter.com/movie/the-x-files-i-want-to-believe-the-x-files-2
-        //http://www.flixster.com/movie/the-x-files-i-want-to-believe-the-x-files-2
-        assertTrue(site.getUrl().contains("/movie/the-x-files-i-want-to-believe-the-x-files-2"));
+        assertTrue(site.getUrl().contains("http://www.flixster.com/movie/the-x-files-i-want-to-believe-the-x-files-2"));
         assertNotNull("MovieWebStars is null", site.getScore());
 
         site = fetcher.fetch("pulp fiction");
-        assertTrue(site.getUrl().contains("/movie/pulp-fiction"));
+        assertTrue(site.getUrl().contains("http://www.flixster.com/movie/pulp-fiction"));
         assertEquals("Pulp Fiction", site.getTitle());
         
     }

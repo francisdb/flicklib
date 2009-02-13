@@ -35,9 +35,9 @@ import org.slf4j.LoggerFactory;
  * @author francisdb
  */
 @Singleton
-public class FlixterParser extends AbstractJerichoParser{
+public class FlixsterParser extends AbstractJerichoParser{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FlixterParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlixsterParser.class);
     
     @Override
     public void parse(String html, Source source, MoviePage movieSite) {

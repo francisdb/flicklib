@@ -33,14 +33,14 @@ public class FlixterParserTest {
 
 
     /**
-     * Test of parse method, of class FlixterParser.
+     * Test of parse method, of class FlixsterParser.
      * @throws Exception 
      */
     @Test
     public void testParse() throws Exception{
         Source source = new FileSourceLoader().loadSource("flixter/the-x-files-i-want-to-believe-the-x-files-2.html");
         MoviePage site = new MoviePage();
-        FlixterParser instance = new FlixterParser();
+        FlixsterParser instance = new FlixsterParser();
         instance.parse(source, site);
         assertEquals(Integer.valueOf(60), site.getScore());
         assertEquals(Integer.valueOf(14259), site.getVotes());

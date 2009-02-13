@@ -38,8 +38,8 @@ import static org.junit.Assert.*;
  */
 public class PorthuFetcherTest {
 
-    AliasingSourceLoader loader;
-    PorthuFetcher fetcher;
+    private AliasingSourceLoader loader;
+    private PorthuFetcher fetcher;
 
     /**
      * @throws java.lang.Exception
