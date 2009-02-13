@@ -96,7 +96,7 @@ public class HttpSourceLoader implements SourceLoader {
             }catch(RedirectException ex){
             	throw new IOException("Redirect problem: "+ex.getMessage(), ex);
             }
-            LOGGER.info("Finished loading at " + httpMethod.getURI().toString());
+            LOGGER.debug("Finished loading at " + httpMethod.getURI().toString());
             String responseCharset = httpMethod.getResponseCharSet();
             if (responseCharset != null) {
                 is = new InputStreamReader(httpMethod.getResponseBodyAsStream(), responseCharset);
