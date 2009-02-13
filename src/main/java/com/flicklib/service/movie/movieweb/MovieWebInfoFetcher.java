@@ -111,7 +111,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
                     m.setService(MovieService.MOVIEWEB);
                     result.add(m);
                     
-                    LOGGER.info("found title: " + movieName + " -> " + movieUrl);
+                    LOGGER.debug("found title: " + movieName + " -> " + movieUrl);
                 }
             }
         }

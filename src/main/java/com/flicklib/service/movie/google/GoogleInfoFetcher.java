@@ -100,7 +100,7 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
                 String movieName = aElement.getContent().getTextExtractor().toString();
                 if (movieName!=null && movieName.trim().length()>0) {
                     if (!isReviewTitle(movieName)) {
-                        LOGGER.info("found result: " + movieName + " -> " + movieUrl);
+                        LOGGER.debug("found result: " + movieName + " -> " + movieUrl);
                         
                         MovieSearchResult s = new MovieSearchResult();
                         s.setService(MovieService.GOOGLE);

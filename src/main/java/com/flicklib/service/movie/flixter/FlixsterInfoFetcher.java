@@ -95,7 +95,7 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
                     m.setTitle(movieName);
                     m.setService(MovieService.FLIXSTER);
                     result.add(m);
-                    LOGGER.info("taking result: " + movieName + " -> " + movieUrl);
+                    LOGGER.debug("taking result: " + movieName + " -> " + movieUrl);
                 }
             }
         }
