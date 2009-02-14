@@ -54,7 +54,11 @@ public class MovieWebParser extends AbstractJerichoParser{
                         try {
                             float theScore = Float.valueOf(score).floatValue() * 20;
                             int intScore = Math.round(theScore);
-                            movieSite.setScore(intScore);
+                            // TODO if check reviews and ratings count because if they are 0 the score is 0
+                            // we ignore 0 score for now
+                            if(intScore != 0){
+                            	movieSite.setScore(intScore);
+                            }
                         } catch (NumberFormatException ex) {
                             LOGGER.error("Could not parse " + score + " to Float", ex);
                         }
