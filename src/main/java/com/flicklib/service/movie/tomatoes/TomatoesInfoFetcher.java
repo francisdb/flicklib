@@ -116,10 +116,18 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 	                    Element strongElement = (Element) k.next();
 	                    String year = strongElement.getContent().getTextExtractor().toString();
 	                    if(year.trim().length() > 0){
+	                    	
+	                    	// TODO handle these
+	                    	//1:44:55.249 [pool-2-thread-3] ERROR c.f.s.m.tomatoes.TomatoesInfoFetcher - For input string: "2002/2004"
+	                    	//11:44:55.249 [pool-2-thread-3] ERROR c.f.s.m.tomatoes.TomatoesInfoFetcher - For input string: "2002-2007"
+	                    	//11:44:55.249 [pool-2-thread-3] ERROR c.f.s.m.tomatoes.TomatoesInfoFetcher - For input string: "2002/2006"
+	                    	//11:44:55.250 [pool-2-thread-3] ERROR c.f.s.m.tomatoes.TomatoesInfoFetcher - For input string: "2002/2003"
+	                    	
+	                    	
 	                    	try{
 	                    		m.setYear(Integer.valueOf(year));
 	                    	}catch(NumberFormatException ex){
-	                    		LOGGER.error(ex.getMessage());
+	                    		LOGGER.warn(ex.getMessage());
 	                    	}
 	                    }
 	            	}
