@@ -103,7 +103,7 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 	        		movieSite.setOriginalTitle(theTitle);
 	        	}
 	        	movieSite.setUrl(MovieService.OFDB.getUrl() + href);
-	        	String id = href.substring(("film/").length());
+	        	String id = href.substring("film/".length());
 	        	movieSite.setIdForSite(id);
 	        	list.add(movieSite);
 	        }
