@@ -31,6 +31,7 @@ import com.flicklib.service.movie.google.Google;
 import com.flicklib.service.movie.imdb.Imdb;
 import com.flicklib.service.movie.movieweb.MovieWeb;
 import com.flicklib.service.movie.netflix.Netflix;
+import com.flicklib.service.movie.ofdb.Ofdb;
 import com.flicklib.service.movie.omdb.Omdb;
 import com.flicklib.service.movie.porthu.PortHu;
 import com.flicklib.service.movie.tomatoes.RottenTomatoes;
@@ -53,6 +54,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
     private final MovieInfoFetcher netflixInfoFetcher;
     private final MovieInfoFetcher porthuInfoFetcher;
     private final MovieInfoFetcher cinebelInfoFetcher;
+    private final MovieInfoFetcher ofdbInfoFetcher;
 
     /**
      * Constructs a new InfoFetcherFactoryImpl
@@ -76,7 +78,8 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
             final @Omdb MovieInfoFetcher omdbInfoFetcher,
             final @Netflix MovieInfoFetcher netflixInfoFetcher,
             final @PortHu MovieInfoFetcher porthuFetcher,
-            final @Cinebel MovieInfoFetcher cinebelFetcher) {
+            final @Cinebel MovieInfoFetcher cinebelFetcher,
+            final @Ofdb MovieInfoFetcher ofdbFetcher) {
         this.imdbInfoFetcher = imdbInfoFetcher;
         this.movieWebInfoFetcher = movieWebInfoFetcher;
         this.tomatoesInfoFetcher = tomatoesInfoFetcher;
@@ -86,6 +89,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
         this.netflixInfoFetcher = netflixInfoFetcher;
         this.porthuInfoFetcher = porthuFetcher;
         this.cinebelInfoFetcher = cinebelFetcher;
+        this.ofdbInfoFetcher = ofdbFetcher;
     }
     
     
@@ -120,6 +124,9 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
                 break;
             case CINEBEL :
                 fetcher = cinebelInfoFetcher;
+                break;
+            case OFDB :
+                fetcher = ofdbInfoFetcher;
                 break;
             default:
             	LOGGER.warn("No fetcher defined for service "+service);
