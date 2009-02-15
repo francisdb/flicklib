@@ -17,7 +17,7 @@ public class TomatoesInfoFetcherTest {
 	@Test
 	public void testGetMovieInfo() throws IOException {
 		TomatoesInfoFetcher fetcher = new TomatoesInfoFetcher(
-				new TomatoesParser(), new HttpSourceLoader(10000, false));
+				new TomatoesParser(), new HttpSourceLoader(60000, false));
 		MoviePage page = fetcher.getMovieInfo("pulp_fiction");
 		assertEquals(MovieService.TOMATOES, page.getService());
 		System.out.println("score = "+page.getScore());
@@ -26,7 +26,7 @@ public class TomatoesInfoFetcherTest {
 	@Test
 	public void testSearch() throws IOException {
 		TomatoesInfoFetcher fetcher = new TomatoesInfoFetcher(
-				new TomatoesParser(), new HttpSourceLoader(10000, false));
+				new TomatoesParser(), new HttpSourceLoader(60000, false));
 		List<MovieSearchResult> results = fetcher.search("Pulp Fiction");
 		assertEquals(10, results.size());
 		assertEquals("Pulp Fiction", results.get(0).getTitle());
