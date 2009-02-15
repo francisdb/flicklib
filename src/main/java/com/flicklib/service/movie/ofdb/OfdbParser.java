@@ -21,7 +21,10 @@ public class OfdbParser implements Parser{
         @SuppressWarnings("unchecked")
         List<Element> h2Elements = jerichoSource.findAllElements(HTMLElementName.H2);
         for(Element h2Element: h2Elements){
+        	// TODO get all titles
+        	page.setAlternateTitle(h2Element.getContent().getTextExtractor().toString());
         	page.setTitle(h2Element.getContent().getTextExtractor().toString());
+        	page.setOriginalTitle(h2Element.getContent().getTextExtractor().toString());
         }
 
         // score
