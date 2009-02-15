@@ -33,8 +33,8 @@ import com.flicklib.service.SourceLoader;
  * 
  */
 public class PorthuLiveFetcherTest {
-    SourceLoader loader;
-    PorthuFetcher fetcher;
+    private SourceLoader loader;
+    private PorthuFetcher fetcher;
 
     
     @Before

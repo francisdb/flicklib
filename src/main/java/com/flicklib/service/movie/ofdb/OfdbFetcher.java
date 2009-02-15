@@ -15,13 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.flicklib.service.movie.cinebel;
+package com.flicklib.service.movie.ofdb;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,28 +46,22 @@ import com.google.inject.Singleton;
  *
  */
 @Singleton
-public class CinebelFetcher extends AbstractMovieInfoFetcher {
+public class OfdbFetcher extends AbstractMovieInfoFetcher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CinebelFetcher.class);
-
-    /**
-     * TODO add support for en and fr
-     * TODO add support for fetching info curently available in the movies (find count link and go to page)
-     */
-    private static final String LANG = "nl";
+    private static final Logger LOGGER = LoggerFactory.getLogger(OfdbFetcher.class);
     
     private final SourceLoader sourceLoader;
     private final Parser parser;
     
     @Inject
-    public CinebelFetcher(final SourceLoader sourceLoader, @Cinebel final Parser parser) {
+    public OfdbFetcher(final SourceLoader sourceLoader, @Ofdb final Parser parser) {
 		this.sourceLoader = sourceLoader;
 		this.parser = parser;
 	}
     
 	@Override
 	public MoviePage getMovieInfo(String idForSite) throws IOException {		
-		MoviePage page = new MoviePage(MovieService.CINEBEL);
+		MoviePage page = new MoviePage(MovieService.OFDB);
 		// No other movie types for this site?
 		page.setType(MovieType.MOVIE);
 		String url = generateMovieUrl(idForSite);
@@ -81,29 +76,53 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 
 	@Override
 	public List<? extends MovieSearchResult> search(String title) throws IOException {
-		LOGGER.trace("search for "+title);
 		List<MovieSearchResult> list = new ArrayList<MovieSearchResult>();
-		String url = generateSearchUrl(title, 30);
+		String url = generateSearchUrl(title);
 		Source source = sourceLoader.loadSource(url);
 		au.id.jericho.lib.html.Source jerichoSource = new au.id.jericho.lib.html.Source(source.getContent());
         jerichoSource.fullSequentialParse();
         
     	// find all links
-    	//<a href="/nl/film/102-Forrest-gump.htm" class="blink">
-		//<h1 class='blink'><b>Forrest gump</b></h1>
-		//</a>
+    	//<a href="film/1050,Pulp-Fiction" onmouseover="....">Pulp Fiction<font size="1"> / Pulp Fiction</font> (1994)</a>
+        //<a href="film/33740,Pulp-Fiction-The-Facts" onmouseover="...">Pulp Fiction: The Facts [Kurzfilm]<font size="1"> / Pulp Fiction: The Facts</font> (2002)</a>
     	@SuppressWarnings("unchecked")
         List<Element> linkElements = jerichoSource.findAllElements(HTMLElementName.A);
     	for(Element linkElement: linkElements){
 	        String href = linkElement.getAttributeValue("href");
-	        String cssClass = linkElement.getAttributeValue("class");
-	        if ("blink".equals(cssClass) && href.startsWith("/"+LANG+"/film") && href.endsWith(".htm")) {
+	        if (href.startsWith("film/")) {
 	        	MovieSearchResult movieSite = new MovieSearchResult();
-		        String movieTitle = linkElement.getContent().getTextExtractor().toString();
-	        	movieSite.setTitle(movieTitle);
-	        	movieSite.setUrl(MovieService.CINEBEL.getUrl() + href);
-	        	String id = href.substring(("/"+LANG+"/film/").length(), href.indexOf('-'));
+		        String movieTitles = linkElement.getContent().getTextExtractor().toString();
+		        String[] titles = movieTitles.split(Pattern.quote("/"));
+		        String germanTitle = titles[0].trim();
+		        if(germanTitle.endsWith("]")){
+		        	String type = germanTitle.substring(germanTitle.lastIndexOf('[') + 1, germanTitle.lastIndexOf(']'));
+		        	if("Kurzfilm".equals(type)){
+		        		movieSite.setType(MovieType.SHORT_FILM);
+		        	}else if("TV-Serie".equals(type)){
+		        		movieSite.setType(MovieType.TV_SERIES);
+		        	}
+		        	germanTitle = germanTitle.substring(0, germanTitle.lastIndexOf('['));
+		        }else{
+	        		movieSite.setType(MovieType.MOVIE);
+	        	}
+	        	movieSite.setTitle(germanTitle);
+	        	if(titles.length > 1){
+	        		String originalTitleYear = titles[1].trim();
+	        		if(originalTitleYear.endsWith(")")){
+	        			String year = originalTitleYear.substring(originalTitleYear.lastIndexOf('(') + 1, originalTitleYear.lastIndexOf(')'));
+	        			try{
+	        				movieSite.setYear(Integer.parseInt(year));
+	        			}catch(NumberFormatException ex){
+	        				LOGGER.warn("Could not parse year: "+ex.getMessage());
+	        			}
+	        			originalTitleYear = originalTitleYear.substring(0, originalTitleYear.lastIndexOf('('));
+	        		}
+	        		movieSite.setOriginalTitle(originalTitleYear.trim());
+	        	}
+	        	movieSite.setUrl(MovieService.OFDB.getUrl() + href);
+	        	String id = href.substring(("film/").length());
 	        	movieSite.setIdForSite(id);
+	        	
 	        	// TODO pick up the year
 	        	// movieSite.setYear(year);
 	        	list.add(movieSite);
@@ -115,18 +134,18 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 	}
 	
 	private String generateMovieUrl(final String id){
-		//http://www.cinebel.be/nl/film/102-.htm
-		return MovieService.CINEBEL.getUrl()+"/"+LANG+"/film/"+id+"-.htm";
+		// http://www.ofdb.de/film/1050,Pulp-Fiction
+		return MovieService.OFDB.getUrl()+"/film/"+id;
 	}
 
-	private String generateSearchUrl(final String title, final int maxResults) {
+	private String generateSearchUrl(final String title) {
 		String encoded;
 		try {
 			encoded = URLEncoder.encode(title, "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("utf-8 encoding not supported" ,e);
 		}
-		String url = MovieService.CINEBEL.getUrl()+"/portal/faces/public/exo/search?portal:componentId=SearchContentPortlet&portal:type=render&portal:isSecure=false&lng="+LANG+"&query="+encoded+"&itemsPerPage="+maxResults+"&fuzzy=true&fieldToSearch=movieTitle&category=movie&movieWithSchedules=false";
+		String url = MovieService.OFDB.getUrl()+"/view.php?page=suchergebnis&Kat=Titel&SText="+encoded;
 		return url;
 	}
 

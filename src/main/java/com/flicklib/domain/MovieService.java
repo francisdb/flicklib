@@ -65,7 +65,12 @@ public enum MovieService {
     /**
      * http://www.cinebel.be
      */
-    CINEBEL("Cinebel", "http://www.cinebel.com");
+    CINEBEL("Cinebel", "http://www.cinebel.com"),
+    
+    /**
+     * http://www.ofdb.de
+     */
+    OFDB("Online-Filmdatenbank", "http://www.ofdb.de", "OFDb");
 
     private final String name;
     private final String url;

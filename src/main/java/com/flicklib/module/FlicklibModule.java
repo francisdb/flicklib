@@ -41,6 +41,9 @@ import com.flicklib.service.movie.movieweb.MovieWebInfoFetcher;
 import com.flicklib.service.movie.movieweb.MovieWebParser;
 import com.flicklib.service.movie.netflix.Netflix;
 import com.flicklib.service.movie.netflix.NetflixInfoFetcher;
+import com.flicklib.service.movie.ofdb.Ofdb;
+import com.flicklib.service.movie.ofdb.OfdbFetcher;
+import com.flicklib.service.movie.ofdb.OfdbParser;
 import com.flicklib.service.movie.omdb.Omdb;
 import com.flicklib.service.movie.omdb.OmdbFetcher;
 import com.flicklib.service.movie.porthu.PortHu;
@@ -75,6 +78,7 @@ public class FlicklibModule extends AbstractModule {
         bind(Parser.class).annotatedWith(Google.class).to(GoogleParser.class);
         bind(Parser.class).annotatedWith(Flixster.class).to(FlixsterParser.class);
         bind(Parser.class).annotatedWith(Cinebel.class).to(CinebelParser.class);
+        bind(Parser.class).annotatedWith(Ofdb.class).to(OfdbParser.class);
 
         bind(MovieInfoFetcher.class).annotatedWith(Imdb.class).to(ImdbInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(MovieWeb.class).to(MovieWebInfoFetcher.class);
@@ -85,6 +89,7 @@ public class FlicklibModule extends AbstractModule {
         bind(MovieInfoFetcher.class).annotatedWith(Netflix.class).to(NetflixInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(PortHu.class).to(PorthuFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Cinebel.class).to(CinebelFetcher.class);
+        bind(MovieInfoFetcher.class).annotatedWith(Ofdb.class).to(OfdbFetcher.class);
 
         bindConstant().annotatedWith(Names.named(HTTP_TIMEOUT)).to(20 * 1000);
         bindConstant().annotatedWith(Names.named(HTTP_CACHE)).to(Boolean.TRUE);

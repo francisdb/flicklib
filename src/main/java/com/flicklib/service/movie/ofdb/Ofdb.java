@@ -15,30 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.flicklib.domain;
+package com.flicklib.service.movie.ofdb;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import com.google.inject.BindingAnnotation;
 
 /**
- *
+ * http://www.ofdb.com/
  * @author francisdb
  */
-public enum MovieType {
-    MOVIE("Movie"),
-    SHORT_FILM("Short Film"),
-    TV_MOVIE("TV Movie"),
-    VIDEO_MOVIE("Video Movie"),
-    TV_SERIES("TV Series"),
-    MINI_SERIES("Mini Series");
-
-    private String name;
-
-    private MovieType(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
-
+@BindingAnnotation
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Ofdb {
+	
 }
