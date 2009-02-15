@@ -67,6 +67,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
      * @param netflixInfoFetcher 
      * @param porthuFetcher 
      * @param cinebelFetcher 
+     * @param ofdbFetcher 
      */
     @Inject
     public InfoFetcherFactoryImpl(

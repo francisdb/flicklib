@@ -42,6 +42,7 @@ public class OfdbParser implements Parser{
         int inhaltIndex = source.getContent().indexOf("Inhalt:</b> ");
         int nextAHref = source.getContent().indexOf("<a href", inhaltIndex);
         String inhalt = source.getContent().substring(inhaltIndex + "Inhalt:</b> ".length(), nextAHref);
+        page.setPlot(inhalt);
         page.setDescription(inhalt);
         // TODO get genre, runtime, director, length, alternative titles
 	}

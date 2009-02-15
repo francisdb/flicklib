@@ -32,6 +32,7 @@ public class OfdbFetcherTest {
 	public void testSearchString() throws IOException {
 		List<? extends MovieSearchResult> res = fetcher.search("Twin Peaks");
 		for(MovieSearchResult result:res){
+			assertEquals(MovieService.OFDB, result.getService());
 			System.out.println(result.getTitle()+" / "+result.getOriginalTitle()+" / "+result.getYear()+" / "+result.getType());
 		}
 		assertEquals("Geheimnis von Twin Peaks, Das", res.get(0).getTitle());
@@ -40,6 +41,13 @@ public class OfdbFetcherTest {
 		assertEquals(MovieType.MOVIE, res.get(0).getType());
 		
 		assertEquals(MovieType.TV_SERIES, res.get(1).getType());
+		
+		List<? extends MovieSearchResult> res2 = fetcher.search("mar adentro");
+		for(MovieSearchResult result:res2){
+			assertEquals(MovieService.OFDB, result.getService());
+			System.out.println(result.getTitle()+" / "+result.getOriginalTitle()+" / "+result.getYear()+" / "+result.getType());
+		}
+		
 	}
 	
 
@@ -52,7 +60,18 @@ public class OfdbFetcherTest {
 		assertEquals(MovieService.OFDB, page.getService());
 		assertEquals("Pulp Fiction", page.getTitle());
 		assertNotNull(page.getScore());
+		assertNotNull(page.getPlot());
 		assertNotNull(page.getDescription());
+		
+		// this was causing problems before
+		page = fetcher.getMovieInfo("3635,Dune---Der-Wüstenplanet");
+		assertEquals(MovieService.OFDB, page.getService());
+		// FIXME parse type and test it
+		assertEquals("Dune - Der Wüstenplanet [TV-Mini-Serie]", page.getTitle());
+		assertNotNull(page.getScore());
+		assertNotNull(page.getPlot());
+		assertNotNull(page.getDescription());
+		
 	}
 
 }

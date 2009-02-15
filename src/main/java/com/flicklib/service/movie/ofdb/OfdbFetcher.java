@@ -91,6 +91,7 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 	        String href = linkElement.getAttributeValue("href");
 	        if (href.startsWith("film/")) {
 	        	MovieSearchResult movieSite = new MovieSearchResult();
+	        	movieSite.setService(MovieService.OFDB);
 		        String movieTitles = linkElement.getContent().getTextExtractor().toString();
 		        String[] titles = movieTitles.split(Pattern.quote("/"));
 		        String germanTitle = titles[0].trim();
@@ -100,6 +101,8 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 		        		movieSite.setType(MovieType.SHORT_FILM);
 		        	}else if("TV-Serie".equals(type)){
 		        		movieSite.setType(MovieType.TV_SERIES);
+		        	}else if("TV-Mini-Serie".equals(type)){
+		        		movieSite.setType(MovieType.MINI_SERIES);
 		        	}
 		        	germanTitle = germanTitle.substring(0, germanTitle.lastIndexOf('['));
 		        }else{
@@ -135,7 +138,13 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 	
 	private String generateMovieUrl(final String id){
 		// http://www.ofdb.de/film/1050,Pulp-Fiction
-		return MovieService.OFDB.getUrl()+"/film/"+id;
+		String encoded;
+		try {
+			encoded = URLEncoder.encode(id, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("utf-8 encoding not supported" ,e);
+		}
+		return MovieService.OFDB.getUrl()+"/film/"+encoded;
 	}
 
 	private String generateSearchUrl(final String title) {
