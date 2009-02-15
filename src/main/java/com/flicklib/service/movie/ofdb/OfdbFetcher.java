@@ -95,39 +95,16 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 		        String movieTitles = linkElement.getContent().getTextExtractor().toString();
 		        String[] titles = movieTitles.split(Pattern.quote("/"));
 		        String germanTitle = titles[0].trim();
-		        if(germanTitle.endsWith("]")){
-		        	String type = germanTitle.substring(germanTitle.lastIndexOf('[') + 1, germanTitle.lastIndexOf(']'));
-		        	if("Kurzfilm".equals(type)){
-		        		movieSite.setType(MovieType.SHORT_FILM);
-		        	}else if("TV-Serie".equals(type)){
-		        		movieSite.setType(MovieType.TV_SERIES);
-		        	}else if("TV-Mini-Serie".equals(type)){
-		        		movieSite.setType(MovieType.MINI_SERIES);
-		        	}
-		        	germanTitle = germanTitle.substring(0, germanTitle.lastIndexOf('['));
-		        }else{
-	        		movieSite.setType(MovieType.MOVIE);
-	        	}
-	        	movieSite.setTitle(germanTitle);
+		        String theTitle = OfdbTools.handleType(germanTitle, movieSite);
+		        movieSite.setTitle(theTitle);
 	        	if(titles.length > 1){
 	        		String originalTitleYear = titles[1].trim();
-	        		if(originalTitleYear.endsWith(")")){
-	        			String year = originalTitleYear.substring(originalTitleYear.lastIndexOf('(') + 1, originalTitleYear.lastIndexOf(')'));
-	        			try{
-	        				movieSite.setYear(Integer.parseInt(year));
-	        			}catch(NumberFormatException ex){
-	        				LOGGER.warn("Could not parse year: "+ex.getMessage());
-	        			}
-	        			originalTitleYear = originalTitleYear.substring(0, originalTitleYear.lastIndexOf('('));
-	        		}
-	        		movieSite.setOriginalTitle(originalTitleYear.trim());
+	        		theTitle = OfdbTools.handleYear(originalTitleYear, movieSite);
+	        		movieSite.setOriginalTitle(theTitle);
 	        	}
 	        	movieSite.setUrl(MovieService.OFDB.getUrl() + href);
 	        	String id = href.substring(("film/").length());
 	        	movieSite.setIdForSite(id);
-	        	
-	        	// TODO pick up the year
-	        	// movieSite.setYear(year);
 	        	list.add(movieSite);
 	        }
     	}
@@ -135,6 +112,8 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 		
         return list;
 	}
+	
+	
 	
 	private String generateMovieUrl(final String id){
 		// http://www.ofdb.de/film/1050,Pulp-Fiction
