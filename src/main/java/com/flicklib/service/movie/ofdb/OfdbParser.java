@@ -44,8 +44,9 @@ public class OfdbParser implements Parser{
         List<Element> fontElements = jerichoSource.findAllElements(HTMLElementName.FONT);
         Iterator<Element> fontIterator = fontElements.iterator();
 
+        Element fontElement;
         while(fontIterator.hasNext()){
-        	Element fontElement = fontIterator.next();
+        	fontElement = fontIterator.next();
         	String txt = fontElement.getContent().getTextExtractor().toString();
         	if("Originaltitel:".equals(txt)){
         		fontElement = fontIterator.next();
@@ -64,6 +65,22 @@ public class OfdbParser implements Parser{
         		page.setDirector(fontElement.getContent().getTextExtractor().toString());
         	}
         }
+        
+        
+        //<img src="http://img.ofdb.de/film/3/3635.jpg" alt="Dune - Der Wüstenplanet" border="0" width="120" height="168"><br><br>
+        @SuppressWarnings("unchecked")
+        List<Element> imgElements = jerichoSource.findAllElements(HTMLElementName.IMG);
+        Iterator<Element> imgIterator = imgElements.iterator();
+        Element imgElement;
+        String imgUrl = null;
+        while(imgIterator.hasNext() && imgUrl == null){
+        	imgElement = imgIterator.next();
+        	String src = imgElement.getAttributeValue("src");
+        	if(src != null && src.startsWith("http://img.ofdb.de/film/")){
+        		imgUrl = src;
+        	}
+        }
+        page.setImgUrl(imgUrl);
 
 
         // score
