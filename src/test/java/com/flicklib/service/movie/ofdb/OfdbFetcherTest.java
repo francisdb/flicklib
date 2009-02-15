@@ -45,6 +45,7 @@ public class OfdbFetcherTest {
 		List<? extends MovieSearchResult> res2 = fetcher.search("mar adentro");
 		for(MovieSearchResult result:res2){
 			assertEquals(MovieService.OFDB, result.getService());
+			assertNotNull(result.getIdForSite());
 			System.out.println(result.getTitle()+" / "+result.getOriginalTitle()+" / "+result.getYear()+" / "+result.getType());
 		}
 		
@@ -72,6 +73,7 @@ public class OfdbFetcherTest {
 		assertNotNull(page.getScore());
 		assertNotNull(page.getPlot());
 		assertNotNull(page.getDescription());
+		assertNotNull(page.getIdForSite());
 		
 	}
 
