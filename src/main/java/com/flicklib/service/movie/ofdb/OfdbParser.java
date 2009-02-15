@@ -17,8 +17,12 @@
  */
 package com.flicklib.service.movie.ofdb;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,6 +104,28 @@ public class OfdbParser implements Parser{
         page.setImgUrl(imgUrl);
 
 
+        //<a href="view.php?page=genre&Genre=Fantasy">Fantasy</a><br><a href="view.php?page=genre&Genre=Krieg">Krieg</a><br>....
+        @SuppressWarnings("unchecked")
+        List<Element> aElements = jerichoSource.findAllElements(HTMLElementName.A);
+        Iterator<Element> aIterator = aElements.iterator();
+        Element aElement;
+        Set<String> genres = new HashSet<String>();
+        while(aIterator.hasNext()){
+        	aElement = aIterator.next();
+        	String href = aElement.getAttributeValue("href");
+        	if(href.startsWith("view.php?page=genre&Genre=")){
+        		href = href.replace("view.php?page=genre&Genre=", "");
+        		try {
+					href = URLDecoder.decode(href, "UTF-8");
+					genres.add(href);
+				} catch (UnsupportedEncodingException e) {
+					LOGGER.error(e.getMessage(), e);
+				}
+        	}
+        }
+        page.setGenres(genres);
+        
+        
         // score
         int noteIndex = source.getContent().indexOf("Note: ");
         int nextBr = source.getContent().indexOf("<br>", noteIndex);

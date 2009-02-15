@@ -70,6 +70,8 @@ public class OfdbFetcherTest {
 		assertEquals("John Harrison", page.getDirector());
 		assertEquals("http://img.ofdb.de/film/3/3635.jpg", page.getImgUrl());
 		assertEquals(Integer.valueOf(2000), page.getYear());
+		assertTrue(page.getGenres().contains("Abenteuer"));
+		assertTrue(page.getGenres().contains("Mystery"));
 		assertNotNull(page.getScore());
 		assertNotNull(page.getPlot());
 		assertNotNull(page.getDescription());
