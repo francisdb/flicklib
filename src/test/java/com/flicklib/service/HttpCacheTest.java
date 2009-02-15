@@ -20,9 +20,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.flicklib.service.HttpCache;
-import com.flicklib.service.Source;
-
 
 public class HttpCacheTest {
 
