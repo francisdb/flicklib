@@ -59,15 +59,12 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 	@Override
 	public MoviePage getMovieInfo(String idForSite) throws IOException {		
 		MoviePage page = new MoviePage(MovieService.OFDB);
-		// No other movie types for this site?
-		page.setType(MovieType.MOVIE);
 		String url = generateMovieUrl(idForSite);
+		page.setIdForSite(idForSite);
 		page.setUrl(url);
 		Source source = sourceLoader.loadSource(url);
 		
 		parser.parse(source, page);
-		
-		
         return page; 
 	}
 
