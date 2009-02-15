@@ -54,20 +54,21 @@ public class OfdbFetcherTest {
 	@Test
 	public void testGetMovieInfo() throws IOException {
 		MoviePage page = fetcher.getMovieInfo("1050,Pulp-Fiction");
-		System.out.println(page.getTitle());
-		System.out.println(page.getScore());
-		System.out.println(page.getDescription());
 		assertEquals(MovieService.OFDB, page.getService());
 		assertEquals("Pulp Fiction", page.getTitle());
 		assertNotNull(page.getScore());
 		assertNotNull(page.getPlot());
 		assertNotNull(page.getDescription());
-		
-		// this was causing problems before
+
 		page = fetcher.getMovieInfo("3635,Dune---Der-Wüstenplanet");
 		assertEquals(MovieService.OFDB, page.getService());
-		// FIXME parse type and test it
-		assertEquals("Dune - Der Wüstenplanet [TV-Mini-Serie]", page.getTitle());
+		assertEquals(MovieType.MINI_SERIES, page.getType());
+		assertEquals("Dune - Der Wüstenplanet", page.getAlternateTitle());
+		assertEquals("Dune", page.getTitle());
+		assertEquals("Dune", page.getOriginalTitle());
+		assertEquals("John Harrison", page.getDirector());
+		assertEquals("http://img.ofdb.de/film/3/3635.jpg", page.getImgUrl());
+		assertEquals(Integer.valueOf(2000), page.getYear());
 		assertNotNull(page.getScore());
 		assertNotNull(page.getPlot());
 		assertNotNull(page.getDescription());
