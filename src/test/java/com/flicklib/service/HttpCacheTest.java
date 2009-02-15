@@ -1,3 +1,4 @@
+package com.flicklib.service;
 /*
  * This file is part of Flicklib.
  *
