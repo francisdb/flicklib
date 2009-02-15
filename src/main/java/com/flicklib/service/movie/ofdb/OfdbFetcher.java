@@ -24,9 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import au.id.jericho.lib.html.Element;
 import au.id.jericho.lib.html.HTMLElementName;
 
@@ -48,7 +45,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class OfdbFetcher extends AbstractMovieInfoFetcher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OfdbFetcher.class);
+    //private static final Logger LOGGER = LoggerFactory.getLogger(OfdbFetcher.class);
     
     private final SourceLoader sourceLoader;
     private final Parser parser;
