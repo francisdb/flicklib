@@ -4,7 +4,7 @@
 	<groupId>com.flicklib</groupId>
 	<artifactId>flicklib</artifactId>
 	<packaging>jar</packaging>
-	<version>0.3-SNAPSHOT</version>
+	<version>0.3</version>
 	<name>flicklib</name>
 	<description>Java library for fetching movie information from the web</description>
 	<url>http://www.flicklib.com</url>
@@ -57,9 +57,9 @@
 		<url>http://code.google.com/p/flicklib/issues/list</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:svn:http://flicklib.googlecode.com/svn/tags/flicklib-0.2</connection>
-		<developerConnection>scm:svn:https://flicklib.googlecode.com/svn/tags/flicklib-0.2</developerConnection>
-		<url>http://code.google.com/p/flicklib/source/browse/tags/flicklib-0.2</url>
+		<connection>scm:svn:http://flicklib.googlecode.com/svn/tags/flicklib-0.3</connection>
+		<developerConnection>scm:svn:https://flicklib.googlecode.com/svn/tags/flicklib-0.3</developerConnection>
+		<url>http://code.google.com/p/flicklib/source/browse/tags/flicklib-0.3</url>
 	</scm>
 	<dependencies>
 		<dependency>
