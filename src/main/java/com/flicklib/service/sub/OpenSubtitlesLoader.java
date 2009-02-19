@@ -142,7 +142,7 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
             Element linkElement = (Element) i.next();
             String href = linkElement.getAttributeValue("href");
             if(!href.isEmpty() && href.contains("/offset-")) {
-                LOGGER.info(linkElement.getTextExtractor().toString());
+                LOGGER.trace(linkElement.getTextExtractor().toString());
                 links.add(href);
             }
         }
@@ -217,7 +217,7 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
     }
 
     private String searchUrl(String title) {
-        String encoded = Param.encode(title);
+        String encoded = Param.encode("\""+title+"\"");
         return SITE + "/en/search2/sublanguageid-all/moviename-" + encoded;
     }
 
