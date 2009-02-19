@@ -39,6 +39,7 @@ public class FlixterInfoFetcherTest {
         FlixsterParser parser = new FlixsterParser();
         FlixsterInfoFetcher fetcher = new FlixsterInfoFetcher(parser, new HttpSourceLoader(null, false));
         MoviePage site = fetcher.fetch("The X-Files I Want to Believe");
+        assertNotNull(site);
         System.out.println(site.getUrl());
         assertTrue(site.getUrl().contains("http://www.flixster.com/movie/the-x-files-i-want-to-believe-the-x-files-2"));
         assertNotNull("MovieWebStars is null", site.getScore());
