@@ -51,6 +51,14 @@ public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
         this.loader = loader;
     }
 
+    
+    public ImdbInfoFetcher(SourceLoader loader) {
+        this.loader = loader;
+        this.imdbParser = new ImdbParser();
+        this.imdbSearch = new ImdbSearch(loader, imdbParser);
+    }
+    
+    
     @Override
     public synchronized List<MovieSearchResult> search(String title) throws IOException {
         return imdbSearch.getResults(title);

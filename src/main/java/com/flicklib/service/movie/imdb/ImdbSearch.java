@@ -89,7 +89,7 @@ public class ImdbSearch {
                         movieSite.setType(ImdbParserRegex.getType(tdContents, false));
                         title = linkElement.getTextExtractor().toString();
                         title = ImdbParserRegex.cleanTitle(title);
-                        movieSite.setTitle(linkElement.getTextExtractor().toString());
+                        movieSite.setTitle(title);
                         ElementOnlyTextExtractor extractor = new ElementOnlyTextExtractor(tableElement.getContent());
                         String titleYear = extractor.toString().trim();
                         if (titleYear.length() > 0 && titleYear.contains(")")) {
@@ -108,6 +108,12 @@ public class ImdbSearch {
                             }
                         }
                         
+                        List<Element> emElements = tableElement.findAllElements("em");
+                        if (emElements!=null && emElements.size() >= 2) {
+                            // first contains the aka title, second (DVD title)
+                            String alternateTitle = ((Element)tableElement.findAllElements("em").get(0)).getTextExtractor().toString();
+                            movieSite.setAlternateTitle(ImdbParserRegex.cleanTitle(alternateTitle));
+                        }
 
                         // only add if not allready in the list
                         if (movieSite.getTitle().length() > 0 && !ids.contains(movieSite.getIdForSite())) {
