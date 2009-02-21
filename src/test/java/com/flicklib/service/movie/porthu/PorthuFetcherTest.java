@@ -107,8 +107,16 @@ public class PorthuFetcherTest {
             assertEquals("score", Integer.valueOf(94), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(80), moviePage.getVotes());
             assertGenres(moviePage.getGenres(), "amerikai", "gengszterfilm");
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
 
-            moviePage = fetcher.getMovieInfo("80364");
+    @Test
+    public void testGetMovieInfo2() {
+        try {
+            MoviePage moviePage = fetcher.getMovieInfo("80364");
             assertNotNull("movie page", moviePage);
             assertEquals("service type", MovieService.PORTHU, moviePage.getService());
             assertEquals("title", "Parfüm: Egy gyilkos története", moviePage.getAlternateTitle());
@@ -120,8 +128,17 @@ public class PorthuFetcherTest {
             assertEquals("score", Integer.valueOf(80), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(114), moviePage.getVotes());
             assertGenres(moviePage.getGenres(), "német", "francia", "spanyol", "filmdráma");
-            
-            moviePage = fetcher.getMovieInfo("1269");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetMovieInfo3() {
+        try {
+            MoviePage moviePage = fetcher.getMovieInfo("1269");
             assertNotNull("movie page", moviePage);
             assertEquals("service type", MovieService.PORTHU, moviePage.getService());
             assertEquals("title", "Star Trek 8. - Kapcsolatfelvétel", moviePage.getAlternateTitle());
@@ -134,8 +151,16 @@ public class PorthuFetcherTest {
             assertEquals("votes", Integer.valueOf(4), moviePage.getVotes());
             assertGenres(moviePage.getGenres(), "amerikai", "akciófilm");
 
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
 
-            moviePage = fetcher.getMovieInfo("75033");
+    @Test
+    public void testGetMovieInfo4() {
+        try {
+            MoviePage moviePage = fetcher.getMovieInfo("75033");
             assertNotNull("movie page", moviePage);
             assertEquals("service type", MovieService.PORTHU, moviePage.getService());
             assertEquals("title", "Terkel in Trouble", moviePage.getTitle());
@@ -150,27 +175,35 @@ public class PorthuFetcherTest {
             assertEquals("runtime", Integer.valueOf(78), moviePage.getRuntime());
             assertGenres(moviePage.getGenres(), "dán", "animációsfilm");
 
-            moviePage = fetcher.getMovieInfo("73833");
-            Assert.assertEquals("title","Syriana", moviePage.getTitle());
-            Assert.assertEquals("title","Sziriana", moviePage.getAlternateTitle());
-            Assert.assertEquals("year", Integer.valueOf(2005), moviePage.getYear());
-            Assert.assertEquals("score", Integer.valueOf(74), moviePage.getScore());
-            Assert.assertEquals("votes", Integer.valueOf(20), moviePage.getVotes());
-            assertGenres(moviePage.getGenres(), "amerikai", "filmdráma");
-
-            
         } catch (IOException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
+    }
 
+    @Test
+    public void testGetMovieInfo5() {
+        try {
+            MoviePage moviePage = fetcher.getMovieInfo("73833");
+            Assert.assertEquals("title", "Syriana", moviePage.getTitle());
+            Assert.assertEquals("title", "Sziriana", moviePage.getAlternateTitle());
+            Assert.assertEquals("year", Integer.valueOf(2005), moviePage.getYear());
+            Assert.assertEquals("runtime", Integer.valueOf(126), moviePage.getRuntime());
+            Assert.assertNull("scores", moviePage.getScore());
+            Assert.assertNull("votes", moviePage.getVotes());
+            assertGenres(moviePage.getGenres(), "amerikai", "filmdráma");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
     }
 
     private void assertGenres(Set<String> genres, String... expected) {
         for (String g : expected) {
-            assertTrue("genres contains "+g, genres.contains(g));
+            assertTrue("genres contains " + g, genres.contains(g));
         }
-        
+
     }
 
 }

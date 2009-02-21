@@ -217,7 +217,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                             LOGGER.info("film url :" + href);
                             String movieTitle = link.getContent().getTextExtractor().toString();
                             MovieSearchResult msr = new MovieSearchResult(MovieService.PORTHU);
-                            msr.setUrl(href);
+                            msr.setUrl(new java.net.URL(new java.net.URL("http://port.hu"),href).toString());
                             msr.setIdForSite(collectIdFromUrl(href));
 
                             String basetitle = unbracket(new ElementOnlyTextExtractor(span.getContent()).toString());
@@ -450,7 +450,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return parseContent(content);
     }
 
-	private void parseAjaxVoteObjectResponse(MoviePage mp, String id) throws IOException {
+    private void parseAjaxVoteObjectResponse(MoviePage mp, String id) throws IOException {
         Source voteObject = fetchVoteObject(id);
         @SuppressWarnings("unchecked")
         List<Element> spanElements = voteObject.findAllElements("span");
