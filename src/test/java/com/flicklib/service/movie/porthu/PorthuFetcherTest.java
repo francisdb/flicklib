@@ -189,8 +189,8 @@ public class PorthuFetcherTest {
             Assert.assertEquals("title", "Sziriana", moviePage.getAlternateTitle());
             Assert.assertEquals("year", Integer.valueOf(2005), moviePage.getYear());
             Assert.assertEquals("runtime", Integer.valueOf(126), moviePage.getRuntime());
-            Assert.assertNull("scores", moviePage.getScore());
-            Assert.assertNull("votes", moviePage.getVotes());
+            Assert.assertNotNull("scores", moviePage.getScore());
+            Assert.assertNotNull("votes", moviePage.getVotes());
             assertGenres(moviePage.getGenres(), "amerikai", "filmdráma");
 
         } catch (IOException e) {
