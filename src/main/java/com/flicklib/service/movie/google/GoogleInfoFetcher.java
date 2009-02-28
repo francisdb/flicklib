@@ -79,9 +79,8 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
     public List<MovieSearchResult> search(String title) throws IOException {
         String params = Param.paramString("q", title);
         com.flicklib.service.Source sourceString = httpLoader.loadSource("http://www.google.com/movies"+params);
-        Source source = new Source(sourceString.getContent());
+        Source source = sourceString.getJerichoSource();
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
-        source.fullSequentialParse();
 
         //Element titleElement = (Element)source.findAllElements(HTMLElementName.TITLE).get(0);
         //System.out.println(titleElement.getContent().extractText());
@@ -141,9 +140,8 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
         try {
             String params = Param.paramString("q", movie.getTitle());
             com.flicklib.service.Source httpSource = httpLoader.loadSource("http://www.google.com/movies"+params);
-            Source source = new Source(httpSource.getContent());
+            Source source = httpSource.getJerichoSource();
             //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
-            source.fullSequentialParse();
 
             //Element titleElement = (Element)source.findAllElements(HTMLElementName.TITLE).get(0);
             //System.out.println(titleElement.getContent().extractText());

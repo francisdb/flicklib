@@ -72,8 +72,7 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 		List<MovieSearchResult> list = new ArrayList<MovieSearchResult>();
 		String url = generateSearchUrl(title);
 		Source source = sourceLoader.loadSource(url);
-		au.id.jericho.lib.html.Source jerichoSource = new au.id.jericho.lib.html.Source(source.getContent());
-        jerichoSource.fullSequentialParse();
+		au.id.jericho.lib.html.Source jerichoSource = source.getJerichoSource();
         
     	// find all links
     	//<a href="film/1050,Pulp-Fiction" onmouseover="....">Pulp Fiction<font size="1"> / Pulp Fiction</font> (1994)</a>

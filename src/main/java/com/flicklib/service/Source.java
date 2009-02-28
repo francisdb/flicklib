@@ -27,6 +27,8 @@ public class Source implements Serializable{
     private final String content;
     private final String contentType;
     
+    private transient au.id.jericho.lib.html.Source jerichoSource;
+    
     /**
      * Creates a new Source
      * @param url
@@ -71,5 +73,13 @@ public class Source implements Serializable{
 		return url;
 	}
     
+	
+	public au.id.jericho.lib.html.Source getJerichoSource() {
+	    if (jerichoSource==null) {
+	        jerichoSource = new au.id.jericho.lib.html.Source(content);
+	        jerichoSource.fullSequentialParse();
+	    }
+            return jerichoSource;
+        }
 	
 }

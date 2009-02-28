@@ -77,9 +77,8 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
     	List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
         
         com.flicklib.service.Source source = sourceLoader.loadSource(createTomatoesSearchUrl(title));
-        Source jerichoSource = new Source(source.getContent());
+        Source jerichoSource = source.getJerichoSource();
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
-        jerichoSource.fullSequentialParse();
         
         List<?> divElements = jerichoSource.findAllElements(HTMLElementName.DIV);
         for (Iterator<?> i = divElements.iterator(); i.hasNext();) {

@@ -39,8 +39,7 @@ public class CinebelParser implements Parser {
 	@Override
 	public void parse(Source source, MoviePage page) {
 
-		au.id.jericho.lib.html.Source jerichoSource = new au.id.jericho.lib.html.Source(source.getContent());
-        jerichoSource.fullSequentialParse();
+		au.id.jericho.lib.html.Source jerichoSource = source.getJerichoSource();
         
         // <span class="movieMainTitle">The Matrix</span>
         @SuppressWarnings("unchecked")

@@ -68,9 +68,8 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
         List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
         
         com.flicklib.service.Source source = sourceLoader.loadSource(createFlixterSearchUrl(title));
-        Source jerichoSource = new Source(source.getContent());
+        Source jerichoSource = source.getJerichoSource();
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
-        jerichoSource.fullSequentialParse();
 
         // <a onmouseover="mB(event, 770678072);" title=" The X-Files: I Want to Believe (The X Files 2)" href="/movie/the-x-files-i-want-to-believe-the-x-files-2"  >
         // The X-Files: I Want to Believe (The X Files 2)
@@ -127,9 +126,8 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
         site.setService(MovieService.FLIXSTER);
         try {
             com.flicklib.service.Source source = sourceLoader.loadSource(createFlixterSearchUrl(movie.getTitle()));
-            Source jerichoSource = new Source(source.getContent());
+            Source jerichoSource = source.getJerichoSource();
             //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
-            jerichoSource.fullSequentialParse();
 
             // <a onmouseover="mB(event, 770678072);" title=" The X-Files: I Want to Believe (The X Files 2)" href="/movie/the-x-files-i-want-to-believe-the-x-files-2"  >
             // The X-Files: I Want to Believe (The X Files 2)

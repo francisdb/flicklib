@@ -85,9 +85,8 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
         String urlToLoad = createMovieWebSearchUrl(title);
 
         com.flicklib.service.Source source = sourceLoader.loadSource(urlToLoad);
-        Source jerichoSource = new Source(source.getContent());
+        Source jerichoSource = source.getJerichoSource();
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
-        jerichoSource.fullSequentialParse();
 
         //Element titleElement = (Element)source.findAllElements(HTMLElementName.TITLE).get(0);
         //System.out.println(titleElement.getContent().extractText());
@@ -128,9 +127,8 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
         String urlToLoad = createMovieWebSearchUrl(movie.getTitle());
         try {
             com.flicklib.service.Source source = sourceLoader.loadSource(urlToLoad);
-            Source jerichoSource = new Source(source.getContent());
+            Source jerichoSource = source.getJerichoSource();
             //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
-            jerichoSource.fullSequentialParse();
 
             //Element titleElement = (Element)source.findAllElements(HTMLElementName.TITLE).get(0);
             //System.out.println(titleElement.getContent().extractText());

@@ -85,8 +85,7 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 		List<MovieSearchResult> list = new ArrayList<MovieSearchResult>();
 		String url = generateSearchUrl(title, 30);
 		Source source = sourceLoader.loadSource(url);
-		au.id.jericho.lib.html.Source jerichoSource = new au.id.jericho.lib.html.Source(source.getContent());
-        jerichoSource.fullSequentialParse();
+		au.id.jericho.lib.html.Source jerichoSource = source.getJerichoSource();
         
     	// find all links
     	//<a href="/nl/film/102-Forrest-gump.htm" class="blink">

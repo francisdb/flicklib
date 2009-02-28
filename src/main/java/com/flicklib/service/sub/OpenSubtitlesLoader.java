@@ -60,8 +60,8 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
         String url = searchUrl(localFileName);
         int carryOn = 1;
         com.flicklib.service.Source source = sourceLoader.loadSource(url);
-        Source jerichoSource = new Source(source.getContent());
-        jerichoSource.fullSequentialParse();
+        Source jerichoSource = source.getJerichoSource();
+
         Set<Subtitle> results = new HashSet<Subtitle>();
 
         Element titleElement = (Element) jerichoSource.findAllElements(HTMLElementName.TITLE).get(0);

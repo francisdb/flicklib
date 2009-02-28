@@ -55,8 +55,8 @@ public class ImdbSearch {
     }
 
     public List<MovieSearchResult> parseResults(com.flicklib.service.Source source) throws IOException{
-        Source jerichoSource = new Source(source.getContent());
-        jerichoSource.fullSequentialParse();
+        Source jerichoSource = source.getJerichoSource();
+
         List<MovieSearchResult> results = new ArrayList<MovieSearchResult>();
         Element titleElement = (Element) jerichoSource.findAllElements(HTMLElementName.TITLE).get(0);
         String title = titleElement.getContent().getTextExtractor().toString();

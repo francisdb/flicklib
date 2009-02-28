@@ -29,9 +29,8 @@ public abstract class AbstractJerichoParser implements Parser{
 
     @Override
     public final void parse(com.flicklib.service.Source htmlSource, MoviePage movieSite) {
-        Source source = new Source(htmlSource.getContent());
+        Source source = htmlSource.getJerichoSource();
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
-        source.fullSequentialParse();
         parse(htmlSource.getContent(), source, movieSite);
     }
 

@@ -78,7 +78,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     public MoviePage getMovieInfo(String id) throws IOException {
 
         String url = generateUrlForFilmID(id);
-        Source source = loadContent(url);
+        Source source = sourceLoader.loadSource(url).getJerichoSource();
 
         MoviePage mp = parseMovieInfoPage(source, id);
         mp.setUrl(url);
@@ -188,7 +188,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         String url = generateUrlForTitleSearch(title);
 
         com.flicklib.service.Source flicklibSource = sourceLoader.loadSource(url);
-        Source jerichoSource = parseContent(flicklibSource);
+        Source jerichoSource = flicklibSource.getJerichoSource();
 
         if (isMoviePageUrl(flicklibSource.getUrl())) {
             String id = collectIdFromUrl(flicklibSource.getUrl());
@@ -438,18 +438,6 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return null;
     }
 
-    /**
-     * load content from the given URL, and returns the parser object
-     * 
-     * @param url
-     * @return
-     * @throws IOException
-     */
-    private Source loadContent(String url) throws IOException {
-        com.flicklib.service.Source content = sourceLoader.loadSource(url);
-        return parseContent(content);
-    }
-
     private void parseAjaxVoteObjectResponse(MoviePage mp, String id) throws IOException {
         Source voteObject = fetchVoteObject(id);
         @SuppressWarnings("unchecked")
@@ -480,14 +468,9 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         headers.put("Referer", generateUrlForFilmID(id));
         
         com.flicklib.service.Source content = sourceLoader.post("http://port.hu/pls/fi/VOTE.print_vote_box?", params, headers);
-        return parseContent(content);
+        return content.getJerichoSource();
     }
 
-    private Source parseContent(com.flicklib.service.Source content) {
-        Source source = new Source(content.getContent());
-        source.fullSequentialParse();
-        return source;
-    }
 
     protected String generateUrlForTitleSearch(String title) {
         try {
