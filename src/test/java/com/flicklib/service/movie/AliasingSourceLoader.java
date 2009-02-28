@@ -52,6 +52,11 @@ public class AliasingSourceLoader implements SourceLoader {
     
     @Override
     public Source loadSource(String url) throws IOException {
+        return this.loadSource(url, false);
+    }
+
+    @Override
+    public Source loadSource(String url, boolean cached) throws IOException {
         String result = mapping.get(url);
         if (result != null) {
             LOGGER.info("loading " + url + " from " + result);
