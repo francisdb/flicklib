@@ -34,6 +34,16 @@ public interface SourceLoader {
      */
     Source loadSource(String url) throws IOException;
 
+    
+    /**
+     * Loads a http request and parses it to a jericho source.
+     * @param url
+     * @param useCache if it's true it is allowed to cache the response.
+     * @return the page source and the final URL (after the redirects followed).
+     * @throws java.io.IOException
+     */
+    Source loadSource(String url, boolean useCache) throws IOException;
+    
     /**
      * Post a http request and parses it to a jericho source
      * 

@@ -42,7 +42,7 @@ import com.google.inject.name.Named;
  * @author francisdb
  */
 @Singleton
-public class HttpSourceLoader implements SourceLoader {
+public class HttpSourceLoader extends AbstractSourceLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpSourceLoader.class);
 
@@ -71,14 +71,14 @@ public class HttpSourceLoader implements SourceLoader {
    
     
     @Override
-    public Source loadSource(String url) throws IOException {
+    public Source loadSource(String url, boolean useCache) throws IOException {
         Source source = null;
-        if(cache != null){
+        if(cache != null && useCache){
         	source = cache.get(url);
         }
         if(source == null){
         	source = load(url);
-        	if(cache != null){
+        	if(cache != null && useCache){
         		cache.put(url, source);
         	}
         }
