@@ -47,6 +47,9 @@ public class FileSourceLoader extends AbstractSourceLoader {
         InputStream fis = null;
         try {
             fis = FileSourceLoader.class.getClassLoader().getResourceAsStream(url);
+            if (fis==null) {
+                throw new IOException("File not found : "+url);
+            }
             source = IOTools.inputSreamToString(fis);
         } finally {
             if (fis != null) {

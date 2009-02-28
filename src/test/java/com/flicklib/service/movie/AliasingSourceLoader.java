@@ -20,6 +20,7 @@ package com.flicklib.service.movie;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,13 +51,14 @@ public class AliasingSourceLoader implements SourceLoader {
         mapping.put(from, to);
     }
     
+    
     @Override
     public Source loadSource(String url) throws IOException {
-        return this.loadSource(url, false);
+        return this.loadSource(url, true);
     }
-
+    
     @Override
-    public Source loadSource(String url, boolean cached) throws IOException {
+    public Source loadSource(String url, boolean useCache) throws IOException {
         String result = mapping.get(url);
         if (result != null) {
             LOGGER.info("loading " + url + " from " + result);
@@ -64,13 +66,13 @@ public class AliasingSourceLoader implements SourceLoader {
         } else {
             LOGGER.info("loading " + url);
         }
-        return parent.loadSource(url);
+        return parent.loadSource(url, useCache);
     }
     
     @Override
     public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
         StringBuilder s = new StringBuilder(url);
-        for (String key : parameters.keySet()) {
+        for (String key : new TreeSet<String>(parameters.keySet())) {
             s.append("::").append(key).append('=').append(parameters.get(key));
         }
         return loadSource(s.toString());
