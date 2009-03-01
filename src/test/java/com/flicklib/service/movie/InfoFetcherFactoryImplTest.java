@@ -41,7 +41,7 @@ public class InfoFetcherFactoryImplTest {
 	@Before
 	public void setupFactory(){
 		MovieInfoFetcher fetcher = new MockInfoFetcher();
-		factory = new InfoFetcherFactoryImpl(fetcher,fetcher,fetcher,fetcher,fetcher,fetcher,fetcher,fetcher,fetcher,fetcher);
+		factory = new InfoFetcherFactoryImpl(fetcher,fetcher,fetcher,fetcher,fetcher,fetcher,fetcher,fetcher,fetcher,fetcher, fetcher);
 	}
 	
 	@Test

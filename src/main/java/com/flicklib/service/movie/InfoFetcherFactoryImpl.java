@@ -35,6 +35,7 @@ import com.flicklib.service.movie.ofdb.Ofdb;
 import com.flicklib.service.movie.omdb.Omdb;
 import com.flicklib.service.movie.porthu.PortHu;
 import com.flicklib.service.movie.tomatoes.RottenTomatoes;
+import com.flicklib.service.movie.xpress.XpressHu;
 
 /**
  *
@@ -55,6 +56,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
     private final MovieInfoFetcher porthuInfoFetcher;
     private final MovieInfoFetcher cinebelInfoFetcher;
     private final MovieInfoFetcher ofdbInfoFetcher;
+    private final MovieInfoFetcher xpressHuFetcher;
 
     /**
      * Constructs a new InfoFetcherFactoryImpl
@@ -80,7 +82,8 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
             final @Netflix MovieInfoFetcher netflixInfoFetcher,
             final @PortHu MovieInfoFetcher porthuFetcher,
             final @Cinebel MovieInfoFetcher cinebelFetcher,
-            final @Ofdb MovieInfoFetcher ofdbFetcher) {
+            final @Ofdb MovieInfoFetcher ofdbFetcher,
+            final @XpressHu MovieInfoFetcher xpressHuFetcher) {
         this.imdbInfoFetcher = imdbInfoFetcher;
         this.movieWebInfoFetcher = movieWebInfoFetcher;
         this.tomatoesInfoFetcher = tomatoesInfoFetcher;
@@ -91,6 +94,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
         this.porthuInfoFetcher = porthuFetcher;
         this.cinebelInfoFetcher = cinebelFetcher;
         this.ofdbInfoFetcher = ofdbFetcher;
+        this.xpressHuFetcher = xpressHuFetcher;
     }
     
     
@@ -128,6 +132,9 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
                 break;
             case OFDB :
                 fetcher = ofdbInfoFetcher;
+                break;
+            case XPRESSHU : 
+                fetcher = xpressHuFetcher;
                 break;
             default:
             	LOGGER.warn("No fetcher defined for service "+service);

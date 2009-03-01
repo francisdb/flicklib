@@ -20,6 +20,7 @@ import au.id.jericho.lib.html.StartTag;
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
+import com.flicklib.domain.MovieService;
 import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.StringUtils;
@@ -63,6 +64,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
         final MoviePage result = new MoviePage();
         result.setIdForSite(idForSite);
         result.setUrl(url);
+        result.setService(MovieService.XPRESSHU);
 
         final List<Element> trLines = jerichoSource.findAllElements("tr");
         // search for <tr valign='top' align='center'> with 2 child
@@ -261,6 +263,8 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
      */
     private MovieSearchResult parseRow(List<Element> childs) {
         MovieSearchResult msr = new MovieSearchResult();
+        msr.setService(MovieService.XPRESSHU);
+        
         {
             Element imageCell = childs.get(1);
             List<Element> imageTags = imageCell.findAllElements("img");

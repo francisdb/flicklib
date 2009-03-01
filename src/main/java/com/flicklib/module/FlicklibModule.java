@@ -51,6 +51,8 @@ import com.flicklib.service.movie.porthu.PorthuFetcher;
 import com.flicklib.service.movie.tomatoes.RottenTomatoes;
 import com.flicklib.service.movie.tomatoes.TomatoesInfoFetcher;
 import com.flicklib.service.movie.tomatoes.TomatoesParser;
+import com.flicklib.service.movie.xpress.XpressHu;
+import com.flicklib.service.movie.xpress.XpressHuFetcher;
 import com.flicklib.service.sub.OpenSubtitlesLoader;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
@@ -90,7 +92,8 @@ public class FlicklibModule extends AbstractModule {
         bind(MovieInfoFetcher.class).annotatedWith(PortHu.class).to(PorthuFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Cinebel.class).to(CinebelFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Ofdb.class).to(OfdbFetcher.class);
-
+        bind(MovieInfoFetcher.class).annotatedWith(XpressHu.class).to(XpressHuFetcher.class);
+        
         bindConstant().annotatedWith(Names.named(HTTP_TIMEOUT)).to(20 * 1000);
         bindConstant().annotatedWith(Names.named(HTTP_CACHE)).to(Boolean.TRUE);
     }
