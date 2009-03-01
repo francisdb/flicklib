@@ -75,8 +75,10 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
                     if (parseCenterPanel(result, tdList)) {
                         // navigate to the right most column, up one table
                         Element outerTr = getParentElement(tr, "tr");
-                        if (outerTr.getChildElements().size()==2) {
+                        if (outerTr != null && outerTr.getChildElements().size()==2) {
                             parseLeftMostColumn(result, (Element) outerTr.getChildElements().get(1));
+                        } else {
+                            LOGGER.error("unable locate rating for "+url);
                         }
                         break;
                     }
@@ -125,7 +127,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
                 for (int i = 1; i < bolds.size() && found < 4; i++) {
                     Element boldElement = bolds.get(i);
                     String text = boldElement.getTextExtractor().toString();
-                    LOGGER.info("text found:" + text);
+                    LOGGER.debug("text found:" + text);
                     if ("Műfaj:".equalsIgnoreCase(text) || "Mûfaj:".equalsIgnoreCase(text)) {
                         String value = getLabelValue(boldElement);
                         if (value != null) {
@@ -170,7 +172,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
         Element tr = getParentElement(img, "tr");
         Element nextRow = getSibling(tr, 1);
         String nextRowValue = nextRow.getTextExtractor().toString();
-        LOGGER.info("nextRow : "+nextRowValue);
+        LOGGER.debug("nextRow : "+nextRowValue);
         if (nextRowValue.endsWith("%")) {
             String subSequence = nextRowValue.substring(0, nextRowValue.length()-1);
             return Integer.valueOf(subSequence);
