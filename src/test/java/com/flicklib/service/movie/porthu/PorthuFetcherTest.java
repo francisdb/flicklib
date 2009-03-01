@@ -55,7 +55,7 @@ public class PorthuFetcherTest {
                 "porthu/filmsearch-response2.html");
         loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=75033&i_city_id=3372&i_county_id=-1", "porthu/film_page4.html");
         loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=73833&i_city_id=3372&i_county_id=-1", "porthu/film_page5.html");
-        loader.putAlias("http://port.hu/pls/fi/VOTE.print_vote_box?::i_object_id=73833::i_area_id=6::i_is_separator=0", "porthu/vote_object.html");
+        loader.putAlias("http://port.hu/pls/fi/VOTE.print_vote_box?::i_area_id=6::i_is_separator=0::i_object_id=73833", "porthu/vote_object.html");
         fetcher = new PorthuFetcher(loader);
     }
 

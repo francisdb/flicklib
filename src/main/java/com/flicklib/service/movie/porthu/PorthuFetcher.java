@@ -18,6 +18,8 @@
 package com.flicklib.service.movie.porthu;
 
 import java.io.IOException;
+
+
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -48,6 +50,8 @@ import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import com.flicklib.tools.LevenshteinDistance;
 import com.google.inject.Inject;
+import static com.flicklib.tools.StringUtils.*;
+
 
 public class PorthuFetcher extends AbstractMovieInfoFetcher {
 
@@ -359,22 +363,6 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         msr.setDescription(description);
     }
 
-    /**
-     * remove brackets from the start and end of the string.
-     * 
-     * @param text
-     * @return
-     */
-    private static String unbracket(String text) {
-        text = text.trim();
-        if (text.startsWith("(")) {
-            text = text.substring(1);
-        }
-        if (text.endsWith(")")) {
-            text = text.substring(0, text.length() - 1);
-        }
-        return text.trim();
-    }
 
     /**
      * search for port.hu movie id in the url.
