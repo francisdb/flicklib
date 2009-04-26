@@ -28,14 +28,20 @@ import org.junit.Test;
 
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.service.HttpSourceLoader;
+import com.flicklib.service.movie.AlternateLiveTester;
 
 /**
  *
  * @author francisdb
  */
-public class ImdbSearchTest {
+public class ImdbSearchTest extends AlternateLiveTester {
 
+    ImdbSearch instance ;
 
+	public ImdbSearchTest(boolean flag) {
+		super(flag);
+		instance = new ImdbSearch(loader, new ImdbParser());
+	}
 
 
     /**
@@ -46,7 +52,6 @@ public class ImdbSearchTest {
     @Test
     //@Ignore
     public void testGetResults_String() throws Exception {
-        ImdbSearch instance = new ImdbSearch(new HttpSourceLoader(null, false), new ImdbParser());
         List<MovieSearchResult> result = instance.getResults("Pulp Fiction");
         assertTrue(result.size() > 0);
         assertEquals("Pulp Fiction", result.get(0).getTitle());
@@ -67,7 +72,6 @@ public class ImdbSearchTest {
     @Test
     public void testGenerateImdbTitleSearchUrl() {
         String title = "Pulp Fiction";
-        ImdbSearch instance = new ImdbSearch(new HttpSourceLoader(null, false), new ImdbParser());
         String expResult = "http://www.imdb.com/find?q=Pulp+Fiction;s=tt;site=aka";
         String result = instance.generateImdbTitleSearchUrl(title);
         assertEquals(expResult, result);
@@ -75,7 +79,7 @@ public class ImdbSearchTest {
     
     @Test
     public void testAlternateTitle() throws IOException {
-        ImdbInfoFetcher fetcher = new ImdbInfoFetcher(new HttpSourceLoader(null, true));
+        ImdbInfoFetcher fetcher = new ImdbInfoFetcher(loader);
         List<MovieSearchResult> list = fetcher.search("Life Is a Miracle");
         assertNotNull("search result", list);
         assertTrue("more then 2 result", list.size() > 2);
