@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.flicklib.module.FlicklibModule;
+import com.flicklib.service.cache.HttpEHCache;
 import com.flicklib.tools.IOTools;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -63,7 +64,7 @@ public class HttpSourceLoader extends AbstractSourceLoader {
             // LOGGER.info("Timeout = "+client.getParams().getSoTimeout());
         }
         if(useCache){
-        	cache = new HttpCache();
+        	cache = new HttpEHCache();
         }else{
         	cache = null;
         }

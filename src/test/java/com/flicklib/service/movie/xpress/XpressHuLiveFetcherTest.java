@@ -22,23 +22,19 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.service.HttpSourceLoader;
-import com.flicklib.service.SourceLoader;
+import com.flicklib.service.movie.AlternateLiveTester;
 
-public class XpressHuLiveFetcherTest {
-    private SourceLoader loader;
+public class XpressHuLiveFetcherTest extends AlternateLiveTester {
     private AbstractMovieInfoFetcher fetcher;
 
     
-    @Before
-    public void setUp() throws Exception {
-        loader = new HttpSourceLoader(60000, false);
+    public XpressHuLiveFetcherTest (boolean internalHttpClient) {
+    	super(internalHttpClient);
         fetcher = new XpressHuFetcher(loader);
     }
     

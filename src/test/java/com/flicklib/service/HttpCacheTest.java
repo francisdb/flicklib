@@ -20,12 +20,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.flicklib.service.cache.HttpEHCache;
+
 
 public class HttpCacheTest {
 
 	@Test
 	public void testHttpCache() {
-		HttpCache cache = new HttpCache();
+		HttpCache cache = new HttpEHCache();
 		Source source = new Source("JUnit", "blabla", "text/plain");
 		cache.put("JUnit", source);
 		assertEquals("blabla", cache.get("JUnit").getContent());

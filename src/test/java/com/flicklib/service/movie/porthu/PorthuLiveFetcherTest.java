@@ -20,26 +20,22 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.service.HttpSourceLoader;
-import com.flicklib.service.SourceLoader;
+import com.flicklib.service.movie.AlternateLiveTester;
 
 /**
  * @author zsombor
  * 
  */
-public class PorthuLiveFetcherTest {
-    private SourceLoader loader;
+// @RunWith(value=Parameterized.class)
+public class PorthuLiveFetcherTest extends AlternateLiveTester {
     private PorthuFetcher fetcher;
 
-    
-    @Before
-    public void setUp() throws Exception {
-        loader = new HttpSourceLoader(60000, false);
+    public PorthuLiveFetcherTest (boolean internalHttpClient) {
+    	super(internalHttpClient);
         fetcher = new PorthuFetcher(loader);
     }
     
