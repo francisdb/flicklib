@@ -64,6 +64,10 @@ public class TomatoesParser extends AbstractJerichoParser {
                 }
             }
         }
+        Element elementById = source.getElementById("movie_synopsis_all");
+        if (elementById!=null) {
+        	movieSite.setPlot(elementById.getContent().getTextExtractor().toString());
+        }
 
     }
 }
