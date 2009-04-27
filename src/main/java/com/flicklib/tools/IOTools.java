@@ -17,18 +17,26 @@
  */
 package com.flicklib.tools;
 
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- *
+ * IO related utility class
+ * 
  * @author francisdb
  */
 public class IOTools {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(IOTools.class);
 
     private IOTools() {
-        // Utility class
+        throw new UnsupportedOperationException("Utility class");
     }
 
     
@@ -39,23 +47,39 @@ public class IOTools {
      * @return the result from reading the stream
      * @throws java.io.IOException
      */
-    public static String inputSreamToString(InputStream in) throws IOException {
-        StringBuilder out = new StringBuilder();
+    public static String inputSreamToString(final InputStream in) throws IOException {
+    	ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] b = new byte[4096];
         for (int n; (n = in.read(b)) != -1;) {
-            out.append(new String(b, 0, n));
+            bos.write(b, 0, n);
         }
-        return out.toString();
+        return bos.toString();
     }
     
-    public static String readerToString(Reader in) throws IOException {
+    public static String readerToString(final Reader in) throws IOException {
         StringBuilder out = new StringBuilder();
         char[] b = new char[4096];
         for (int n; (n = in.read(b)) != -1;) {
             out.append(new String(b, 0, n));
         }
         return out.toString();
-        
+    }
+    
+    /**
+     * Silently closes a Closeable, logs exceptions
+     * 
+     * @param closeable
+     */
+    public static void close(final Closeable closeable){
+    	if(closeable != null) {
+	    	try {
+				closeable.close();
+			} catch (IOException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+    	}else{
+    		LOGGER.warn("Trying to close null Closeable");
+    	}
     }
     
 }

@@ -109,13 +109,7 @@ public class HttpSourceLoader extends AbstractSourceLoader {
             // String contentType = URLConnection.guessContentTypeFromName(url)
             return new Source(httpMethod.getURI().toString(), IOTools.readerToString(is), contentType);
         } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException ex) {
-                    LOGGER.error("Could not close InputStream", is);
-                }
-            }
+        	IOTools.close(is);
             if (httpMethod != null) {
                 httpMethod.releaseConnection();
             }
@@ -154,13 +148,7 @@ public class HttpSourceLoader extends AbstractSourceLoader {
             // String contentType = URLConnection.guessContentTypeFromName(url)
             return new Source(httpMethod.getURI().toString(), IOTools.readerToString(is), contentType);
         } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException ex) {
-                    LOGGER.error("Could not close InputStream", is);
-                }
-            }
+        	IOTools.close(is);
             if (httpMethod != null) {
                 httpMethod.releaseConnection();
             }

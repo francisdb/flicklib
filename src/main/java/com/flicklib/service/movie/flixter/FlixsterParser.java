@@ -27,9 +27,6 @@ import com.flicklib.service.movie.AbstractJerichoParser;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import java.util.Iterator;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author francisdb

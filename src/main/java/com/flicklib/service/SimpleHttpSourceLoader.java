@@ -42,6 +42,24 @@ import com.flicklib.tools.IOTools;
  */
 public class SimpleHttpSourceLoader extends AbstractSourceLoader {
 
+	static {
+		CookieManager manager = new CookieManager(null, new CookiePolicy() {
+			@Override
+			public boolean shouldAccept(URI uri, HttpCookie cookie) {
+				if (cookie.getMaxAge() == 0) {
+					cookie.setMaxAge(-1);
+				}
+				if (cookie.getDomain() == null) {
+					cookie.setDomain(uri.getHost());
+				}
+				return true;
+			}
+		});
+		CookieHandler.setDefault(manager);
+	}
+	
+	
+	
 	private	final HttpCache cache;
 	private boolean hideAgent = true;
 	private Integer timeOut = null;
@@ -85,23 +103,27 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
 
 	private Source processRequest(HttpURLConnection connection) throws IOException,
 			UnsupportedEncodingException {
-		InputStream input = connection.getInputStream();
-		String encoding = connection.getContentEncoding();
-		String contentType = connection.getHeaderField("Content-Type");
-		if (encoding == null) {
-			if (contentType != null && contentType.indexOf("charset") != -1) {
-				encoding = contentType.replaceAll(".*charset=(.*)", "$1");
+		InputStream input = null;
+		Source source = null;
+		try{
+			input = connection.getInputStream();
+			String encoding = connection.getContentEncoding();
+			String contentType = connection.getHeaderField("Content-Type");
+			if (encoding == null) {
+				if (contentType != null && contentType.indexOf("charset") != -1) {
+					encoding = contentType.replaceAll(".*charset=(.*)", "$1");
+				}
 			}
+			if (encoding == null) {
+				// the old default ...
+				encoding = "ISO-8859-1";
+			}
+			Reader reader = new InputStreamReader(input, encoding);
+			source = new Source(connection.getURL().toString(), IOTools.readerToString(reader), contentType);
+			reader.close();
+		}finally{
+			IOTools.close(input);
 		}
-		if (encoding == null) {
-			// the old default ...
-			encoding = "ISO-8859-1";
-		}
-		Reader reader = new InputStreamReader(input, encoding);
-		
-		Source source = new Source(connection.getURL().toString(), IOTools
-				.readerToString(reader), contentType);
-		reader.close();
 		return source;
 	}
 
@@ -146,22 +168,6 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
 		outputStream.close();
 		
 		return processRequest(connection);
-	}
-
-	static {
-		CookieManager manager = new CookieManager(null, new CookiePolicy() {
-			@Override
-			public boolean shouldAccept(URI uri, HttpCookie cookie) {
-				if (cookie.getMaxAge() == 0) {
-					cookie.setMaxAge(-1);
-				}
-				if (cookie.getDomain() == null) {
-					cookie.setDomain(uri.getHost());
-				}
-				return true;
-			}
-		});
-		CookieHandler.setDefault(manager);
 	}
 
 }

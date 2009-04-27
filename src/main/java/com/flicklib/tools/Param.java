@@ -33,7 +33,7 @@ public class Param {
     private static final Logger LOGGER = LoggerFactory.getLogger(Param.class);
 
     private Param() {
-        // Utility class
+        throw new UnsupportedOperationException("Utility class");
     }
 
     /**
