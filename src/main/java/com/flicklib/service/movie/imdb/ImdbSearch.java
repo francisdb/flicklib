@@ -108,6 +108,7 @@ public class ImdbSearch {
                             }
                         }
                         
+                        @SuppressWarnings("unchecked")
                         List<Element> emElements = tableElement.findAllElements("em");
                         if (emElements!=null && emElements.size() >= 2) {
                             // first contains the aka title, second (DVD title)
