@@ -20,8 +20,6 @@ package com.flicklib.service.movie.imdb;
 import java.io.IOException;
 import java.util.List;
 
-import au.id.jericho.lib.html.Source;
-
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
