@@ -32,7 +32,6 @@ import com.flicklib.service.movie.imdb.Imdb;
 import com.flicklib.service.movie.movieweb.MovieWeb;
 import com.flicklib.service.movie.netflix.Netflix;
 import com.flicklib.service.movie.ofdb.Ofdb;
-import com.flicklib.service.movie.omdb.Omdb;
 import com.flicklib.service.movie.porthu.PortHu;
 import com.flicklib.service.movie.tomatoes.RottenTomatoes;
 import com.flicklib.service.movie.xpress.XpressHu;
@@ -51,7 +50,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
     private final MovieInfoFetcher tomatoesInfoFetcher;
     private final MovieInfoFetcher googleInfoFetcher;
     private final MovieInfoFetcher flixterInfoFetcher;
-    private final MovieInfoFetcher omdbInfoFetcher;
+    //private final MovieInfoFetcher omdbInfoFetcher;
     private final MovieInfoFetcher netflixInfoFetcher;
     private final MovieInfoFetcher porthuInfoFetcher;
     private final MovieInfoFetcher cinebelInfoFetcher;
@@ -78,7 +77,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
             final @RottenTomatoes MovieInfoFetcher tomatoesInfoFetcher,
             final @Google MovieInfoFetcher googleInfoFetcher,
             final @Flixster MovieInfoFetcher flixterInfoFetcher,
-            final @Omdb MovieInfoFetcher omdbInfoFetcher,
+            //final @Omdb MovieInfoFetcher omdbInfoFetcher,
             final @Netflix MovieInfoFetcher netflixInfoFetcher,
             final @PortHu MovieInfoFetcher porthuFetcher,
             final @Cinebel MovieInfoFetcher cinebelFetcher,
@@ -89,7 +88,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
         this.tomatoesInfoFetcher = tomatoesInfoFetcher;
         this.googleInfoFetcher = googleInfoFetcher;
         this.flixterInfoFetcher = flixterInfoFetcher;
-        this.omdbInfoFetcher = omdbInfoFetcher;
+        //this.omdbInfoFetcher = omdbInfoFetcher;
         this.netflixInfoFetcher = netflixInfoFetcher;
         this.porthuInfoFetcher = porthuFetcher;
         this.cinebelInfoFetcher = cinebelFetcher;
@@ -115,9 +114,9 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
             case MOVIEWEB:
                 fetcher = movieWebInfoFetcher;
                 break;
-            case OMDB:
-                fetcher = omdbInfoFetcher;
-                break;
+//            case OMDB:
+//                fetcher = omdbInfoFetcher;
+//                break;
             case TOMATOES:
                 fetcher = tomatoesInfoFetcher;
                 break;
