@@ -71,7 +71,7 @@ public class XpressHuLiveFetcherTest extends AlternateLiveTester {
         Assert.assertEquals("director", "Alan Rudolph", movieInfo.getDirector());
         Assert.assertEquals("orig title", "Breakfast of Champions", movieInfo.getOriginalTitle());
         Assert.assertEquals("orig year", Integer.valueOf(1999), movieInfo.getYear());
-        Assert.assertEquals("score", Integer.valueOf(73), movieInfo.getScore());
+        Assert.assertEquals("score", Integer.valueOf(70), movieInfo.getScore());
         
     }
     
