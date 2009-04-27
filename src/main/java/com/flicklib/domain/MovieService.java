@@ -37,10 +37,12 @@ public enum MovieService {
      */
     MOVIEWEB("MovieWeb", "http://www.movieweb.com", "MWeb"),
     
-    /**
-     * http://www.omdb.com
-     */
-    OMDB("OMDB", "http://www.omdb.com"),
+    
+    /* TODO add http/jericho based parser */
+//    /**
+//     * http://www.omdb.com
+//     */
+//    OMDB("OMDB", "http://www.omdb.com"),
     
     /**
      * http://www.google.com/movies
