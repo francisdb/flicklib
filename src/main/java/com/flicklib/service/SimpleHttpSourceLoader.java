@@ -30,7 +30,6 @@ import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,9 +42,9 @@ import com.flicklib.tools.IOTools;
  */
 public class SimpleHttpSourceLoader extends AbstractSourceLoader {
 
-	HttpCache cache;
-	boolean hideAgent = true;
-	Integer timeOut = null;
+	private	final HttpCache cache;
+	private boolean hideAgent = true;
+	private Integer timeOut = null;
 
 	/**
 	 * 
@@ -55,6 +54,7 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
 	}
 	
 	public SimpleHttpSourceLoader() {
+		this(null);
 	}
 
 	/*
