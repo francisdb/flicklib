@@ -41,47 +41,35 @@ public class FlixsterParser extends AbstractJerichoParser{
     
     @Override
     public void parse(String html, Source source, MoviePage movieSite) {
-        // <a  title=" The X-Files: I Want to Believe (The X Files 2)" href="/movie/the-x-files-i-want-to-believe-the-x-files-2"  class="headerLink" >
-        List<?> aElements = source.findAllElements(HTMLElementName.A);
-        for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
-            Element aElement = (Element) i.next();
-            if("headerLink".equals(aElement.getAttributeValue("class"))){
-                movieSite.setTitle(aElement.getContent().getTextExtractor().toString().trim());
-            }
-        }
-        
-        List<?> divElements = source.findAllElements(HTMLElementName.TH);
-        for (Iterator<?> i = divElements.iterator(); i.hasNext();) {
-            Element thElement = (Element) i.next();
-            TextExtractor extractor = new ElementOnlyTextExtractor(thElement.getContent());
-            String content = extractor.toString().trim();
-            if (content.equals("All Flixster")) {
-                Element next = source.findNextElement(thElement.getEnd());
-                String votes = new ElementOnlyTextExtractor(next.getContent()).toString().trim();
-                votes = votes.replaceAll("\\(", "").replaceAll("\\)", "");
-                movieSite.setVotes(Integer.valueOf(votes));
-                List<?> childs = next.getChildElements();
-                if (childs.size() > 0) {
-                    Element imgElment = (Element) childs.get(0);
-                    // <img src="/static/images/rating/3.0.png"   score="3.0 Stars" />
-                    String score = imgElment.getAttributeValue("alt");
-                    score = score.replaceAll("Stars", "");
-                    if (score.length() > 0) {
-                        try {
-                            float theScore = Float.valueOf(score).floatValue() * 20;
-                            int intScore = Math.round(theScore);
-                            movieSite.setScore(intScore);
-                        } catch (NumberFormatException ex) {
-                            LOGGER.error("Could not parse " + score + " to Float", ex);
-                        }
-                    }
+    	
+    	List<?> h1Elements = source.findAllElements(HTMLElementName.H1);
+    	for (Iterator<?> i = h1Elements.iterator(); i.hasNext();) {
+    		Element h1Element = (Element) i.next();
+    		List<?> aElements = h1Element.findAllElements(HTMLElementName.A);
+            for (Iterator<?> i2 = aElements.iterator(); i2.hasNext();) {
+                Element aElement = (Element) i2.next();
+                if(aElement.getAttributeValue("href").contains("/movie/")){
+                    movieSite.setTitle(aElement.getContent().getTextExtractor().toString().trim());
                 }
-            } 
-//            else if (content.equals("Female")) {
-//                // TODO use?
-//                
-//            } 
-//            // ...
+            }
+    	}
+    	
+        
+        
+        List<?> h4Elements = source.findAllElements(HTMLElementName.H4);
+        for (Iterator<?> i = h4Elements.iterator(); i.hasNext();) {
+            Element h4Element = (Element) i.next();
+            TextExtractor extractor = new ElementOnlyTextExtractor(h4Element.getContent());
+            String content = extractor.toString().trim();
+            
+            // TODO use "Critics" score
+            if (content.equals("Flixster Users")) {
+                Element next = source.findNextElement(h4Element.getEnd());
+                next = (Element) next.findAllElements(HTMLElementName.SPAN).get(0);
+                String votes = new ElementOnlyTextExtractor(next.getContent()).toString().trim();
+                votes = votes.replace("%", "");
+                movieSite.setScore(Integer.valueOf(votes));
+            }
         }
     }
 
