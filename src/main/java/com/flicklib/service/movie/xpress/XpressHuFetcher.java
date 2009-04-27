@@ -1,3 +1,20 @@
+/*
+ * This file is part of Flicklib.
+ *
+ * Copyright (C) Francis De Brabandere
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.flicklib.service.movie.xpress;
 
 import java.io.IOException;
@@ -23,7 +40,6 @@ import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
-import com.flicklib.tools.StringUtils;
 import com.google.inject.Inject;
 
 import static com.flicklib.tools.StringUtils.*;
@@ -108,7 +124,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
         }
     }
 
-    private boolean parseCenterPanel(final MoviePage result, List<Element> tdList) {
+	private boolean parseCenterPanel(final MoviePage result, List<Element> tdList) {
         Element firstTd = tdList.get(0);
         Element secondTd = tdList.get(1);
         if (isElementAttributeValue(firstTd, "rowspan", "2") && isElementAttributeValue(secondTd, "rowspan", "2")
