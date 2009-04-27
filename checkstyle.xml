@@ -49,7 +49,7 @@
 
         <module name="Header">
             <property name="headerFile" value="java.header"/>
-<!--    <property name="ignoreLines" value="2, 3, 4"/>-->
+			<property name="ignoreLines" value="4"/>
         </module>
     </module>
 </module>
