@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
@@ -128,13 +129,13 @@ public class HttpSourceLoader extends AbstractSourceLoader {
             LOGGER.info("Loading " + url);
             httpMethod = new PostMethod(url);
             if (parameters!=null) {
-                for (String key : parameters.keySet()) {
-                    httpMethod.addParameter(key, parameters.get(key));
+                for (Entry<String,String> entry : parameters.entrySet()) {
+                    httpMethod.addParameter(entry.getKey(), entry.getValue());
                 }
             }
             if (headers!=null) {
-                for (String key : headers.keySet()) {
-                    httpMethod.addRequestHeader(key, headers.get(key));
+                for (Entry<String,String> entry : headers.entrySet()) {
+                    httpMethod.addRequestHeader(entry.getKey(), entry.getValue());
                 }
             }            
             try{
