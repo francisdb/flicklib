@@ -57,6 +57,8 @@ public class AppleTrailerFinder implements TrailerFinder {
         request.getClientInfo().setAcceptedMediaTypes(types);
         //request.setReferrerRef("http://www.nosite.org");
 
+        
+        // TODO get rid of the restlet dependency
         Client client = new Client(Protocol.HTTP);
         try {
             Response response = client.handle(request);
