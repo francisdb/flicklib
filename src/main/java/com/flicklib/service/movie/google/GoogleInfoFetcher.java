@@ -35,7 +35,7 @@ import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
-import com.flicklib.service.HttpSourceLoader;
+import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.Param;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -50,7 +50,7 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
     private static final Logger LOGGER = LoggerFactory.getLogger(GoogleInfoFetcher.class);
     
     private final Parser googleParser;
-    private final HttpSourceLoader httpLoader;
+    private final SourceLoader httpLoader;
 
     /**
      * Constructs a new GoogleInfoFetcher
@@ -58,9 +58,13 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
      * @param httpLoader
      */
     @Inject
-    public GoogleInfoFetcher(final @Google Parser googleParser, HttpSourceLoader httpLoader) {
+    public GoogleInfoFetcher(final @Google Parser googleParser, SourceLoader httpLoader) {
         this.googleParser = googleParser;
         this.httpLoader = httpLoader;
+    }
+    
+    public GoogleInfoFetcher(SourceLoader loader) {
+        this(new GoogleParser(), loader);
     }
     
     @Override

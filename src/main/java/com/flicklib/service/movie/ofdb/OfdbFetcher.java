@@ -55,6 +55,10 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 		this.parser = parser;
 	}
     
+    public OfdbFetcher(final SourceLoader loader) {
+        this(loader, new OfdbParser());
+    }
+    
 	@Override
 	public MoviePage getMovieInfo(String idForSite) throws IOException {		
 		MoviePage page = new MoviePage(MovieService.OFDB);

@@ -62,6 +62,11 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
         this.sourceLoader = sourceLoader;
         this.parser = parser;
     }
+    
+    public FlixsterInfoFetcher(final SourceLoader sourceLoader) {
+        this(new FlixsterParser(), sourceLoader);
+    }
+   
 
     @Override
     public List<MovieSearchResult> search(String title) throws IOException {

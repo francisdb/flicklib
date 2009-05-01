@@ -59,6 +59,9 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
         this.tomatoesParser = tomatoesParser;
     }
 
+    public TomatoesInfoFetcher(SourceLoader loader) {
+        this(new TomatoesParser(), loader);
+    }
     
     @Override
     public MoviePage getMovieInfo(String id) throws IOException {

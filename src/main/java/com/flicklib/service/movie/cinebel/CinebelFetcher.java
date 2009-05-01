@@ -64,6 +64,10 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 		this.parser = parser;
 	}
     
+    public CinebelFetcher(final SourceLoader loader) {
+        this(loader, new CinebelParser());
+    }
+    
 	@Override
 	public MoviePage getMovieInfo(String idForSite) throws IOException {		
 		MoviePage page = new MoviePage(MovieService.CINEBEL);
