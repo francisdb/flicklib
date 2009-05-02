@@ -34,8 +34,8 @@ import com.flicklib.service.movie.AlternateLiveTester;
 public class PorthuLiveFetcherTest extends AlternateLiveTester {
     private PorthuFetcher fetcher;
 
-    public PorthuLiveFetcherTest (boolean internalHttpClient) {
-    	super(internalHttpClient);
+    public PorthuLiveFetcherTest (boolean internalHttpClient, boolean internalRedirects) {
+    	super(internalHttpClient, internalRedirects);
         fetcher = new PorthuFetcher(loader);
     }
     

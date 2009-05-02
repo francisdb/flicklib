@@ -76,6 +76,8 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
     private boolean hideAgent = true;
     private Integer timeOut = null;
 
+    private boolean internalRedirects = true;
+    
     /**
 	 * 
 	 */
@@ -86,7 +88,16 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
     public SimpleHttpSourceLoader() {
         this(null);
     }
+    
+    public SimpleHttpSourceLoader(boolean internalRedirects) {
+        this(null);
+        setInternalRedirects(internalRedirects);
+    }
 
+    public void setInternalRedirects(boolean internalRedirects) {
+        this.internalRedirects = internalRedirects;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -102,9 +113,7 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
             }
         }
         URL httpUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
-        setupConnection(connection);
-        Source source = processRequest(connection);
+        Source source = load(httpUrl);
         if (useCache) {
             if (cache != null) {
                 cache.put(url, source);
@@ -113,11 +122,25 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
         return source;
     }
 
+    private Source load(URL httpUrl) throws IOException, UnsupportedEncodingException {
+        HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
+        setupConnection(connection);
+        return processRequest(connection);
+    }
+
     private Source processRequest(HttpURLConnection connection) throws IOException, UnsupportedEncodingException {
         InputStream input = null;
         Source source = null;
         try {
             input = connection.getInputStream();
+            int responseCode = connection.getResponseCode();
+            String newLocation = connection.getHeaderField("Location");
+            if (responseCode==302 && newLocation!=null) {
+                URL redirectUrl = new URL(connection.getURL(), newLocation);
+                LOG.info("redirect to "+redirectUrl.toString());
+                IOTools.close(input);
+                return load(redirectUrl);
+            }
             String encoding = connection.getContentEncoding();
             String contentType = connection.getHeaderField("Content-Type");
             if (encoding == null) {
@@ -134,17 +157,17 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
             LOG.info("request for " + connection.getURL().toString() + " processed, result content type : " + contentType + ", encoding :" + encoding
                     + ", size:" + source.getContent().length());
             reader.close();
+            return source;
         } finally {
             IOTools.close(input);
         }
-        return source;
     }
 
     private void setupConnection(HttpURLConnection connection) {
         if (hideAgent) {
             connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
         }
-        connection.setInstanceFollowRedirects(true);connection.setInstanceFollowRedirects(true);
+        connection.setInstanceFollowRedirects(internalRedirects);
         if (timeOut != null) {
             connection.setReadTimeout(timeOut);
         }

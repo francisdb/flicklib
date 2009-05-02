@@ -14,13 +14,12 @@ import com.flicklib.domain.MovieService;
 import com.flicklib.service.movie.AlternateLiveTester;
 
 public class TomatoesInfoFetcherTest extends AlternateLiveTester {
-	TomatoesInfoFetcher fetcher;
-	
-	public TomatoesInfoFetcherTest(boolean flag) {
-		super(flag);
-		fetcher = new TomatoesInfoFetcher(
-				new TomatoesParser(), loader);
-	}
+    TomatoesInfoFetcher fetcher;
+
+    public TomatoesInfoFetcherTest(boolean flag, boolean internalRedirects) {
+        super(flag, internalRedirects);
+        fetcher = new TomatoesInfoFetcher(new TomatoesParser(), loader);
+    }
 	
 	@Test
 	public void testGetMovieInfo() throws IOException {

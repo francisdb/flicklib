@@ -33,8 +33,8 @@ public class XpressHuLiveFetcherTest extends AlternateLiveTester {
     private AbstractMovieInfoFetcher fetcher;
 
     
-    public XpressHuLiveFetcherTest (boolean internalHttpClient) {
-    	super(internalHttpClient);
+    public XpressHuLiveFetcherTest (boolean internalHttpClient, boolean internalRedirects) {
+    	super(internalHttpClient, internalRedirects);
         fetcher = new XpressHuFetcher(loader);
     }
     

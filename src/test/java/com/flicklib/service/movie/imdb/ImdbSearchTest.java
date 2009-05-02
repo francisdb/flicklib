@@ -37,10 +37,10 @@ public class ImdbSearchTest extends AlternateLiveTester {
 
     ImdbSearch instance ;
 
-	public ImdbSearchTest(boolean flag) {
-		super(flag);
-		instance = new ImdbSearch(loader, new ImdbParser());
-	}
+    public ImdbSearchTest(boolean flag, boolean internalRedirects) {
+        super(flag, internalRedirects);
+        instance = new ImdbSearch(loader, new ImdbParser());
+    }
 
 
     /**
