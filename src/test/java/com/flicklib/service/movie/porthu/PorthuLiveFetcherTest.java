@@ -60,6 +60,30 @@ public class PorthuLiveFetcherTest extends AlternateLiveTester {
             Assert.fail(e.getMessage());
         }
     }
+
+    @Test
+    public void testMalenaSearch() {
+        try {
+            List<MovieSearchResult> list = fetcher.search("maléna");
+            Assert.assertEquals("search result size", 1, list.size());
+            MovieSearchResult searchResult = list.get(0);
+            Assert.assertNotNull("search result not null", searchResult);
+            Assert.assertTrue("search result is an extended search result", searchResult instanceof MoviePage);
+            
+            MoviePage moviePage = (MoviePage) searchResult;
+            
+            Assert.assertEquals("title", "Maléna", moviePage.getAlternateTitle());
+            Assert.assertEquals("alternate title", "Malena", moviePage.getTitle());
+            Assert.assertEquals("year", Integer.valueOf(2000), moviePage.getYear());
+            Assert.assertNotNull("has plot", moviePage.getPlot());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+        
+    }
+    
     
     @Test
     public void testLiveMovieFetch() {

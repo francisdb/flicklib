@@ -31,8 +31,12 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.AccessControlException;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.flicklib.tools.IOTools;
 
@@ -42,132 +46,136 @@ import com.flicklib.tools.IOTools;
  */
 public class SimpleHttpSourceLoader extends AbstractSourceLoader {
 
-	static {
-		CookieManager manager = new CookieManager(null, new CookiePolicy() {
-			@Override
-			public boolean shouldAccept(URI uri, HttpCookie cookie) {
-				if (cookie.getMaxAge() == 0) {
-					cookie.setMaxAge(-1);
-				}
-				if (cookie.getDomain() == null) {
-					cookie.setDomain(uri.getHost());
-				}
-				return true;
-			}
-		});
-		CookieHandler.setDefault(manager);
-	}
-	
-	
-	
-	private	final HttpCache cache;
-	private boolean hideAgent = true;
-	private Integer timeOut = null;
+    static Logger LOG = LoggerFactory.getLogger(SimpleHttpSourceLoader.class);
 
-	/**
+    static {
+        try {
+            CookieManager manager = new CookieManager(null, new CookiePolicy() {
+                @Override
+                public boolean shouldAccept(URI uri, HttpCookie cookie) {
+                    if (cookie.getMaxAge() == 0) {
+                        cookie.setMaxAge(-1);
+                    }
+                    if (cookie.getDomain() == null) {
+                        cookie.setDomain(uri.getHost());
+                    }
+                    return true;
+                }
+            });
+            try {
+                CookieHandler.setDefault(manager);
+            } catch (AccessControlException ace) {
+                LOG.warn("cookie handler initialization failed!");
+            }
+        } catch (java.lang.NoClassDefFoundError ncde) {
+            LOG.warn("CookieManager is not accessible " + ncde.getMessage(), ncde);
+        }
+    }
+
+    private final HttpCache cache;
+    private boolean hideAgent = true;
+    private Integer timeOut = null;
+
+    /**
 	 * 
 	 */
-	public SimpleHttpSourceLoader(HttpCache cache) {
-		this.cache = cache;
-	}
-	
-	public SimpleHttpSourceLoader() {
-		this(null);
-	}
+    public SimpleHttpSourceLoader(HttpCache cache) {
+        this.cache = cache;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.flicklib.service.SourceLoader#loadSource(java.lang.String,
-	 * boolean)
-	 */
-	@Override
-	public Source loadSource(String url, boolean useCache) throws IOException {
-		if (useCache && cache!=null) {
-			Source source = cache.get(url);
-			if (source != null) {
-				return source;
-			}
-		}
-		URL httpUrl = new URL(url);
-		HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
-		setupConnection(connection);
-		Source source = processRequest(connection);
-		if (useCache) {
-			if (cache != null) {
-				cache.put(url, source);
-			}
-		}
-		return source;
-	}
+    public SimpleHttpSourceLoader() {
+        this(null);
+    }
 
-	private Source processRequest(HttpURLConnection connection) throws IOException,
-			UnsupportedEncodingException {
-		InputStream input = null;
-		Source source = null;
-		try{
-			input = connection.getInputStream();
-			String encoding = connection.getContentEncoding();
-			String contentType = connection.getHeaderField("Content-Type");
-			if (encoding == null) {
-				if (contentType != null && contentType.indexOf("charset") != -1) {
-					encoding = contentType.replaceAll(".*charset=(.*)", "$1");
-				}
-			}
-			if (encoding == null) {
-				// the old default ...
-				encoding = "ISO-8859-1";
-			}
-			Reader reader = new InputStreamReader(input, encoding);
-			source = new Source(connection.getURL().toString(), IOTools.readerToString(reader), contentType);
-			reader.close();
-		}finally{
-			IOTools.close(input);
-		}
-		return source;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.flicklib.service.SourceLoader#loadSource(java.lang.String,
+     * boolean)
+     */
+    @Override
+    public Source loadSource(String url, boolean useCache) throws IOException {
+        if (useCache && cache != null) {
+            Source source = cache.get(url);
+            if (source != null) {
+                return source;
+            }
+        }
+        URL httpUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
+        setupConnection(connection);
+        Source source = processRequest(connection);
+        if (useCache) {
+            if (cache != null) {
+                cache.put(url, source);
+            }
+        }
+        return source;
+    }
 
-	private void setupConnection(HttpURLConnection connection) {
-		if (hideAgent) {
-			connection
-					.addRequestProperty(
-							"User-Agent",
-							"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
-		}
-		connection.setInstanceFollowRedirects(true);
-		if (timeOut != null) {
-			connection.setReadTimeout(timeOut);
-		}
-	}
+    private Source processRequest(HttpURLConnection connection) throws IOException, UnsupportedEncodingException {
+        InputStream input = null;
+        Source source = null;
+        try {
+            input = connection.getInputStream();
+            String encoding = connection.getContentEncoding();
+            String contentType = connection.getHeaderField("Content-Type");
+            if (encoding == null) {
+                if (contentType != null && contentType.indexOf("charset") != -1) {
+                    encoding = contentType.replaceAll(".*charset=(.*)", "$1");
+                }
+            }
+            if (encoding == null) {
+                // the old default ...
+                encoding = "ISO-8859-1";
+            }
+            Reader reader = new InputStreamReader(input, encoding);
+            source = new Source(connection.getURL().toString(), IOTools.readerToString(reader), contentType);
+            LOG.info("request for " + connection.getURL().toString() + " processed, result content type : " + contentType + ", encoding :" + encoding
+                    + ", size:" + source.getContent().length());
+            reader.close();
+        } finally {
+            IOTools.close(input);
+        }
+        return source;
+    }
 
-	@Override
-	public Source post(String url, Map<String, String> parameters,
-			Map<String, String> headers) throws IOException {
-		URL httpUrl = new URL(url);
-		HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
-		setupConnection(connection);
-		connection.setRequestMethod("POST");
-		connection.setDoOutput(true);
-		for (Entry<String, String> entry : headers.entrySet()) {
-			connection.setRequestProperty(entry.getKey(), entry.getValue());
-		}
+    private void setupConnection(HttpURLConnection connection) {
+        if (hideAgent) {
+            connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
+        }
+        connection.setInstanceFollowRedirects(true);connection.setInstanceFollowRedirects(true);
+        if (timeOut != null) {
+            connection.setReadTimeout(timeOut);
+        }
+    }
 
-		StringBuilder buf = new StringBuilder();
-		boolean first = true;
-		for (Entry<String, String> entry : parameters.entrySet()) {
-			if (first) {
-				first = false;
-			} else {
-				buf.append('&');
-			}
-			buf.append(URLEncoder.encode(entry.getKey(), "UTF-8")).append('=')
-					.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-		}
-		OutputStream outputStream = connection.getOutputStream();
-		outputStream.write(buf.toString().getBytes("UTF-8"));
-		outputStream.close();
-		
-		return processRequest(connection);
-	}
+    @Override
+    public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
+        URL httpUrl = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
+        setupConnection(connection);
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+        for (Entry<String, String> entry : headers.entrySet()) {
+            connection.setRequestProperty(entry.getKey(), entry.getValue());
+        }
+
+        StringBuilder buf = new StringBuilder();
+        boolean first = true;
+        for (Entry<String, String> entry : parameters.entrySet()) {
+            if (first) {
+                first = false;
+            } else {
+                buf.append('&');
+            }
+            buf.append(URLEncoder.encode(entry.getKey(), "UTF-8")).append('=').append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+        }
+        OutputStream outputStream = connection.getOutputStream();
+        outputStream.write(buf.toString().getBytes("UTF-8"));
+        outputStream.close();
+
+        return processRequest(connection);
+    }
 
 }
