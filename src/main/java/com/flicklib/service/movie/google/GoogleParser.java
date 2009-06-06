@@ -17,8 +17,8 @@
  */
 package com.flicklib.service.movie.google;
 
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.Source;
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.Source;
 import com.flicklib.domain.MoviePage;
 import com.google.inject.Singleton;
 import com.flicklib.service.movie.AbstractJerichoParser;
@@ -38,7 +38,7 @@ public class GoogleParser extends AbstractJerichoParser{
 
     @Override
     public void parse(final String html, final Source source, final MoviePage movieSite) {
-        List<?> nobrElements = source.findAllElements("nobr");
+        List<?> nobrElements = source.getAllElements("nobr");
         for (Iterator<?> i = nobrElements.iterator(); i.hasNext();) {
             Element nobrElement = (Element) i.next();
             //3.9&nbsp;/&nbsp;5

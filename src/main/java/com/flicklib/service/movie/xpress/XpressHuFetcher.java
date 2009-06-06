@@ -17,6 +17,10 @@
  */
 package com.flicklib.service.movie.xpress;
 
+import static com.flicklib.tools.StringUtils.isElementAttributeValue;
+import static com.flicklib.tools.StringUtils.isElementAttributeValueContains;
+import static com.flicklib.tools.StringUtils.unbracket;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,11 +32,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.StartTag;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.StartTag;
 
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.domain.MoviePage;
@@ -41,8 +45,6 @@ import com.flicklib.domain.MovieService;
 import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
 import com.google.inject.Inject;
-
-import static com.flicklib.tools.StringUtils.*;
 
 public class XpressHuFetcher extends AbstractMovieInfoFetcher {
 
@@ -71,18 +73,17 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
         this.sourceLoader = sourceLoader;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public MoviePage getMovieInfo(final String idForSite) throws IOException {
         final String url = "http://www.xpress.hu/dvd/film.asp?FILMAZ=" + idForSite;
         final Source source = this.sourceLoader.loadSource(url);
-        final au.id.jericho.lib.html.Source jerichoSource = source.getJerichoSource();
+        final net.htmlparser.jericho.Source jerichoSource = source.getJerichoSource();
         final MoviePage result = new MoviePage();
         result.setIdForSite(idForSite);
         result.setUrl(url);
         result.setService(MovieService.XPRESSHU);
 
-        final List<Element> trLines = jerichoSource.findAllElements("tr");
+        final List<Element> trLines = jerichoSource.getAllElements("tr");
         // search for <tr valign='top' align='center'> with 2 child
         for (Element tr : trLines) {
             if (isElementAttributeValue(tr, "valign", "top") && isElementAttributeValue(tr, "align", "center")) {
@@ -107,9 +108,8 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     private void parseLeftMostColumn(MoviePage result, Element element) {
-        List<Element> bolds = element.findAllElements("b");
+        List<Element> bolds = element.getAllElements("b");
         for (Element boldElement : bolds) {
             List<Element> boldChild = boldElement.getChildElements();
             LOGGER.debug("CHILD:" + boldChild);
@@ -130,13 +130,13 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
         if (isElementAttributeValue(firstTd, "rowspan", "2") && isElementAttributeValue(secondTd, "rowspan", "2")
                 && isElementAttributeValue(firstTd, "valign", "top") && isElementAttributeValue(firstTd, "width", "194")
                 && isElementAttributeValue(secondTd, "width", "1056")) {
-            List<Element> imgList = firstTd.findAllElements("img");
+            List<Element> imgList = firstTd.getAllElements("img");
             for (Element image : imgList) {
                 if (isElementAttributeValueContains(image, "src", "cover")) {
                     result.setImgUrl(resolveRelativeUrl(MOVIE_URL, image.getAttributeValue("src")));
                 }
             }
-            List<Element> bolds = secondTd.findAllElements("b");
+            List<Element> bolds = secondTd.getAllElements("b");
             if (bolds.size() > 0) {
                 extractTitle(result, bolds);
                 int found = 0;
@@ -237,26 +237,24 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     private static Element getSibling(Element element, int position) {
         List<Element> elements = element.getParentElement().getChildElements();
         int current = elements.indexOf(element);
         return elements.get(current + position);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<? extends MovieSearchResult> search(String title) throws IOException {
         Source searchResponse = executeSearch(title);
         LOGGER.info("search for '" + title + "' returned " + searchResponse);
 
-        au.id.jericho.lib.html.Source jerichoSource = searchResponse.getJerichoSource();
-        List<StartTag> forms = jerichoSource.findAllStartTags("form");
+        net.htmlparser.jericho.Source jerichoSource = searchResponse.getJerichoSource();
+        List<StartTag> forms = jerichoSource.getAllStartTags("form");
 
         List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
         for (StartTag form : forms) {
             if (isElementAttributeValueContains(form, "action", "rendel.asp")) {
-                List<Element> trLines = form.getElement().findAllElements("tr");
+                List<Element> trLines = form.getElement().getAllElements("tr");
                 for (Element tr : trLines) {
                     if (isElementAttributeValue(tr, "valign", "top")) {
                         List<Element> childs = tr.getChildElements();
@@ -285,7 +283,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
         
         {
             Element imageCell = childs.get(1);
-            List<Element> imageTags = imageCell.findAllElements("img");
+            List<Element> imageTags = imageCell.getAllElements("img");
             if (imageTags.size() > 0) {
                 String imageUrl = imageTags.get(0).getAttributeValue("src");
                 LOGGER.info("image url : " + imageUrl);
@@ -293,7 +291,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
         }
         {
             Element descCell = childs.get(2);
-            List<Element> aTags = descCell.findAllElements("a");
+            List<Element> aTags = descCell.getAllElements("a");
             if (aTags.size() > 0) {
                 Element alink = aTags.get(0);
                 String link = alink.getAttributeValue("href");
@@ -306,7 +304,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
                     String url = resolveRelativeUrl(SEARCH_URL, relUrl);
                     msr.setUrl(url);
                 }
-                List<Element> fontElements = alink.findAllElements("font");
+                List<Element> fontElements = alink.getAllElements("font");
                 if (fontElements.size() == 1) {
                     msr.setTitle(fontElements.get(0).getTextExtractor().toString());
                     LOGGER.info("set title :" + msr.getTitle());
@@ -359,8 +357,8 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
      */
     private Source executeSearch(String title) throws IOException {
         Source loadSource = sourceLoader.loadSource("http://www.xpress.hu/", false);
-        au.id.jericho.lib.html.Source jerichoSource = loadSource.getJerichoSource();
-        List<StartTag> forms = jerichoSource.findAllStartTags("form");
+        net.htmlparser.jericho.Source jerichoSource = loadSource.getJerichoSource();
+        List<StartTag> forms = jerichoSource.getAllStartTags("form");
         Map<String, String> params = new HashMap<String, String>();
         params.put("GOMB", "1");
         params.put("Go2", "Go");
@@ -381,7 +379,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
     }
 
     private static void parseHiddenFields(Map<String, String> params, StartTag form) {
-        List<Element> hiddenElements = form.getElement().findAllElements("type", "hidden", true);
+        List<Element> hiddenElements = form.getElement().getAllElements("type", "hidden", true);
         for (Element hidden : hiddenElements) {
             String name = hidden.getAttributeValue("name");
             String value = hidden.getAttributeValue("value");

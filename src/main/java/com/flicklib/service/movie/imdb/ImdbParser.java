@@ -20,13 +20,13 @@ package com.flicklib.service.movie.imdb;
 import java.util.Iterator;
 import java.util.List;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.EndTag;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.EndTag;
-import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Source;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.movie.AbstractJerichoParser;
@@ -54,12 +54,12 @@ public class ImdbParser extends AbstractJerichoParser {
         ImdbParserRegex regexParser = new ImdbParserRegex(html);
 
         movie.setType(regexParser.getType());
-        Element titleHeader = (Element) source.findAllElements(HTMLElementName.H1).get(0);
+        Element titleHeader = (Element) source.getAllElements(HTMLElementName.H1).get(0);
         String title = new ElementOnlyTextExtractor(titleHeader.getContent()).toString();
         title = ImdbParserRegex.cleanTitle(title);
         movie.setTitle(title);
 
-        List<?> yearLinks = titleHeader.findAllElements(HTMLElementName.A);
+        List<?> yearLinks = titleHeader.getAllElements(HTMLElementName.A);
         if (yearLinks.size() > 0) {
             Element yearLink = (Element) yearLinks.get(0);
             String year = yearLink.getContent().getTextExtractor().toString();
@@ -70,12 +70,12 @@ public class ImdbParser extends AbstractJerichoParser {
             }
         }
 
-        List<?> linkElements = source.findAllElements(HTMLElementName.A);
+        List<?> linkElements = source.getAllElements(HTMLElementName.A);
         for (Iterator<?> i = linkElements.iterator(); i.hasNext();) {
             Element linkElement = (Element) i.next();
             if ("poster".equals(linkElement.getAttributeValue("name"))) {
                 // A element can contain other tags so need to extract the text from it:
-                List<?> imgs = linkElement.getContent().findAllElements(HTMLElementName.IMG);
+                List<?> imgs = linkElement.getContent().getAllElements(HTMLElementName.IMG);
                 Element img = (Element) imgs.get(0);
                 String imgUrl = img.getAttributeValue("src");
                 movie.setImgUrl(imgUrl);
@@ -94,49 +94,48 @@ public class ImdbParser extends AbstractJerichoParser {
 
         }
 
-        linkElements = source.findAllElements(HTMLElementName.B);
+        linkElements = source.getAllElements(HTMLElementName.B);
         for (Iterator<?> i = linkElements.iterator(); i.hasNext();) {
             Element bElement = (Element) i.next();
             if (bElement.getContent().getTextExtractor().toString().contains("User Rating:")) {
-                Element next = source.findNextElement(bElement.getEndTag().getEnd());
+                Element next = source.getNextElement(bElement.getEndTag().getEnd());
                 String rating = next.getContent().getTextExtractor().toString();
                 // skip (awaiting 5 votes)
                 if (!rating.contains("awaiting")) {
                     parseRatingString(movie, rating);
-                    next = source.findNextElement(next.getEndTag().getEnd());
+                    next = source.getNextElement(next.getEndTag().getEnd());
                     parseVotes(movie, next);
                 }
             }
         }
 
-        linkElements = source.findAllElements(HTMLElementName.H5);
+        linkElements = source.getAllElements(HTMLElementName.H5);
         String hText;
         for (Iterator<?> i = linkElements.iterator(); i.hasNext();) {
             Element hElement = (Element) i.next();
             hText = hElement.getContent().getTextExtractor().toString();
             int end = hElement.getEnd();
             if (hText.contains("Plot Outline")) {
-                movie.setPlot(source.subSequence(end, source.findNextStartTag(end).getBegin()).toString().trim());
+                movie.setPlot(source.subSequence(end, source.getNextStartTag(end).getBegin()).toString().trim());
             } else if (hText.contains("Plot:")) {
-                movie.setPlot(source.subSequence(end, source.findNextStartTag(end).getBegin()).toString().trim());
+                movie.setPlot(source.subSequence(end, source.getNextStartTag(end).getBegin()).toString().trim());
             } else if (hText.contains("Runtime")) {
-                EndTag next = source.findNextEndTag(end);
+                EndTag next = source.getNextEndTag(end);
                 //System.out.println(next);
                 String runtime = source.subSequence(end, next.getBegin()).toString().trim();
                 movie.setRuntime(parseRuntime(runtime));
             } else if (hText.contains("Director")) {
-                Element aElement = source.findNextElement(end);
+                Element aElement = source.getNextElement(end);
                 movie.setDirector(aElement.getContent().getTextExtractor().toString());
             } else if (hText.contains("User Rating")) {
-                Element aElement = source.findNextElement(end);
-                @SuppressWarnings("unchecked")
-                List<Element> boldOnes = aElement.findAllElements(HTMLElementName.B);
+                Element aElement = source.getNextElement(end);
+                List<Element> boldOnes = aElement.getAllElements(HTMLElementName.B);
                 if (boldOnes.size()>0) {
                     Element element = boldOnes.get(0);
                     String rating = element.getTextExtractor().toString();
                     if (!rating.contains("awaiting")) {
                         parseRatingString(movie, rating);
-                        Element next = source.findNextElement(element.getEndTag().getEnd());
+                        Element next = source.getNextElement(element.getEndTag().getEnd());
                         parseVotes(movie, next);
                     }
                 }

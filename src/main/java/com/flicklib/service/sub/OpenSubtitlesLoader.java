@@ -17,23 +17,26 @@
  */
 package com.flicklib.service.sub;
 
-import com.flicklib.api.SubtitlesLoader;
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Source;
-import com.google.inject.Inject;
-import com.flicklib.domain.Subtitle;
-import com.flicklib.service.SourceLoader;
-import com.flicklib.tools.Param;
-import com.flicklib.tools.ElementOnlyTextExtractor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.flicklib.api.SubtitlesLoader;
+import com.flicklib.domain.Subtitle;
+import com.flicklib.service.SourceLoader;
+import com.flicklib.tools.ElementOnlyTextExtractor;
+import com.flicklib.tools.Param;
+import com.google.inject.Inject;
 
 /**
  * 
@@ -64,11 +67,11 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
 
         Set<Subtitle> results = new HashSet<Subtitle>();
 
-        Element titleElement = (Element) jerichoSource.findAllElements(HTMLElementName.TITLE).get(0);
+        Element titleElement = (Element) jerichoSource.getAllElements(HTMLElementName.TITLE).get(0);
         String title = titleElement.getContent().getTextExtractor().toString();
         if (title.contains("(results)")) {
             //first check if the results page contains no results. 
-            List<?> divElements = jerichoSource.findAllElements(HTMLElementName.DIV);
+            List<?> divElements = jerichoSource.getAllElements(HTMLElementName.DIV);
             Iterator<?> j = divElements.iterator();
             while(j.hasNext() && carryOn==1) {
                 Element divElement  = (Element) j.next();
@@ -83,7 +86,7 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
             //if the results page does contain results then load first link
             if(carryOn!=0) {
                 String subsUrl = null;
-                List<?> aElements = jerichoSource.findAllElements(HTMLElementName.A);
+                List<?> aElements = jerichoSource.getAllElements(HTMLElementName.A);
                 for (int i = 0; i < aElements.size() && subsUrl == null; i++) {
                     Element aElement = (Element) aElements.get(i);
                     if ("bnone".equals(aElement.getAttributeValue("class"))) {
@@ -134,7 +137,7 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
      */
     private Set<String> getPageLinks(Source source) {
         Set<String> links = new HashSet<String>();
-        List<?> linksElements = source.findAllElements(HTMLElementName.A);
+        List<?> linksElements = source.getAllElements(HTMLElementName.A);
         Iterator<?> i;
         i = linksElements.iterator();
         
@@ -152,9 +155,9 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
     private Set<Subtitle> loadSubtitlesPage(Source jerichoSource) {
         Set<Subtitle> results = new HashSet<Subtitle>();
 
-        Element tableElement = (Element) jerichoSource.findAllElements("id", "search_results", false).get(0);
+        Element tableElement = (Element) jerichoSource.getAllElements("id", "search_results", false).get(0);
 
-        List<?> trElements = tableElement.findAllElements(HTMLElementName.TR);
+        List<?> trElements = tableElement.getAllElements(HTMLElementName.TR);
         Element trElement;
         Subtitle sub;
         for (Object trObject : trElements) {
@@ -165,13 +168,13 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
                 sub = new Subtitle();
                 sub.setSubSource(SITE);
 
-                List<?> tdElements = trElement.findAllElements(HTMLElementName.TD);
+                List<?> tdElements = trElement.getAllElements(HTMLElementName.TD);
                 if (tdElements.size() >= 4) {
 
 
                     // TITLE/URL
                     Element titleTd = (Element) tdElements.get(0);
-                    Element firstLink = (Element) titleTd.findAllElements(HTMLElementName.A).get(0);
+                    Element firstLink = (Element) titleTd.getAllElements(HTMLElementName.A).get(0);
                     String fileName = firstLink.getContent().getTextExtractor().toString();
 
                     ElementOnlyTextExtractor extractor = new ElementOnlyTextExtractor(titleTd.getContent());
@@ -184,7 +187,7 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
 
                     // LANG
                     Element flagTd = (Element) tdElements.get(1);
-                    List<?> divElements = flagTd.findAllElements(HTMLElementName.DIV);
+                    List<?> divElements = flagTd.getAllElements(HTMLElementName.DIV);
                     Element divElement;
                     Iterator<?> divs = divElements.iterator();
                     while (divs.hasNext()) {
@@ -202,8 +205,8 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
 
                     // TYPE & URL
                     Element typeTd = (Element) tdElements.get(4);
-                    Element span = (Element) typeTd.findAllElements("class", "p", false).get(0);
-                    Element link = (Element) typeTd.findAllElements("a").get(0);
+                    Element span = (Element) typeTd.getAllElements("class", "p", false).get(0);
+                    Element link = (Element) typeTd.getAllElements("a").get(0);
                     sub.setType(span.getContent().getTextExtractor().toString());
                     sub.setFileUrl(SITE + link.getAttributeValue("href"));
 

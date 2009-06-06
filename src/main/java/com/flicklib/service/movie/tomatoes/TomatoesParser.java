@@ -17,9 +17,9 @@
  */
 package com.flicklib.service.movie.tomatoes;
 
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Source;
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
 import com.flicklib.domain.MoviePage;
 import com.google.inject.Singleton;
 import com.flicklib.service.movie.AbstractJerichoParser;
@@ -43,7 +43,7 @@ public class TomatoesParser extends AbstractJerichoParser {
     		movieSite.setIdForSite(movieSite.getUrl().replace("http://www.rottentomatoes.com/m/", ""));
     	}
     	
-        List<?> divElements = source.findAllElements(HTMLElementName.DIV);
+        List<?> divElements = source.getAllElements(HTMLElementName.DIV);
         for (Iterator<?> i = divElements.iterator(); i.hasNext();) {
             Element divElement = (Element) i.next();
             

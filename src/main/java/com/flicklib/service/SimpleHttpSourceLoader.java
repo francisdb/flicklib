@@ -47,6 +47,8 @@ import com.flicklib.tools.IOTools;
 public class SimpleHttpSourceLoader extends AbstractSourceLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHttpSourceLoader.class);
+    
+    private static final String ENCODING = "UTF-8";
 
     static {
         try {
@@ -73,9 +75,9 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
     }
 
     private final HttpCache cache;
+    
     private boolean hideAgent = true;
     private Integer timeOut = null;
-
     private boolean internalRedirects = true;
     
     /**
@@ -98,28 +100,26 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
         this.internalRedirects = internalRedirects;
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.flicklib.service.SourceLoader#loadSource(java.lang.String,
-     * boolean)
-     */
+    /** {@inheritDoc} */
     @Override
     public Source loadSource(String url, boolean useCache) throws IOException {
+    	Source result = null;
         if (useCache && cache != null) {
             Source source = cache.get(url);
             if (source != null) {
-                return source;
+               result = source;
             }
         }
-        URL httpUrl = new URL(url);
-        Source source = load(httpUrl);
-        if (useCache) {
-            if (cache != null) {
-                cache.put(url, source);
-            }
+        if(result == null){
+	        URL httpUrl = new URL(url);
+	        result = load(httpUrl);
+	        if (useCache) {
+	            if (cache != null) {
+	                cache.put(url, result);
+	            }
+	        }
         }
-        return source;
+        return result;
     }
 
     private Source load(URL httpUrl) throws IOException, UnsupportedEncodingException {
@@ -131,39 +131,44 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
     private Source processRequest(HttpURLConnection connection) throws IOException, UnsupportedEncodingException {
         InputStream input = null;
         Source source = null;
+        Reader reader = null;
         try {
             input = connection.getInputStream();
             int responseCode = connection.getResponseCode();
-            String newLocation = connection.getHeaderField("Location");
-            if (responseCode==302 && newLocation!=null) {
-                URL redirectUrl = new URL(connection.getURL(), newLocation);
-                LOGGER.info("redirect to "+redirectUrl.toString());
-                IOTools.close(input);
-                return load(redirectUrl);
-            }
-            String encoding = connection.getContentEncoding();
-            String contentType = connection.getHeaderField("Content-Type");
-            if (encoding == null) {
-                if (contentType != null && contentType.indexOf("charset") != -1) {
-                    encoding = contentType.replaceAll(".*charset=(.*)", "$1");
+            if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP  || responseCode == HttpURLConnection.HTTP_MOVED_PERM) {
+                String newLocation = connection.getHeaderField("Location");
+                if(newLocation != null){
+	                URL redirectUrl = new URL(connection.getURL(), newLocation);
+	                LOGGER.info("redirect to "+redirectUrl.toString());
+	                return load(redirectUrl);
                 }
+            } else {
+	            String encoding = connection.getContentEncoding();
+	            String contentType = connection.getHeaderField("Content-Type");
+	            if (encoding == null) {
+	                if (contentType != null && contentType.indexOf("charset") != -1) {
+	                    encoding = contentType.replaceAll(".*charset=(.*)", "$1");
+	                }
+	            }
+	            if (encoding == null) {
+	                // the old default ...
+	                encoding = "ISO-8859-1";
+	            }
+	            reader = new InputStreamReader(input, encoding);
+	            String content = IOTools.readerToString(reader);
+	            source = new Source(connection.getURL().toString(), content, contentType);
+	            LOGGER.info("request for " + connection.getURL().toString() + " processed, result content type : " + contentType + ", encoding :" + encoding
+	                    + ", size:" + source.getContent().length());
             }
-            if (encoding == null) {
-                // the old default ...
-                encoding = "ISO-8859-1";
-            }
-            Reader reader = new InputStreamReader(input, encoding);
-            source = new Source(connection.getURL().toString(), IOTools.readerToString(reader), contentType);
-            LOGGER.info("request for " + connection.getURL().toString() + " processed, result content type : " + contentType + ", encoding :" + encoding
-                    + ", size:" + source.getContent().length());
-            reader.close();
-            return source;
         } finally {
+            IOTools.close(reader);
             IOTools.close(input);
         }
+       
+        return source;
     }
 
-    private void setupConnection(HttpURLConnection connection) {
+    private void setupConnection(final HttpURLConnection connection) {
         if (hideAgent) {
             connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
         }
@@ -173,6 +178,7 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
         URL httpUrl = new URL(url);
@@ -192,11 +198,15 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
             } else {
                 buf.append('&');
             }
-            buf.append(URLEncoder.encode(entry.getKey(), "UTF-8")).append('=').append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            buf.append(URLEncoder.encode(entry.getKey(), ENCODING)).append('=').append(URLEncoder.encode(entry.getValue(), ENCODING));
         }
-        OutputStream outputStream = connection.getOutputStream();
-        outputStream.write(buf.toString().getBytes("UTF-8"));
-        outputStream.close();
+        OutputStream outputStream = null;
+        try{
+        	outputStream = connection.getOutputStream();
+            outputStream.write(buf.toString().getBytes(ENCODING));
+        }finally{
+        	IOTools.close(outputStream);
+        }
 
         return processRequest(connection);
     }

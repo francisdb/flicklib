@@ -23,11 +23,11 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
 
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.api.Parser;
@@ -89,14 +89,13 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 		List<MovieSearchResult> list = new ArrayList<MovieSearchResult>();
 		String url = generateSearchUrl(title, 30);
 		Source source = sourceLoader.loadSource(url);
-		au.id.jericho.lib.html.Source jerichoSource = source.getJerichoSource();
+		net.htmlparser.jericho.Source jerichoSource = source.getJerichoSource();
         
     	// find all links
     	//<a href="/nl/film/102-Forrest-gump.htm" class="blink">
 		//<h1 class='blink'><b>Forrest gump</b></h1>
 		//</a>
-    	@SuppressWarnings("unchecked")
-        List<Element> linkElements = jerichoSource.findAllElements(HTMLElementName.A);
+        List<Element> linkElements = jerichoSource.getAllElements(HTMLElementName.A);
     	for(Element linkElement: linkElements){
 	        String href = linkElement.getAttributeValue("href");
 	        String cssClass = linkElement.getAttributeValue("class");

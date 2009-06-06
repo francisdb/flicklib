@@ -21,28 +21,23 @@ import com.flicklib.service.HttpCache;
 import com.flicklib.service.Source;
 
 /**
+ * Mock implementation, always returns null and ignores puts
  * 
  * @author zsombor
  *
  */
 public class EmptyHttpCache implements HttpCache {
 
-	/* (non-Javadoc)
-	 * @see com.flicklib.service.HttpCache#get(java.lang.String)
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public Source get(String url) {
-		// TODO Auto-generated method stub
+	public Source get(final String url) {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.flicklib.service.HttpCache#put(java.lang.String, com.flicklib.service.Source)
-	 */
+	/** {@inheritDoc} */
 	@Override
-	public void put(String url, Source page) {
-		// TODO Auto-generated method stub
-
+	public void put(final String url, final Source page) {
+		// ignored
 	}
 
 }

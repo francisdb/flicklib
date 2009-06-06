@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Source;
 
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.api.Parser;
@@ -81,7 +81,7 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
         // </a>
 
         
-        List<?> aElements = jerichoSource.findAllElements(HTMLElementName.A);
+        List<?> aElements = jerichoSource.getAllElements(HTMLElementName.A);
         for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
             Element aElement = (Element) i.next();
             String url = aElement.getAttributeValue("href");
@@ -139,7 +139,7 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
             // </a>
 
             String movieUrl = null;
-            List<?> aElements = jerichoSource.findAllElements(HTMLElementName.A);
+            List<?> aElements = jerichoSource.getAllElements(HTMLElementName.A);
             for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
                 Element aElement = (Element) i.next();
                 String url = aElement.getAttributeValue("href");

@@ -17,9 +17,9 @@
  */
 package com.flicklib.tools;
 
-import au.id.jericho.lib.html.Segment;
-import au.id.jericho.lib.html.StartTag;
-import au.id.jericho.lib.html.TextExtractor;
+import net.htmlparser.jericho.Segment;
+import net.htmlparser.jericho.StartTag;
+import net.htmlparser.jericho.TextExtractor;
 
 /**
  * @author francisdb

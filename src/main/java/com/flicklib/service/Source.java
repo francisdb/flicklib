@@ -27,7 +27,7 @@ public class Source implements Serializable{
     private final String content;
     private final String contentType;
     
-    private transient au.id.jericho.lib.html.Source jerichoSource;
+    private transient net.htmlparser.jericho.Source jerichoSource;
     
     /**
      * Creates a new Source
@@ -74,9 +74,9 @@ public class Source implements Serializable{
 	}
     
 	
-	public au.id.jericho.lib.html.Source getJerichoSource() {
+	public net.htmlparser.jericho.Source getJerichoSource() {
 	    if (jerichoSource==null) {
-	        jerichoSource = new au.id.jericho.lib.html.Source(content);
+	        jerichoSource = new net.htmlparser.jericho.Source(content);
 	        jerichoSource.fullSequentialParse();
 	    }
             return jerichoSource;

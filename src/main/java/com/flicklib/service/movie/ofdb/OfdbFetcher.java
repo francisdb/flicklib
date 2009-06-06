@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
 
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.api.Parser;
@@ -76,13 +76,12 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 		List<MovieSearchResult> list = new ArrayList<MovieSearchResult>();
 		String url = generateSearchUrl(title);
 		Source source = sourceLoader.loadSource(url);
-		au.id.jericho.lib.html.Source jerichoSource = source.getJerichoSource();
+		net.htmlparser.jericho.Source jerichoSource = source.getJerichoSource();
         
     	// find all links
     	//<a href="film/1050,Pulp-Fiction" onmouseover="....">Pulp Fiction<font size="1"> / Pulp Fiction</font> (1994)</a>
         //<a href="film/33740,Pulp-Fiction-The-Facts" onmouseover="...">Pulp Fiction: The Facts [Kurzfilm]<font size="1"> / Pulp Fiction: The Facts</font> (2002)</a>
-    	@SuppressWarnings("unchecked")
-        List<Element> linkElements = jerichoSource.findAllElements(HTMLElementName.A);
+        List<Element> linkElements = jerichoSource.getAllElements(HTMLElementName.A);
     	for(Element linkElement: linkElements){
 	        String href = linkElement.getAttributeValue("href");
 	        if (href.startsWith("film/")) {

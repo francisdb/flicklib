@@ -24,11 +24,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
 
 import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
@@ -42,11 +42,10 @@ public class OfdbParser implements Parser{
 	@Override
 	public void parse(Source source, MoviePage page) {
 
-		au.id.jericho.lib.html.Source jerichoSource = source.getJerichoSource();
+		net.htmlparser.jericho.Source jerichoSource = source.getJerichoSource();
         
         // <span class="movieMainTitle">The Matrix</span>
-        @SuppressWarnings("unchecked")
-        List<Element> h2Elements = jerichoSource.findAllElements(HTMLElementName.H2);
+        List<Element> h2Elements = jerichoSource.getAllElements(HTMLElementName.H2);
         for(Element h2Element: h2Elements){
         	// TODO get all titles
         	String germanTitle = h2Element.getContent().getTextExtractor().toString();
@@ -60,8 +59,7 @@ public class OfdbParser implements Parser{
 //        <td width="99%"><font face="Arial,Helvetica,sans-serif" size="2" class="Daten"><b>Dune</b></font></td>
 //        </tr>
         
-    	@SuppressWarnings("unchecked")
-        List<Element> fontElements = jerichoSource.findAllElements(HTMLElementName.FONT);
+        List<Element> fontElements = jerichoSource.getAllElements(HTMLElementName.FONT);
         Iterator<Element> fontIterator = fontElements.iterator();
 
         Element fontElement;
@@ -88,8 +86,7 @@ public class OfdbParser implements Parser{
         
         
         //<img src="http://img.ofdb.de/film/3/3635.jpg" alt="Dune - Der Wüstenplanet" border="0" width="120" height="168"><br><br>
-        @SuppressWarnings("unchecked")
-        List<Element> imgElements = jerichoSource.findAllElements(HTMLElementName.IMG);
+        List<Element> imgElements = jerichoSource.getAllElements(HTMLElementName.IMG);
         Iterator<Element> imgIterator = imgElements.iterator();
         Element imgElement;
         String imgUrl = null;
@@ -104,8 +101,7 @@ public class OfdbParser implements Parser{
 
 
         //<a href="view.php?page=genre&Genre=Fantasy">Fantasy</a><br><a href="view.php?page=genre&Genre=Krieg">Krieg</a><br>....
-        @SuppressWarnings("unchecked")
-        List<Element> aElements = jerichoSource.findAllElements(HTMLElementName.A);
+        List<Element> aElements = jerichoSource.getAllElements(HTMLElementName.A);
         Iterator<Element> aIterator = aElements.iterator();
         Element aElement;
         Set<String> genres = new HashSet<String>();

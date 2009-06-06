@@ -17,16 +17,6 @@
  */
 package com.flicklib.service.movie.imdb;
 
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Source;
-import com.google.inject.Inject;
-import com.flicklib.api.Parser;
-import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.domain.MovieService;
-import com.flicklib.domain.MoviePage;
-import com.flicklib.service.SourceLoader;
-import com.flicklib.tools.ElementOnlyTextExtractor;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -35,8 +25,21 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.flicklib.api.Parser;
+import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieSearchResult;
+import com.flicklib.domain.MovieService;
+import com.flicklib.service.SourceLoader;
+import com.flicklib.tools.ElementOnlyTextExtractor;
+import com.google.inject.Inject;
 
 /**
  *
@@ -58,17 +61,17 @@ public class ImdbSearch {
         Source jerichoSource = source.getJerichoSource();
 
         List<MovieSearchResult> results = new ArrayList<MovieSearchResult>();
-        Element titleElement = (Element) jerichoSource.findAllElements(HTMLElementName.TITLE).get(0);
+        Element titleElement = (Element) jerichoSource.getAllElements(HTMLElementName.TITLE).get(0);
         String title = titleElement.getContent().getTextExtractor().toString();
         if (title.contains("IMDb") && title.contains("Search")) {
             LOGGER.info("Search results returned");
-            List<?> tableElements = jerichoSource.findAllElements(HTMLElementName.TD);
+            List<?> tableElements = jerichoSource.getAllElements(HTMLElementName.TD);
             Element tableElement;
             Iterator<?> j = tableElements.iterator();
             while(j.hasNext()) {
                 tableElement = (Element) j.next();
                 String tdContents = tableElement.getTextExtractor().toString();
-                List<?> linkElements = tableElement.findAllElements(HTMLElementName.A);
+                List<?> linkElements = tableElement.getAllElements(HTMLElementName.A);
                 Element linkElement;
                 MovieSearchResult movieSite;
                 Iterator<?> i = linkElements.iterator();
@@ -108,11 +111,10 @@ public class ImdbSearch {
                             }
                         }
                         
-                        @SuppressWarnings("unchecked")
-                        List<Element> emElements = tableElement.findAllElements("em");
+                        List<Element> emElements = tableElement.getAllElements("em");
                         if (emElements!=null && emElements.size() >= 2) {
                             // first contains the aka title, second (DVD title)
-                            String alternateTitle = ((Element)tableElement.findAllElements("em").get(0)).getTextExtractor().toString();
+                            String alternateTitle = ((Element)tableElement.getAllElements("em").get(0)).getTextExtractor().toString();
                             movieSite.setAlternateTitle(ImdbParserRegex.cleanTitle(alternateTitle));
                         }
 
@@ -132,7 +134,7 @@ public class ImdbSearch {
             // FIXME, there should be a way to know at what url whe ended up (better way to parse imdb id)
             
             //Assume it's a perfect result, therefore get first /title/tt link.
-            List<?> linkElements = jerichoSource.findAllElements(HTMLElementName.A);
+            List<?> linkElements = jerichoSource.getAllElements(HTMLElementName.A);
             Element linkElement;
             Iterator<?> i = linkElements.iterator();
             Set<String> ids = new HashSet<String>();

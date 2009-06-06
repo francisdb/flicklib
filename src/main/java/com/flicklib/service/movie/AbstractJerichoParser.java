@@ -17,7 +17,7 @@
  */
 package com.flicklib.service.movie;
 
-import au.id.jericho.lib.html.Source;
+import net.htmlparser.jericho.Source;
 import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
 

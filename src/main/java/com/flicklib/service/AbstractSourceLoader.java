@@ -28,21 +28,14 @@ import java.util.Map;
  */
 public abstract class AbstractSourceLoader implements SourceLoader {
 
-    /**
-     * 
-     */
-    public AbstractSourceLoader() {
-        // TODO Auto-generated constructor stub
-    }
 
-
+	/** {@inheritDoc} */
     @Override
     public Source loadSource(String url) throws IOException {
         return loadSource(url, true);
     }
-    /* (non-Javadoc)
-     * @see com.flicklib.service.SourceLoader#post(java.lang.String, java.util.Map, java.util.Map)
-     */
+    
+    /** {@inheritDoc} */
     @Override
     public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
         return loadSource(url, true);

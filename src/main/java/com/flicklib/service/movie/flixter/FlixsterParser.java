@@ -17,16 +17,18 @@
  */
 package com.flicklib.service.movie.flixter;
 
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Source;
-import au.id.jericho.lib.html.TextExtractor;
-import com.flicklib.domain.MoviePage;
-import com.google.inject.Singleton;
-import com.flicklib.service.movie.AbstractJerichoParser;
-import com.flicklib.tools.ElementOnlyTextExtractor;
 import java.util.Iterator;
 import java.util.List;
+
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
+import net.htmlparser.jericho.TextExtractor;
+
+import com.flicklib.domain.MoviePage;
+import com.flicklib.service.movie.AbstractJerichoParser;
+import com.flicklib.tools.ElementOnlyTextExtractor;
+import com.google.inject.Singleton;
 /**
  *
  * @author francisdb
@@ -39,10 +41,10 @@ public class FlixsterParser extends AbstractJerichoParser{
     @Override
     public void parse(String html, Source source, MoviePage movieSite) {
     	
-    	List<?> h1Elements = source.findAllElements(HTMLElementName.H1);
+    	List<?> h1Elements = source.getAllElements(HTMLElementName.H1);
     	for (Iterator<?> i = h1Elements.iterator(); i.hasNext();) {
     		Element h1Element = (Element) i.next();
-    		List<?> aElements = h1Element.findAllElements(HTMLElementName.A);
+    		List<?> aElements = h1Element.getAllElements(HTMLElementName.A);
             for (Iterator<?> i2 = aElements.iterator(); i2.hasNext();) {
                 Element aElement = (Element) i2.next();
                 if(aElement.getAttributeValue("href").contains("/movie/")){
@@ -53,7 +55,7 @@ public class FlixsterParser extends AbstractJerichoParser{
     	
         
         
-        List<?> h4Elements = source.findAllElements(HTMLElementName.H4);
+        List<?> h4Elements = source.getAllElements(HTMLElementName.H4);
         for (Iterator<?> i = h4Elements.iterator(); i.hasNext();) {
             Element h4Element = (Element) i.next();
             TextExtractor extractor = new ElementOnlyTextExtractor(h4Element.getContent());
@@ -61,8 +63,8 @@ public class FlixsterParser extends AbstractJerichoParser{
             
             // TODO use "Critics" score
             if (content.equals("Flixster Users")) {
-                Element next = source.findNextElement(h4Element.getEnd());
-                next = (Element) next.findAllElements(HTMLElementName.SPAN).get(0);
+                Element next = source.getNextElement(h4Element.getEnd());
+                next = (Element) next.getAllElements(HTMLElementName.SPAN).get(0);
                 String votes = new ElementOnlyTextExtractor(next.getContent()).toString().trim();
                 votes = votes.replace("%", "");
                 movieSite.setScore(Integer.valueOf(votes));

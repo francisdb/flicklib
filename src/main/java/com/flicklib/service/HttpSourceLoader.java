@@ -116,7 +116,8 @@ public class HttpSourceLoader extends AbstractSourceLoader {
         }
     }
     
-    public Source post(String url, Map<String,String> parameters, Map<String,String> headers) throws IOException {
+    @Override
+	public Source post(String url, Map<String,String> parameters, Map<String,String> headers) throws IOException {
         PostMethod httpMethod = null;
         Reader is = null;
         try {

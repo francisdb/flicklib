@@ -17,9 +17,9 @@
  */
 package com.flicklib.service.movie.porthu;
 
+import static com.flicklib.tools.StringUtils.unbracket;
+
 import java.io.IOException;
-
-
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -35,12 +35,11 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.Source;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElements;
-import au.id.jericho.lib.html.Source;
 
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.domain.MoviePage;
@@ -50,7 +49,6 @@ import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import com.flicklib.tools.LevenshteinDistance;
 import com.google.inject.Inject;
-import static com.flicklib.tools.StringUtils.*;
 
 
 public class PorthuFetcher extends AbstractMovieInfoFetcher {
@@ -93,8 +91,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         MoviePage mp = new MoviePage(MovieService.PORTHU);
         mp.setIdForSite(id);
         {
-            @SuppressWarnings("unchecked")
-            List<Element> titleElements = source.findAllElements("class", "blackbigtitle", false);
+            List<Element> titleElements = source.getAllElements("class", "blackbigtitle", false);
             if (titleElements.size() == 0) {
                 throw new RuntimeException("no <span class='blackbigtitle'> found!");
             }
@@ -103,8 +100,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
             setEnglishAndOriginalTitle(mp, getOriginalAndEnglishTitle(titleElement), titleElement.getContent().getTextExtractor().toString());
         }
         {
-            @SuppressWarnings("unchecked")
-            List<Element> spanElements = source.findAllElements("span");
+            List<Element> spanElements = source.getAllElements("span");
             int btxtCount = 0;
             for (int i = 0; i < spanElements.size(); i++) {
                 Element span = spanElements.get(i);
@@ -143,10 +139,8 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return mp;
     }
 
-
-    @SuppressWarnings("unchecked")
     private String getPlot(Source source) {
-        List<Element> tables = source.findAllElements("table");
+        List<Element> tables = source.getAllElements("table");
         // find a table which doesn't have 'id', it's width='100%'
         // cellpadding="0" cellspacing="0' and it's parent a td
         for (Element table : tables) {
@@ -154,7 +148,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
             if (table.getAttributeValue("id") == null && "100%".equals(table.getAttributeValue("width")) && "0".equals(table.getAttributeValue("cellpadding"))
                     && "0".equals(table.getAttributeValue("cellspacing"))) {
                 if ("td".equals(table.getParentElement().getName())) {
-                    List<Element> txtElements = table.findAllElements("class", "txt", true);
+                    List<Element> txtElements = table.getAllElements("class", "txt", true);
                     if (txtElements.size() > 0) {
                         return txtElements.get(0).getContent().getTextExtractor().toString();
                     }
@@ -204,14 +198,12 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         MovieSearchResultComparator comparator = new MovieSearchResultComparator();
         TreeSet<MovieSearchResult> orderedSet = new TreeSet<MovieSearchResult>(comparator);
 
-        @SuppressWarnings("unchecked")
-        List<Element> spans = (List<Element>) jerichoSource.findAllElements(HTMLElements.SPAN);
+        List<Element> spans = jerichoSource.getAllElements("span");
         for (int i = 0; i < spans.size(); i++) {
             Element span = spans.get(i);
 
             if ("btxt".equals(span.getAttributeValue("class"))) {
-                @SuppressWarnings("unchecked")
-                List<Element> childs = span.getContent().findAllElements();
+                List<Element> childs = span.getContent().getAllElements();
                 if (childs.size() > 0) {
                     Element link = childs.get(0);
                     LOGGER.trace("link : " + link);
@@ -428,8 +420,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
 
     private void parseAjaxVoteObjectResponse(MoviePage mp, String id) throws IOException {
         Source voteObject = fetchVoteObject(id);
-        @SuppressWarnings("unchecked")
-        List<Element> spanElements = voteObject.findAllElements("span");
+        List<Element> spanElements = voteObject.getAllElements("span");
         for (Element span : spanElements) {
             String content = span.getTextExtractor().toString();
             String classAttr = span.getAttributeValue("class");

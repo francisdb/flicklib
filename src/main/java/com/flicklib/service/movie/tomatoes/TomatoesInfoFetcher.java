@@ -17,20 +17,6 @@
  */
 package com.flicklib.service.movie.tomatoes;
 
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
-import au.id.jericho.lib.html.Source;
-
-import com.flicklib.api.AbstractMovieInfoFetcher;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.flicklib.api.Parser;
-import com.flicklib.domain.Movie;
-import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.domain.MovieService;
-import com.flicklib.domain.MoviePage;
-import com.flicklib.service.SourceLoader;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -38,8 +24,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.flicklib.api.AbstractMovieInfoFetcher;
+import com.flicklib.api.Parser;
+import com.flicklib.domain.Movie;
+import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieSearchResult;
+import com.flicklib.domain.MovieService;
+import com.flicklib.service.SourceLoader;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
@@ -83,19 +83,19 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
         Source jerichoSource = source.getJerichoSource();
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
         
-        List<?> divElements = jerichoSource.findAllElements(HTMLElementName.DIV);
+        List<?> divElements = jerichoSource.getAllElements(HTMLElementName.DIV);
         for (Iterator<?> i = divElements.iterator(); i.hasNext();) {
             Element divElement = (Element) i.next();
             //<div id="search_results_main" class="content clearfix">
             if("search_results_main".equals(divElement.getAttributeValue("id"))){
-            	List<?> trElements = divElement.findAllElements(HTMLElementName.TR);
+            	List<?> trElements = divElement.getAllElements(HTMLElementName.TR);
             	for (Iterator<?> j = trElements.iterator(); j.hasNext();) {
                     Element trElement = (Element) j.next();
                     
                     MovieSearchResult m = new MovieSearchResult();
                     
                     
-	            	List<?> aElements = trElement.findAllElements(HTMLElementName.A);
+	            	List<?> aElements = trElement.getAllElements(HTMLElementName.A);
 	            	for (Iterator<?> k = aElements.iterator(); k.hasNext();) {
 	                    Element aElement = (Element) k.next();
 	                    String url = aElement.getAttributeValue("href");
@@ -113,7 +113,7 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 	                    }
 	            	}
 	            	
-	            	List<?> strongElements = trElement.findAllElements(HTMLElementName.STRONG);
+	            	List<?> strongElements = trElement.getAllElements(HTMLElementName.STRONG);
 	            	for (Iterator<?> k = strongElements.iterator(); k.hasNext();) {
 	                    Element strongElement = (Element) k.next();
 	                    String year = strongElement.getContent().getTextExtractor().toString();

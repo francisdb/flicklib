@@ -19,8 +19,8 @@ package com.flicklib.service.movie.cinebel;
 
 import java.util.List;
 
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.HTMLElementName;
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
 
 import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
@@ -39,11 +39,10 @@ public class CinebelParser implements Parser {
 	@Override
 	public void parse(Source source, MoviePage page) {
 
-		au.id.jericho.lib.html.Source jerichoSource = source.getJerichoSource();
+		net.htmlparser.jericho.Source jerichoSource = source.getJerichoSource();
         
         // <span class="movieMainTitle">The Matrix</span>
-        @SuppressWarnings("unchecked")
-        List<Element> spanElements = jerichoSource.findAllElements(HTMLElementName.SPAN);
+        List<Element> spanElements = jerichoSource.getAllElements(HTMLElementName.SPAN);
         for(Element spanElement: spanElements){
         	if("movieMainTitle".equals(spanElement.getAttributeValue("class"))){
         		page.setTitle(spanElement.getContent().getTextExtractor().toString());
@@ -60,8 +59,7 @@ public class CinebelParser implements Parser {
         // <img src="/portal/resources/common/cineb9_off.gif" title="93%" alt="93%" width="48"  height="9" />
         
         // TODO support big images?
-        @SuppressWarnings("unchecked")
-        List<Element> imgElements = jerichoSource.findAllElements(HTMLElementName.IMG);
+        List<Element> imgElements = jerichoSource.getAllElements(HTMLElementName.IMG);
         for(Element imgElement: imgElements){
         	if("imgFilmPoster".equals(imgElement.getAttributeValue("id"))){
         		page.setImgUrl(MovieService.CINEBEL.getUrl() + imgElement.getAttributeValue("src"));
@@ -77,11 +75,10 @@ public class CinebelParser implements Parser {
 //		<h2 class="textRemovedWithCSS">Synopsis</h2>
 //		<p>Thomas, een informaticus met een ongelukkig privéleven, neemt buiten ...</p>
 //	</div>
-        @SuppressWarnings("unchecked")
-        List<Element> divElements = jerichoSource.findAllElements(HTMLElementName.DIV);
+        List<Element> divElements = jerichoSource.getAllElements(HTMLElementName.DIV);
         for(Element divElement: divElements){
         	if("synopsis".equals(divElement.getAttributeValue("id"))){
-        		Element par = (Element) divElement.findAllElements(HTMLElementName.P).get(0);
+        		Element par = (Element) divElement.getAllElements(HTMLElementName.P).get(0);
         		String synopsis = par.getContent().getTextExtractor().toString();
         		page.setDescription(synopsis);
         		page.setPlot(synopsis);

@@ -17,8 +17,8 @@
  */
 package com.flicklib.tools;
 
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.StartTag;
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.StartTag;
 
 public final class StringUtils {
 
