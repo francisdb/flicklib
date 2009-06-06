@@ -46,7 +46,7 @@ import com.flicklib.tools.IOTools;
  */
 public class SimpleHttpSourceLoader extends AbstractSourceLoader {
 
-    static Logger LOG = LoggerFactory.getLogger(SimpleHttpSourceLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHttpSourceLoader.class);
 
     static {
         try {
@@ -65,10 +65,10 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
             try {
                 CookieHandler.setDefault(manager);
             } catch (AccessControlException ace) {
-                LOG.warn("cookie handler initialization failed!");
+            	LOGGER.warn("cookie handler initialization failed!");
             }
         } catch (java.lang.NoClassDefFoundError ncde) {
-            LOG.warn("CookieManager is not accessible " + ncde.getMessage(), ncde);
+        	LOGGER.warn("CookieManager is not accessible " + ncde.getMessage(), ncde);
         }
     }
 
@@ -137,7 +137,7 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
             String newLocation = connection.getHeaderField("Location");
             if (responseCode==302 && newLocation!=null) {
                 URL redirectUrl = new URL(connection.getURL(), newLocation);
-                LOG.info("redirect to "+redirectUrl.toString());
+                LOGGER.info("redirect to "+redirectUrl.toString());
                 IOTools.close(input);
                 return load(redirectUrl);
             }
@@ -154,7 +154,7 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
             }
             Reader reader = new InputStreamReader(input, encoding);
             source = new Source(connection.getURL().toString(), IOTools.readerToString(reader), contentType);
-            LOG.info("request for " + connection.getURL().toString() + " processed, result content type : " + contentType + ", encoding :" + encoding
+            LOGGER.info("request for " + connection.getURL().toString() + " processed, result content type : " + contentType + ", encoding :" + encoding
                     + ", size:" + source.getContent().length());
             reader.close();
             return source;

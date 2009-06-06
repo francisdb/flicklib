@@ -37,7 +37,6 @@ import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
-import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.service.SourceLoader;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
