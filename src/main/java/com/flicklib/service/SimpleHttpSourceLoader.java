@@ -95,6 +95,12 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
         this(null);
         setInternalRedirects(internalRedirects);
     }
+    
+    public SimpleHttpSourceLoader(boolean internalRedirects, final int timeOut) {
+        this(null);
+        this.timeOut = timeOut;
+        setInternalRedirects(internalRedirects);
+    }
 
     public void setInternalRedirects(boolean internalRedirects) {
         this.internalRedirects = internalRedirects;

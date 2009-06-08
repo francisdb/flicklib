@@ -13,6 +13,8 @@ import com.flicklib.service.SimpleHttpSourceLoader;
 
 @RunWith(value = Parameterized.class)
 public class AlternateLiveTester {
+	
+	private static final int TIMEOUT = 30000;
 
     @SuppressWarnings("unchecked")
     @Parameters
@@ -23,7 +25,7 @@ public class AlternateLiveTester {
     protected AbstractSourceLoader loader;
 
     public AlternateLiveTester(boolean internalHttpClient, boolean internalRedirects) {
-        loader = internalHttpClient ? new SimpleHttpSourceLoader(internalRedirects) : new HttpSourceLoader(60000, false);
+        loader = internalHttpClient ? new SimpleHttpSourceLoader(internalRedirects, TIMEOUT) : new HttpSourceLoader(TIMEOUT, false);
     }
 
 }
