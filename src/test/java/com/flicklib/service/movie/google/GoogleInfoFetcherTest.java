@@ -17,12 +17,14 @@
  */
 package com.flicklib.service.movie.google;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
+
+import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.HttpSourceLoader;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -36,7 +38,6 @@ public class GoogleInfoFetcherTest {
      * @throws IOException 
      */
     @Test
-    //@Ignore(value="Disabled for CI")
     public void testFetch() throws IOException {
         GoogleParser googleParser = new GoogleParser();
         GoogleInfoFetcher instance = new GoogleInfoFetcher(googleParser, new HttpSourceLoader(null, false));

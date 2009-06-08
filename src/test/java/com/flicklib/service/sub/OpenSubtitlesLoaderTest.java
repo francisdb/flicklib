@@ -21,7 +21,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +41,6 @@ public class OpenSubtitlesLoaderTest {
      * @throws Exception 
      */
     @Test
-    @Ignore(value="temp ignoring as their site is down")
     public void testSearch() throws Exception {
         SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(null, false));
         Set<Subtitle> result = loader.search("The Science of Sleep", null);
@@ -53,8 +51,6 @@ public class OpenSubtitlesLoaderTest {
     }
     
     @Test
-    @Ignore(value="temp ignoring as their site is down")
-    //@Ignore(value="The opensubtitles site search is failing for this, used to work though and the file is still there...")
     public void testSearch2() throws Exception {
     	SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(null, false));
     	Set<Subtitle> result = loader.search("The.Science.of.Sleep.LIMITED.DVDRip.XViD.-iMBT.avi", null);
@@ -66,7 +62,6 @@ public class OpenSubtitlesLoaderTest {
     }
     
     @Test
-    @Ignore(value="ignoring as their site search wont work for this")
     public void testSearch3() throws Exception {
     	SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(null, false));
     	Set<Subtitle> result = loader.search("X-Men", null);

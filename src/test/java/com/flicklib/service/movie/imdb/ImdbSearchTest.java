@@ -18,8 +18,8 @@
 package com.flicklib.service.movie.imdb;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,7 +49,6 @@ public class ImdbSearchTest extends AlternateLiveTester {
      * @throws Exception 
      */
     @Test
-    //@Ignore
     public void testGetResults_String() throws Exception {
         List<MovieSearchResult> result = instance.getResults("Pulp Fiction");
         assertTrue(result.size() > 0);
