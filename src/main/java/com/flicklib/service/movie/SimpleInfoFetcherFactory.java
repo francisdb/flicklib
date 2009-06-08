@@ -17,6 +17,9 @@
  */
 package com.flicklib.service.movie;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.flicklib.api.InfoFetcherFactory;
 import com.flicklib.api.MovieInfoFetcher;
 import com.flicklib.domain.MovieService;
@@ -31,7 +34,13 @@ import com.flicklib.service.movie.porthu.PorthuFetcher;
 import com.flicklib.service.movie.tomatoes.TomatoesInfoFetcher;
 import com.flicklib.service.movie.xpress.XpressHuFetcher;
 
+/**
+ * Lets you use flicklib without using Guice
+ *
+ */
 public class SimpleInfoFetcherFactory implements InfoFetcherFactory {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleInfoFetcherFactory.class);
 
     private final MovieInfoFetcher imdbInfoFetcher;
     private final MovieInfoFetcher movieWebInfoFetcher;
@@ -96,6 +105,9 @@ public class SimpleInfoFetcherFactory implements InfoFetcherFactory {
             default:
                 // keep this exception in here!
                 throw new RuntimeException("Unknown service: "+service);
+        }
+        if(fetcher == null){
+        	LOGGER.warn("No fetcher was found for: " + service);
         }
         return fetcher;
     }

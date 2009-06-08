@@ -64,8 +64,10 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
     private final OAuthAccessor accessor;
 
     @Inject
-    public NetflixInfoFetcher(@Named("netflix.key")final String apikey, @Named("netflix.secret")final String sharedsecret) {
-        OAuthServiceProvider provider = new OAuthServiceProvider("http://api.netflix.com/oauth/request_token", "https://api-user.netflix.com/oauth/login",
+    public NetflixInfoFetcher(@Named("netflix.key") final String apikey, @Named("netflix.secret") final String sharedsecret) {
+        OAuthServiceProvider provider = new OAuthServiceProvider(
+        		"http://api.netflix.com/oauth/request_token", 
+        		"https://api-user.netflix.com/oauth/login",
                 "http://api.netflix.com/oauth/access_token");
         OAuthConsumer consumer = new OAuthConsumer(null, apikey, sharedsecret, provider);
         accessor = new OAuthAccessor(consumer);
