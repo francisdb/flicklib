@@ -20,14 +20,15 @@ public class SimpleHttpSourceLoaderTest {
 		params.put("username", "test");
 		Source source = loader.post("http://www.piiix.com/login", params, headers);
 		assertTrue(source.getContent(). startsWith("<!DOCTYPE"));
-		System.out.println(source.getContent());
+		//System.out.println(source.getContent());
 	}
 
 	@Test
 	public void testLoadSource() throws IOException {
 		SimpleHttpSourceLoader loader = new SimpleHttpSourceLoader();
 		Source source = loader.loadSource("http://www.google.com");
-		assertTrue(source.getContent(). startsWith("<html>"));
+		System.out.println(source.getContent());
+		assertTrue(source.getContent(). startsWith("<!doctype html>"));
 	}
 	
 	@Test
