@@ -46,7 +46,7 @@ public class PorthuFetcherTest {
      */
     @Before
     public void setUp() throws Exception {
-        loader = new AliasingSourceLoader(new FileSourceLoader());
+        loader = new AliasingSourceLoader(new FileSourceLoader("UTF-8"));
         loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=5609&i_city_id=3372&i_county_id=-1", "porthu/film_page.html");
         loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=80364&i_city_id=3372&i_county_id=-1", "porthu/film_page2.html");
         loader.putAlias("http://port.hu/pls/fi/films.film_page?i_where=2&i_film_id=1269&i_city_id=3372&i_county_id=-1", "porthu/film_page3.html");
