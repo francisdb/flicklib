@@ -21,7 +21,7 @@ public class XpressHuFetcherTest {
 
     @Before
     public void setUp() throws Exception {
-        loader = new AliasingSourceLoader(new FileSourceLoader());
+        loader = new AliasingSourceLoader(new FileSourceLoader("UTF-8"));
         loader.putAlias("http://www.xpress.hu/", "xpresshu/main.html");
         loader.putAlias("http://www.xpress.hu/dvd/keres.asp" +
                 "::GOMB=1::Go2=Go::Go2.x=0::Go2.y=0::KERES=Breakfast::VID=066-193882322-6678351010467122", 
