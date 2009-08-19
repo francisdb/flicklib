@@ -44,16 +44,21 @@ public class IOTools {
     /**
      * Reads an inputstream to String
      * @param in
+     * @param charsetName the charset name
      * @return the result from reading the stream
      * @throws java.io.IOException
      */
-    public static String inputSreamToString(final InputStream in) throws IOException {
+    public static String inputSreamToString(final InputStream in, final String charsetName) throws IOException {
     	ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] b = new byte[4096];
         for (int n; (n = in.read(b)) != -1;) {
             bos.write(b, 0, n);
         }
-        return bos.toString();
+        if(charsetName != null){
+        	return bos.toString(charsetName);
+        }else{
+        	return bos.toString();
+        }
     }
     
     public static String readerToString(final Reader in) throws IOException {

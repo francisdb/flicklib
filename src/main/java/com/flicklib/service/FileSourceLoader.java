@@ -32,17 +32,27 @@ import com.flicklib.tools.IOTools;
  */
 public class FileSourceLoader extends AbstractSourceLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileSourceLoader.class);
+    
+    private final String charsetName;
+    
+    public FileSourceLoader(final String charsetname) {
+		this.charsetName = charsetname;
+	}
+    
+    public FileSourceLoader() {
+		this(null);
+	}
 	
     @Override
     public Source loadSource(String url, boolean useCache) throws IOException {
     	String contentType = null;
     	contentType = URLConnection.guessContentTypeFromName(url);
     	LOGGER.trace("Content-Type: "+contentType);
-        return new Source(url, getOrPost(url), contentType);
+        return new Source(url, getOrPost(url, charsetName), contentType);
     }
     
     
-    private String getOrPost(String url) throws IOException {
+    private String getOrPost(String url, String charsetName) throws IOException {
         String source = null;
         InputStream fis = null;
         try {
@@ -50,7 +60,7 @@ public class FileSourceLoader extends AbstractSourceLoader {
             if (fis==null) {
                 throw new IOException("File not found : "+url);
             }
-            source = IOTools.inputSreamToString(fis);
+            source = IOTools.inputSreamToString(fis, charsetName);
         } finally {
             if (fis != null) {
                 fis.close();
