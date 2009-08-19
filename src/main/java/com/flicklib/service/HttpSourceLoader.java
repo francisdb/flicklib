@@ -93,6 +93,7 @@ public class HttpSourceLoader extends AbstractSourceLoader {
         try {
             LOGGER.info("Loading " + url);
             httpMethod = new GetMethod(url);   
+            //httpMethod.addRequestHeader("Content-Type","text/html; charset=UTF-8");
             try{
             	client.executeMethod(httpMethod);
             }catch(RedirectException ex){
@@ -100,10 +101,12 @@ public class HttpSourceLoader extends AbstractSourceLoader {
             }
             LOGGER.debug("Finished loading at " + httpMethod.getURI().toString());
             String responseCharset = httpMethod.getResponseCharSet();
+            LOGGER.info("Response charset = " + responseCharset);
             if (responseCharset != null) {
                 is = new InputStreamReader(httpMethod.getResponseBodyAsStream(), responseCharset);
             } else {
-                is = new InputStreamReader(httpMethod.getResponseBodyAsStream());
+            	// default as described in: http://hc.apache.org/httpclient-3.x/charencodings.html
+                is = new InputStreamReader(httpMethod.getResponseBodyAsStream(), "ISO-8859-1");
             }
             String contentType = httpMethod.getResponseHeader("Content-Type").getValue();
             // String contentType = URLConnection.guessContentTypeFromName(url)
