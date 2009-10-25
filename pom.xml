@@ -57,9 +57,9 @@
 		<url>http://code.google.com/p/flicklib/issues/list</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:svn:http://flicklib.googlecode.com/svn/trunk</connection>
-		<developerConnection>scm:svn:https://flicklib.googlecode.com/svn/trunk</developerConnection>
-		<url>http://code.google.com/p/flicklib/source/browse/trunk</url>
+		<connection>scm:hg:https://flicklib.googlecode.com/hg/</connection>
+		<developerConnection>scm:hg:https://flicklib.googlecode.com/hg/</developerConnection>
+		<url>http://code.google.com/p/flicklib/source/browse/</url>
 	</scm>
 	<dependencies>
 		<dependency>
