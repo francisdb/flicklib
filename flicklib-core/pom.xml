@@ -11,4 +11,5 @@
 	<groupId>com.flicklib</groupId>
 	<artifactId>flicklib-core</artifactId>
 	<packaging>jar</packaging>
+	<name>flicklib-core</name>
 </project>

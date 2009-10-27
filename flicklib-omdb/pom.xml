@@ -11,11 +11,12 @@
 	<groupId>com.flicklib</groupId>
 	<artifactId>flicklib-omdb</artifactId>
 	<packaging>jar</packaging>
+	<name>flicklib-omdb</name>
 	
 	<dependencies>
 		<dependency>
 			<groupId>com.flicklib</groupId>
-			<artifactId>flicklib</artifactId>
+			<artifactId>flicklib-core</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
 	</dependencies>

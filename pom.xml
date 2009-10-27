@@ -3,11 +3,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.flicklib</groupId>
 	<artifactId>flicklib</artifactId>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 	<version>0.4-SNAPSHOT</version>
 	<name>flicklib</name>
 	<description>Java library for fetching movie information from the web</description>
 	<url>http://www.flicklib.com</url>
+	
+	<modules>
+		<module>flicklib-core</module>
+		<module>flicklib-httpcache4j</module>
+		<!-- <module>flicklib-omdb</module> -->
+	</modules>
+	
 	<developers>
 		<developer>
 			<id>francisdb</id>
