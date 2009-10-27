@@ -79,8 +79,19 @@ public class OfdbParser implements Parser{
     				LOGGER.warn("Could not parse year: "+ex.getMessage());
     			}
         	}else if("Regie:".equals(txt)){
-        		fontElement = fontIterator.next();
-        		page.getDirectors().add(fontElement.getContent().getTextExtractor().toString());
+        		Element tr = jerichoSource.getNextElement(fontElement.getEnd(), HTMLElementName.TR);
+        		Element a = jerichoSource.getNextElement(fontElement.getEnd(), HTMLElementName.A);
+        		while(a != null && tr != null && a.getEnd() < tr.getStartTag().getBegin()){
+        			page.getDirectors().add(a.getContent().getTextExtractor().toString());
+        			a = jerichoSource.getNextElement(a.getEnd(), HTMLElementName.A);
+        		}
+        	}else if("Darsteller:".equals(txt)){
+        		Element tr = jerichoSource.getNextElement(fontElement.getEnd(), HTMLElementName.TR);
+        		Element a = jerichoSource.getNextElement(fontElement.getEnd(), HTMLElementName.A);
+        		while(a != null && tr != null && a.getEnd() < tr.getStartTag().getBegin()){
+        			page.getActors().add(a.getContent().getTextExtractor().toString());
+        			a = jerichoSource.getNextElement(a.getEnd(), HTMLElementName.A);
+        		}
         	}
         }
         

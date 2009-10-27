@@ -71,7 +71,14 @@ public class OfdbFetcherTest {
 		assertEquals("Dune - Der Wüstenplanet", page.getAlternateTitle());
 		assertEquals("Dune", page.getTitle());
 		assertEquals("Dune", page.getOriginalTitle());
+		
+		assertEquals(1, page.getDirectors().size());
 		assertTrue(page.getDirectors().contains("John Harrison"));
+		
+		assertTrue(page.getActors().contains("William Hurt"));
+		assertTrue(page.getActors().contains("Alec Newman"));
+		assertTrue(page.getActors().contains("Saskia Reeves"));
+		
 		assertEquals("http://img.ofdb.de/film/3/3635.jpg", page.getImgUrl());
 		assertEquals(Integer.valueOf(2000), page.getYear());
 		assertTrue(page.getGenres().contains("Abenteuer"));

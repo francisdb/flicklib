@@ -67,6 +67,10 @@ public class ImdbInfoFetcherTest {
 			assertTrue(page.getDirectors().contains("Andy Wachowski"));
 			assertTrue(page.getDirectors().contains("Larry Wachowski"));
 			
+			assertTrue(page.getActors().contains("Keanu Reeves"));
+			assertTrue(page.getActors().contains("Laurence Fishburne"));
+			assertTrue(page.getActors().contains("Carrie-Anne Moss"));			
+			
 			assertNotNull(page.getScore());
 			assertNotNull(page.getPlot());
 			assertTrue(page.getGenres().contains("Action"));

@@ -91,7 +91,16 @@ public class ImdbParser extends AbstractJerichoParser {
             if (href != null && href.contains("/Sections/Languages/")) {
                 movie.addLanguage(linkElement.getContent().getTextExtractor().toString());
             }
-
+            
+            //<a href="/name/nm0000206/" onclick="(new Image()).src='/rg/castlist/position-1/images/b.gif?link=/name/nm0000206/';">Keanu Reeves</a>
+            String onclick = linkElement.getAttributeValue("onclick");
+            if(onclick != null && onclick.contains("castlist")){
+            	 movie.getActors().add(linkElement.getContent().getTextExtractor().toString());
+            }
+            //<a href="/name/nm0905154/" onclick="(new Image()).src='/rg/directorlist/position-2/images/b.gif?link=name/nm0905154/';">Larry Wachowski</a><br/> 
+			if (onclick != null && onclick.contains("directorlist")) {
+				movie.getDirectors().add(linkElement.getContent().getTextExtractor().toString());
+			}
         }
 
         linkElements = source.getAllElements(HTMLElementName.B);
@@ -124,19 +133,6 @@ public class ImdbParser extends AbstractJerichoParser {
                 //System.out.println(next);
                 String runtime = source.subSequence(end, next.getBegin()).toString().trim();
                 movie.setRuntime(parseRuntime(runtime));
-            } else if (hText.contains("Directors")) {
-            	// we have at least 2
-            	// TODO get a better way to load these
-                Element aElement = source.getNextElement(end);
-                while(HTMLElementName.A.equals(aElement.getName())){
-                	movie.getDirectors().add(aElement.getContent().getTextExtractor().toString());
-                	// skip the br so do this twice
-                	aElement = source.getNextElement(aElement.getEnd());
-                	aElement = source.getNextElement(aElement.getEnd());
-                }
-            } else if (hText.contains("Director")) {
-                Element aElement = source.getNextElement(end);
-                movie.getDirectors().add(aElement.getContent().getTextExtractor().toString());
             } else if (hText.contains("User Rating")) {
                 Element aElement = source.getNextElement(end);
                 List<Element> boldOnes = aElement.getAllElements(HTMLElementName.B);

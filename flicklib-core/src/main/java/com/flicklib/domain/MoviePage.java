@@ -46,6 +46,7 @@ public class MoviePage extends MovieSearchResult {
     private Set<String> genres;
     private Set<String> languages;
     private Set<String> directors;
+    private Set<String> actors;
 
     public MoviePage() {
     	this(null);
@@ -56,6 +57,7 @@ public class MoviePage extends MovieSearchResult {
         this.directors = new HashSet<String>();
         this.languages = new HashSet<String>();
         this.genres = new HashSet<String>();
+        this.actors = new HashSet<String>();
     }
 
     /**
@@ -147,19 +149,27 @@ public class MoviePage extends MovieSearchResult {
     }
 
     /**
-     * @return the director
+     * @return the directors
      */
     public Set<String> getDirectors() {
         return directors;
     }
 
     /**
-     * @param director
-     *            the director to set
+     * @param directors
+     *            the directors to set
      */
     public void setDirectors(Set<String> directors) {
         this.directors = directors;
     }
+    
+    public Set<String> getActors() {
+		return actors;
+	}
+    
+    public void setActors(Set<String> actors) {
+		this.actors = actors;
+	}
 
     public void addGenre(String genre) {
         this.genres.add(genre);
