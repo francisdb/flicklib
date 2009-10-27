@@ -59,7 +59,7 @@ public class HttpCache4J implements HttpCache{
 		HTTPResponse response = cache.doCachedRequest(request, forceRefresh);
 		String content = payloadToString(response);
 		String respUrl = response.getHeaders().getFirstHeaderValue("Content-Location");
-		System.err.println(response.getHeaders().toString());
+		//System.err.println(response.getHeaders().toString());
 		String theUrl = url;
 		if(respUrl != null){
 			System.err.println(respUrl);
@@ -77,6 +77,16 @@ public class HttpCache4J implements HttpCache{
 			request.addHeader(header.getKey(), header.getValue());
 		}
 		
+//		TODO Enable when new version of httpcache4j is released
+//		
+//		List<FormParameter> params = new ArrayList<FormParameter>();
+//		for(Entry<String,String> param:parameters.entrySet()){
+//			params.add(new FormParameter(param.getKey(), param.getValue()));
+//		}
+//		FormDataPayload payload = new FormDataPayload(params);
+//		request = request.payload(payload);
+		
+		///////////////// TODO replace this part with the code above /////////////////////
 		StringBuilder builder = new StringBuilder();
 		// TODO fix when this is fixed: http://jira.codehaus.org/browse/HTCJ-51
 		// or see in httpclient if we can reuse code
@@ -89,12 +99,15 @@ public class HttpCache4J implements HttpCache{
 		ByteArrayInputStream bis = new ByteArrayInputStream(builder.toString().getBytes());
 		
 		MIMEType mimeType = new MIMEType("application/x-www-form-urlencoded");
+		
+		Payload payload = null;
 		try {
-			Payload payload = new ByteArrayPayload(bis, mimeType);
-			request = request.payload(payload);
+			payload = new ByteArrayPayload(bis, mimeType);
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
+		request = request.payload(payload);
+		//////////////////////////////////////////////////////////////////////////
 		
 		HTTPResponse response = cache.doCachedRequest(request, false);
 		String content = payloadToString(response);

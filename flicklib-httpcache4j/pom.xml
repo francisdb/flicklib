@@ -21,12 +21,17 @@
 		<dependency>
 			<groupId>org.codehaus.httpcache4j</groupId>
 			<artifactId>httpcache4j-core</artifactId>
-			<version>2.1.1</version>
+			<version>${httpcache4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.httpcache4j.resolvers</groupId>
 			<artifactId>resolvers-commons-httpclient</artifactId>
-			<version>2.1.1</version>
+			<version>${httpcache4j.version}</version>
 		</dependency>
 	</dependencies>
+	
+	<properties>
+		<!-- <httpcache4j.version>2.1.1</httpcache4j.version> -->
+		<httpcache4j.version>2.2-SNAPSHOT</httpcache4j.version>
+	</properties>
 </project>
