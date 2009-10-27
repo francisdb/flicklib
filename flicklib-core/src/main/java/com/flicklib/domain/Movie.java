@@ -30,7 +30,7 @@ public class Movie {
     private String title;
     private String plot;
     private Integer year;
-    private String director;
+    private Set<String> directors;
     private MovieType type;
     /**
      * Runtime in minutes
@@ -101,16 +101,16 @@ public class Movie {
     /**
      * @return the director
      */
-    public String getDirector() {
-        return director;
+    public Set<String> getDirectors() {
+        return directors;
     }
 
     /**
      * @param director
      *            the director to set
      */
-    public void setDirector(String director) {
-        this.director = director;
+    public void setDirectors(Set<String> directors) {
+        this.directors = directors;
     }
 
     /**

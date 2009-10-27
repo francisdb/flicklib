@@ -80,7 +80,7 @@ public class OfdbParser implements Parser{
     			}
         	}else if("Regie:".equals(txt)){
         		fontElement = fontIterator.next();
-        		page.setDirector(fontElement.getContent().getTextExtractor().toString());
+        		page.getDirectors().add(fontElement.getContent().getTextExtractor().toString());
         	}
         }
         

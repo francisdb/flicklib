@@ -153,7 +153,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
                     } else if ("Rendezte:".equalsIgnoreCase(text)) {
                         String value = getLabelValue(boldElement);
                         if (value != null) {
-                            result.setDirector(value);
+                            result.getDirectors().add(value);
                             found++;
                         }
                     } else if ("Szereplők:".equalsIgnoreCase(text) || "Szereplõk:".equalsIgnoreCase(text)) {

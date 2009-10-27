@@ -68,7 +68,7 @@ public class XpressHuLiveFetcherTest extends AlternateLiveTester {
         Assert.assertEquals("image url", "http://www.xpress.hu/dvd/cover/kicsi/7467.jpg", movieInfo.getImgUrl());
         Assert.assertEquals("title", "Bajnokok reggelije", movieInfo.getTitle());
         Assert.assertEquals("genre", "[vígjáték]", movieInfo.getGenres().toString());
-        Assert.assertEquals("director", "Alan Rudolph", movieInfo.getDirector());
+        Assert.assertTrue("director", movieInfo.getDirectors().contains("Alan Rudolph"));
         Assert.assertEquals("orig title", "Breakfast of Champions", movieInfo.getOriginalTitle());
         Assert.assertEquals("orig year", Integer.valueOf(1999), movieInfo.getYear());
         Assert.assertEquals("score", Integer.valueOf(70), movieInfo.getScore());

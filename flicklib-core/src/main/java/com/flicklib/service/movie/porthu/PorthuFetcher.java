@@ -115,7 +115,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                             // the next span contains the name of the director
                             Element nextSpan = spanElements.get(i + 1);
                             LOGGER.debug("director is : " + nextSpan);
-                            mp.setDirector(nextSpan.getTextExtractor().toString());
+                            mp.getDirectors().add(nextSpan.getTextExtractor().toString());
                         }
                         if (content.startsWith("A film értékelése:")) {
 

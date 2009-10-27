@@ -42,16 +42,20 @@ public class MoviePage extends MovieSearchResult {
      * Runtime in minutes
      */
     private Integer runtime;
-    private Set<String> genres = new HashSet<String>();;
-    private Set<String> languages = new HashSet<String>();;
-
-    private String director;
+    
+    private Set<String> genres;
+    private Set<String> languages;
+    private Set<String> directors;
 
     public MoviePage() {
+    	this(null);
     }
 
     public MoviePage(MovieService service) {
         super(service);
+        this.directors = new HashSet<String>();
+        this.languages = new HashSet<String>();
+        this.genres = new HashSet<String>();
     }
 
     /**
@@ -145,16 +149,16 @@ public class MoviePage extends MovieSearchResult {
     /**
      * @return the director
      */
-    public String getDirector() {
-        return director;
+    public Set<String> getDirectors() {
+        return directors;
     }
 
     /**
      * @param director
      *            the director to set
      */
-    public void setDirector(String director) {
-        this.director = director;
+    public void setDirectors(Set<String> directors) {
+        this.directors = directors;
     }
 
     public void addGenre(String genre) {

@@ -17,6 +17,11 @@
  */
 package com.flicklib.service.movie.porthu;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +35,6 @@ import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.FileSourceLoader;
 import com.flicklib.service.movie.AliasingSourceLoader;
-import static org.junit.Assert.*;
 
 /**
  * @author zsombor
@@ -103,7 +107,7 @@ public class PorthuFetcherTest {
             assertEquals("year", Integer.valueOf(1972), moviePage.getYear());
             assertNotNull("has plot", moviePage.getPlot());
             assertTrue("plot", moviePage.getPlot().startsWith("A gengszterfilmek legnagyobbika, világhírű"));
-            assertEquals("director", "Francis Ford Coppola", moviePage.getDirector());
+            assertTrue("director", moviePage.getDirectors().contains("Francis Ford Coppola"));
             assertEquals("score", Integer.valueOf(94), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(80), moviePage.getVotes());
             assertGenres(moviePage.getGenres(), "amerikai", "gengszterfilm");
@@ -124,7 +128,7 @@ public class PorthuFetcherTest {
             assertEquals("year", Integer.valueOf(2006), moviePage.getYear());
             assertNotNull("has plot", moviePage.getPlot());
             assertTrue("plot", moviePage.getPlot().startsWith("1766-ban, a franciaországi Grasse városban a parfűmkészítő"));
-            assertEquals("director", "Tom Tykwer", moviePage.getDirector());
+            assertTrue("director", moviePage.getDirectors().contains("Tom Tykwer"));
             assertEquals("score", Integer.valueOf(80), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(114), moviePage.getVotes());
             assertGenres(moviePage.getGenres(), "német", "francia", "spanyol", "filmdráma");
@@ -146,7 +150,7 @@ public class PorthuFetcherTest {
             assertEquals("year", Integer.valueOf(1996), moviePage.getYear());
             assertNotNull("has plot", moviePage.getPlot());
             assertTrue("plot", moviePage.getPlot().startsWith("A Star Trek filmek legújabb és magasan legjobb darabja"));
-            assertEquals("director", "Jonathan Frakes", moviePage.getDirector());
+            assertTrue("director", moviePage.getDirectors().contains("Jonathan Frakes"));
             assertEquals("score", Integer.valueOf(100), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(4), moviePage.getVotes());
             assertGenres(moviePage.getGenres(), "amerikai", "akciófilm");
@@ -169,7 +173,7 @@ public class PorthuFetcherTest {
             assertEquals("year", Integer.valueOf(2004), moviePage.getYear());
             assertNotNull("has plot", moviePage.getPlot());
             assertTrue("plot", moviePage.getPlot().startsWith("Végy egy göndör hajú, pattanásos tizenhét éves tinédzsert"));
-            assertEquals("director", "Kresten Vestbjerg Andersen", moviePage.getDirector());
+            assertTrue("director", moviePage.getDirectors().contains("Kresten Vestbjerg Andersen"));
             assertEquals("score", Integer.valueOf(78), moviePage.getScore());
             assertEquals("votes", Integer.valueOf(9), moviePage.getVotes());
             assertEquals("runtime", Integer.valueOf(78), moviePage.getRuntime());

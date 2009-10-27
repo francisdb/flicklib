@@ -18,6 +18,7 @@
 package com.flicklib.service.movie.imdb;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public class ImdbParserTest {
         instance.parse(source, site);
         //assertEquals(Integer.valueOf(89), site.getIdForSite());
         assertEquals("Pulp Fiction", site.getTitle());
-        assertEquals("Quentin Tarantino", site.getDirector());
+        assertTrue(site.getDirectors().contains("Quentin Tarantino"));
         assertEquals(Integer.valueOf(1994), site.getYear());
         assertEquals("Pulp%20Fiction%20%281994%29_files/MV5BMjE0ODk2NjczOV5BMl5BanBnXkFtZTYwNDQ0NDg4.jpg", site.getImgUrl());
         assertEquals("The lives of two mob hit men, a boxer, a gangster's wife, and a pair of\ndiner bandits intertwine in four tales of violence and redemption.", site.getPlot());
@@ -58,7 +59,7 @@ public class ImdbParserTest {
         instance.parse(source, site);
         //assertEquals(Integer.valueOf(89), site.getIdForSite());
         assertEquals("A Couple of White Chicks at the Hairdresser", site.getTitle());
-        assertEquals("Roxanne Messina Captor", site.getDirector());
+        assertTrue(site.getDirectors().contains("Roxanne Messina Captor"));
         assertEquals(Integer.valueOf(2007), site.getYear());
         assertEquals(null, site.getImgUrl());
         assertEquals("\"A COUPLE OF WHITE CHICKS AT THE HAIRDRESSER\" is a Dramady about two very different women who develop...", site.getPlot());
