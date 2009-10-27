@@ -68,12 +68,23 @@
 		<developerConnection>scm:hg:https://flicklib.googlecode.com/hg/</developerConnection>
 		<url>http://code.google.com/p/flicklib/source/browse/</url>
 	</scm>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.flicklib</groupId>
+				<artifactId>flicklib-core</artifactId>
+				<version>${parent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.htmlparser.jericho</groupId>
+				<artifactId>jericho-html</artifactId>
+				<version>3.1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
 	<dependencies>
-		<dependency>
-			<groupId>net.oauth</groupId>
-			<artifactId>core</artifactId>
-			<version>20080621</version>
-		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -83,53 +94,13 @@
 			<groupId>com.google.code.guice</groupId>
 			<artifactId>guice</artifactId>
 			<version>1.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.htmlparser.jericho</groupId>
-			<artifactId>jericho-html</artifactId>
-			<version>3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.1</version>
 		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20090211</version>
-		</dependency>
-		<dependency>
-			<groupId>org.restlet</groupId>
-			<artifactId>org.restlet</artifactId>
-			<version>${restlet.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.noelios.restlet</groupId>
-			<artifactId>com.noelios.restlet</artifactId>
-			<version>${restlet.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.noelios.restlet</groupId>
-			<artifactId>com.noelios.restlet.ext.httpclient</artifactId>
-			<version>${restlet.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.httpcache4j</groupId>
-			<artifactId>httpcache4j-core</artifactId>
-			<version>2.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.httpcache4j.resolvers</groupId>
-			<artifactId>resolvers-commons-httpclient</artifactId>
-			<version>2.1.1</version>
-		</dependency>
+
 		<!-- TESTING -->
 
 		<dependency>
@@ -145,6 +116,9 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	
+	
 	<build>
 		<defaultGoal>install</defaultGoal>
 		<plugins>

@@ -12,4 +12,48 @@
 	<artifactId>flicklib-core</artifactId>
 	<packaging>jar</packaging>
 	<name>flicklib-core</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.htmlparser.jericho</groupId>
+			<artifactId>jericho-html</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.oauth</groupId>
+			<artifactId>core</artifactId>
+			<version>20080621</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
+		<dependency>
+			<groupId>org.restlet</groupId>
+			<artifactId>org.restlet</artifactId>
+			<version>${restlet.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.noelios.restlet</groupId>
+			<artifactId>com.noelios.restlet</artifactId>
+			<version>${restlet.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.noelios.restlet</groupId>
+			<artifactId>com.noelios.restlet.ext.httpclient</artifactId>
+			<version>${restlet.version}</version>
+		</dependency>
+		<!-- test -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.4</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

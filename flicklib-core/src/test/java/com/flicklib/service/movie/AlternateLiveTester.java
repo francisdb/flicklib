@@ -13,7 +13,6 @@ import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.UrlConnectionResolver;
 import com.flicklib.service.cache.EmptyHttpCache;
-import com.flicklib.service.cache.HttpCache4J;
 
 @RunWith(value = Parameterized.class)
 public class AlternateLiveTester {
@@ -25,7 +24,7 @@ public class AlternateLiveTester {
     public static Collection data() {
         return Arrays.asList(new Object[][] { 
         		{ Boolean.TRUE, Boolean.TRUE }, 
-        		{ Boolean.TRUE, Boolean.FALSE }, 
+        		//{ Boolean.TRUE, Boolean.FALSE }, 
         		{ Boolean.FALSE, Boolean.FALSE } });
     }
 
@@ -34,13 +33,10 @@ public class AlternateLiveTester {
     public AlternateLiveTester(boolean internalHttpClient, boolean internalRedirects) {
     	HttpCache cache = null;
     	if(internalHttpClient){
-    		if(internalRedirects){
-    			cache = new EmptyHttpCache(new UrlConnectionResolver(5000));
-    		}else{
-    			cache = new EmptyHttpCache(new HttpClientResponseResolver(5000));
-    		}
+    		//if(internalRedirects){
+    		cache = new EmptyHttpCache(new UrlConnectionResolver(5000));
     	}else{
-    		cache = new HttpCache4J();
+    		cache = new EmptyHttpCache(new HttpClientResponseResolver(5000));
     	}
     	loader = new HttpSourceLoader(cache);
     }

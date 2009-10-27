@@ -25,14 +25,14 @@ public class CachesTest {
 		System.out.println(url);
 		EmptyHttpCache empty = new EmptyHttpCache(new UrlConnectionResolver(5000));
 		EmptyHttpCache empty2 = new EmptyHttpCache(new HttpClientResponseResolver(5000));
-		HttpCache4J cache4j = new HttpCache4J();
+		//HttpCache4J cache4j = new HttpCache4J();
 		
 		String emptyContent = empty.get(url).getContent();
 		String emptyContent2 = empty2.get(url).getContent();
-		String cache4jContent = cache4j.get(url).getContent();
+		//String cache4jContent = cache4j.get(url).getContent();
 		
 		assertEquals(emptyContent, emptyContent2);
-		assertEquals(emptyContent2, cache4jContent);
+		//assertEquals(emptyContent2, cache4jContent);
 	}
 	
 	protected String generateUrlForTitleSearch(String title) {

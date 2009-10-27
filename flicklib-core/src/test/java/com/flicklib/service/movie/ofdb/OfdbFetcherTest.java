@@ -16,7 +16,8 @@ import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MovieType;
 import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.service.SourceLoader;
-import com.flicklib.service.cache.HttpCache4J;
+import com.flicklib.service.UrlConnectionResolver;
+import com.flicklib.service.cache.EmptyHttpCache;
 
 public class OfdbFetcherTest {
     private SourceLoader loader;
@@ -25,7 +26,7 @@ public class OfdbFetcherTest {
     
     @Before
     public void setUp() throws Exception {
-        loader = new HttpSourceLoader(new HttpCache4J());
+        loader = new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000)));
         fetcher = new OfdbFetcher(loader, new OfdbParser());
     }
     

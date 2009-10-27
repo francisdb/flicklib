@@ -17,7 +17,16 @@
 		<dependency>
 			<groupId>com.flicklib</groupId>
 			<artifactId>flicklib-core</artifactId>
-			<version>${parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.httpcache4j</groupId>
+			<artifactId>httpcache4j-core</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.httpcache4j.resolvers</groupId>
+			<artifactId>resolvers-commons-httpclient</artifactId>
+			<version>2.1.1</version>
 		</dependency>
 	</dependencies>
 </project>

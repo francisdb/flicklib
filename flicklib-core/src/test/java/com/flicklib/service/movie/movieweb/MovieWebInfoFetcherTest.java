@@ -26,7 +26,8 @@ import org.junit.Test;
 import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.HttpSourceLoader;
-import com.flicklib.service.cache.HttpCache4J;
+import com.flicklib.service.UrlConnectionResolver;
+import com.flicklib.service.cache.EmptyHttpCache;
 
 /**
  *
@@ -44,7 +45,7 @@ public class MovieWebInfoFetcherTest {
         Movie movie = new Movie();
         movie.setTitle("Pulp Fiction");
         MovieWebParser parser = new MovieWebParser();
-        MovieWebInfoFetcher fetcher = new MovieWebInfoFetcher(parser, new HttpSourceLoader(new HttpCache4J()));
+        MovieWebInfoFetcher fetcher = new MovieWebInfoFetcher(parser, new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000))));
         MoviePage site = fetcher.fetch("Pulp Fiction");
         assertNotNull("MovieWebStars is null", site.getScore());
     }
