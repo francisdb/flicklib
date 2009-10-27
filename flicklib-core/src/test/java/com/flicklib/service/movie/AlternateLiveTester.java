@@ -34,9 +34,9 @@ public class AlternateLiveTester {
     	HttpCache cache = null;
     	if(internalHttpClient){
     		//if(internalRedirects){
-    		cache = new EmptyHttpCache(new UrlConnectionResolver(5000));
+    		cache = new EmptyHttpCache(new UrlConnectionResolver(TIMEOUT));
     	}else{
-    		cache = new EmptyHttpCache(new HttpClientResponseResolver(5000));
+    		cache = new EmptyHttpCache(new HttpClientResponseResolver(TIMEOUT));
     	}
     	loader = new HttpSourceLoader(cache);
     }
