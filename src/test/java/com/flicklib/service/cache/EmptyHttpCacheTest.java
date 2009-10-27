@@ -1,4 +1,4 @@
-package com.flicklib.service;
+package com.flicklib.service.cache;
 /*
  * This file is part of Flicklib.
  *
@@ -16,22 +16,27 @@ package com.flicklib.service;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.flicklib.service.cache.HttpEHCache;
+import com.flicklib.service.HttpCache;
 
-
-public class HttpCacheTest {
+public class EmptyHttpCacheTest {
+	
+	
 
 	@Test
-	public void testHttpCache() {
-		HttpCache cache = new HttpEHCache();
-		Source source = new Source("JUnit", "blabla", "text/plain");
-		cache.put("JUnit", source);
-		assertEquals("blabla", cache.get("JUnit").getContent());
-		assertEquals("text/plain", cache.get("JUnit").getContentType());
+	public void testPutGet() {
+		MockResolver resolver = new MockResolver();
+		HttpCache cache = new EmptyHttpCache(resolver);
+		
+		assertEquals("mock", cache.get("test").getContent());
+		assertEquals(1, resolver.getCallCount());
+		
+		// second call should hit the resolver again
+		assertEquals("mock", cache.get("test").getContent());
+		assertEquals(2, resolver.getCallCount());
 	}
 
 }

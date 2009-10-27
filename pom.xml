@@ -113,12 +113,22 @@
 			<artifactId>ehcache</artifactId>
 			<version>1.6.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.codehaus.httpcache4j</groupId>
+			<artifactId>httpcache4j-core</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.httpcache4j.resolvers</groupId>
+			<artifactId>resolvers-commons-httpclient</artifactId>
+			<version>2.1.1</version>
+		</dependency>
 		<!-- TESTING -->
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.6</version>
+			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

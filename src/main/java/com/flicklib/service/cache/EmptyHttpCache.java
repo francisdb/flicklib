@@ -17,27 +17,61 @@
  */
 package com.flicklib.service.cache;
 
+import java.io.IOException;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.flicklib.service.HttpCache;
+import com.flicklib.service.ResponseResolver;
 import com.flicklib.service.Source;
+import com.google.inject.Inject;
 
 /**
- * Mock implementation, always returns null and ignores puts
+ * Mock implementation, just forwards to the resolver
  * 
  * @author zsombor
  *
  */
 public class EmptyHttpCache implements HttpCache {
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmptyHttpCache.class);
 
+	private final ResponseResolver resolver;
+	
+	@Inject
+	public EmptyHttpCache(
+			final ResponseResolver resolver) {
+		this.resolver = resolver;
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public Source get(final String url) {
-		return null;
+		Source source = null;
+		try {
+			source = resolver.get(url);
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+		return source;
 	}
-
-	/** {@inheritDoc} */
+	
 	@Override
-	public void put(final String url, final Source page) {
-		// ignored
+	public Source get(String url, boolean forceRefresh) {
+		return get(url);
+	}
+	
+	
+	@Override
+	public Source post(String url, Map<String, String> parameters, Map<String, String> headers) {
+		Source source = null;
+		try {
+			source = resolver.post(url, parameters, headers);
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+		return source;
 	}
 
 }

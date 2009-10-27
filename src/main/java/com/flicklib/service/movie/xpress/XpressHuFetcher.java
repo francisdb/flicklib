@@ -247,6 +247,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
     public List<? extends MovieSearchResult> search(String title) throws IOException {
         Source searchResponse = executeSearch(title);
         LOGGER.info("search for '" + title + "' returned " + searchResponse);
+        System.err.println(searchResponse.getContent());
 
         net.htmlparser.jericho.Source jerichoSource = searchResponse.getJerichoSource();
         List<StartTag> forms = jerichoSource.getAllStartTags("form");

@@ -17,10 +17,37 @@
  */
 package com.flicklib.service;
 
+import java.util.Map;
+
+/**
+ * Simple source cache
+ * @author francisdb
+ *
+ */
 public interface HttpCache {
 
-	public abstract Source get(String url);
+	/**
+	 * Get the Source for a url
+	 * @param url the url to look up
+	 * @return the source of <code>null</code> if it was not available
+	 */
+	Source get(String url);
+	
+	/**
+	 * Get the Source for a url
+	 * @param url the url to look up
+	 * @param forceRefresh forces a refresh if true
+	 * @return the source of <code>null</code> if it was not available
+	 */
+	Source get(String url, boolean forceRefresh);
 
-	public abstract void put(String url, Source page);
+	/**
+	 * Get the Source for a url
+	 * TODO transform all parameters to a request object and merge post and get to get
+	 * @param url
+	 * @param forceRefresh
+	 * @return
+	 */
+	Source post(String url, Map<String, String> parameters, Map<String, String> headers);
 
 }

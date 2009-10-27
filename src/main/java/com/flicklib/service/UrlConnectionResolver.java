@@ -1,20 +1,3 @@
-/*
- * This file is part of Flicklib.
- *
- * Copyright (C) Zsombor Gegesy
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.flicklib.service;
 
 import java.io.IOException;
@@ -38,19 +21,15 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.flicklib.module.FlicklibModule;
 import com.flicklib.tools.IOTools;
+import com.google.inject.name.Named;
 
-/**
- * @author zsombor
- * 
- */
-public class SimpleHttpSourceLoader extends AbstractSourceLoader {
+public class UrlConnectionResolver implements ResponseResolver {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UrlConnectionResolver.class);
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHttpSourceLoader.class);
-    
-    private static final String ENCODING = "UTF-8";
-
-    static {
+	static {
         try {
             CookieManager manager = new CookieManager(null, new CookiePolicy() {
                 @Override
@@ -73,62 +52,22 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
         	LOGGER.warn("CookieManager is not accessible " + ncde.getMessage(), ncde);
         }
     }
-
-    private final HttpCache cache;
-    
+	
+	// TODO detect encoding?
+    private static final String ENCODING = "UTF-8";
+	
     private boolean hideAgent = true;
     private Integer timeOut = null;
     private boolean internalRedirects = true;
+	
+    public UrlConnectionResolver(
+    		@Named(value = FlicklibModule.HTTP_TIMEOUT) final Integer timeout) {
+		this.timeOut = timeout;
+	}
     
-    /**
-	 * 
-	 */
-    public SimpleHttpSourceLoader(HttpCache cache) {
-        this.cache = cache;
-    }
-
-    public SimpleHttpSourceLoader() {
-        this(null);
-    }
-    
-    public SimpleHttpSourceLoader(boolean internalRedirects) {
-        this(null);
-        setInternalRedirects(internalRedirects);
-    }
-    
-    public SimpleHttpSourceLoader(boolean internalRedirects, final int timeOut) {
-        this(null);
-        this.timeOut = timeOut;
-        setInternalRedirects(internalRedirects);
-    }
-
-    public void setInternalRedirects(boolean internalRedirects) {
-        this.internalRedirects = internalRedirects;
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public Source loadSource(String url, boolean useCache) throws IOException {
-    	Source result = null;
-        if (useCache && cache != null) {
-            Source source = cache.get(url);
-            if (source != null) {
-               result = source;
-            }
-        }
-        if(result == null){
-	        URL httpUrl = new URL(url);
-	        result = load(httpUrl);
-	        if (useCache) {
-	            if (cache != null) {
-	                cache.put(url, result);
-	            }
-	        }
-        }
-        return result;
-    }
-
-    private Source load(URL httpUrl) throws IOException, UnsupportedEncodingException {
+	@Override
+	public Source get(String url) throws IOException {
+		URL httpUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
         setupConnection(connection);
         return processRequest(connection);
@@ -146,7 +85,7 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
                 if(newLocation != null){
 	                URL redirectUrl = new URL(connection.getURL(), newLocation);
 	                LOGGER.info("redirect to "+redirectUrl.toString());
-	                return load(redirectUrl);
+	                return get(redirectUrl.toExternalForm());
                 }
             } else {
 	            String encoding = connection.getContentEncoding();
@@ -183,7 +122,7 @@ public class SimpleHttpSourceLoader extends AbstractSourceLoader {
             connection.setReadTimeout(timeOut);
         }
     }
-
+    
     /** {@inheritDoc} */
     @Override
     public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {

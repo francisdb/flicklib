@@ -464,6 +464,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     }
 
     protected boolean isMoviePageUrl(String url) {
+    	// FIXME is this first cause correct?
         return FILM_INFO_URL.startsWith(url) || (url.startsWith("http://port.hu") && url.indexOf(FILM_INFO_URL)!=-1);
     }
 }

@@ -20,6 +20,7 @@ package com.flicklib.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ import com.flicklib.tools.IOTools;
  * Loads a page source file from the class path
  * @author francisdb
  */
-public class FileSourceLoader extends AbstractSourceLoader {
+public class FileSourceLoader implements SourceLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileSourceLoader.class);
     
     private final String charsetName;
@@ -42,6 +43,18 @@ public class FileSourceLoader extends AbstractSourceLoader {
     public FileSourceLoader() {
 		this(null);
 	}
+    
+	/** {@inheritDoc} */
+    @Override
+    public Source loadSource(String url) throws IOException {
+        return loadSource(url, true);
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
+        return loadSource(url, true);
+    }
 	
     @Override
     public Source loadSource(String url, boolean useCache) throws IOException {

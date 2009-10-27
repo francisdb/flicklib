@@ -1,6 +1,8 @@
 package com.flicklib.service.movie.ofdb;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,6 +16,7 @@ import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MovieType;
 import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.service.SourceLoader;
+import com.flicklib.service.cache.HttpCache4J;
 
 public class OfdbFetcherTest {
     private SourceLoader loader;
@@ -22,7 +25,7 @@ public class OfdbFetcherTest {
     
     @Before
     public void setUp() throws Exception {
-        loader = new HttpSourceLoader(60000, false);
+        loader = new HttpSourceLoader(new HttpCache4J());
         fetcher = new OfdbFetcher(loader, new OfdbParser());
     }
     

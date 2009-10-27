@@ -17,17 +17,21 @@
  */
 package com.flicklib.service.cache;
 
+import java.io.IOException;
 import java.net.URL;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.flicklib.service.HttpCache;
+import com.flicklib.service.ResponseResolver;
 import com.flicklib.service.Source;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
@@ -38,8 +42,12 @@ public class HttpEHCache implements HttpCache {
 
 	private final CacheManager manager;
 	private final Cache cache;
+	private final ResponseResolver resolver;
 
-	public HttpEHCache() {
+	@Inject
+	public HttpEHCache(
+			final ResponseResolver resolver) {
+		this.resolver = resolver;
 		URL url = getClass().getResource("/ehcache-flicklib.xml");
 		manager = new CacheManager(url);
 		manager.addCache("httpCache");
@@ -56,22 +64,52 @@ public class HttpEHCache implements HttpCache {
 		});
 	}
 
-	/* (non-Javadoc)
-	 * @see com.flicklib.service.IHttpCache#get(java.lang.String)
-	 */
+	@Override
+	public Source get(String url, boolean forceRefresh) {
+		Source source = null;
+		Element element = null;
+		if(!forceRefresh){
+			element = cache.get(url);
+		}
+		if (element != null) {
+			source = (Source) element.getObjectValue();
+		}else{
+			try {
+				source = resolver.get(url);
+				put(url, source);
+			} catch (IOException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+			
+		}
+		return source;
+	}
+	
+	@Override
 	public Source get(String url) {
+		return get(url, false);
+	}
+	
+	@Override
+	public Source post(String url, Map<String, String> parameters, Map<String, String> headers) {
+		// FIXME what about the parameters, they should be added to the cache
 		Source source = null;
 		Element element = cache.get(url);
 		if (element != null) {
 			source = (Source) element.getObjectValue();
+		}else{
+			try {
+				source = resolver.post(url, parameters, headers);
+				put(url, source);
+			} catch (IOException e) {
+				LOGGER.error(e.getMessage(), e);
+			}
+			
 		}
 		return source;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.flicklib.service.IHttpCache#put(java.lang.String, com.flicklib.service.Source)
-	 */
-	public void put(String url, Source page) {
+	private void put(String url, Source page) {
 		LOGGER.debug("Caching result for " + url + " (" + page.getContentType()
 				+ ")");
 		cache.put(new Element(url, page));

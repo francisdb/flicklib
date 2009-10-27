@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.HttpSourceLoader;
+import com.flicklib.service.cache.HttpCache4J;
 
 /**
  *
@@ -40,7 +41,7 @@ public class GoogleInfoFetcherTest {
     @Test
     public void testFetch() throws IOException {
         GoogleParser googleParser = new GoogleParser();
-        GoogleInfoFetcher instance = new GoogleInfoFetcher(googleParser, new HttpSourceLoader(null, false));
+        GoogleInfoFetcher instance = new GoogleInfoFetcher(googleParser, new HttpSourceLoader(new HttpCache4J()));
         MoviePage site = instance.fetch("Pulp Fiction");
         assertNotNull("Google score is null", site.getScore());
     }

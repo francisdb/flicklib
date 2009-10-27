@@ -7,9 +7,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.flicklib.service.AbstractSourceLoader;
+import com.flicklib.service.HttpCache;
+import com.flicklib.service.HttpClientResponseResolver;
 import com.flicklib.service.HttpSourceLoader;
-import com.flicklib.service.SimpleHttpSourceLoader;
+import com.flicklib.service.SourceLoader;
+import com.flicklib.service.UrlConnectionResolver;
+import com.flicklib.service.cache.EmptyHttpCache;
+import com.flicklib.service.cache.HttpCache4J;
 
 @RunWith(value = Parameterized.class)
 public class AlternateLiveTester {
@@ -19,13 +23,26 @@ public class AlternateLiveTester {
     @SuppressWarnings("unchecked")
     @Parameters
     public static Collection data() {
-        return Arrays.asList(new Object[][] { { Boolean.TRUE, Boolean.TRUE }, { Boolean.TRUE, Boolean.FALSE }, { Boolean.FALSE, Boolean.FALSE } });
+        return Arrays.asList(new Object[][] { 
+        		{ Boolean.TRUE, Boolean.TRUE }, 
+        		{ Boolean.TRUE, Boolean.FALSE }, 
+        		{ Boolean.FALSE, Boolean.FALSE } });
     }
 
-    protected AbstractSourceLoader loader;
+    protected SourceLoader loader;
 
     public AlternateLiveTester(boolean internalHttpClient, boolean internalRedirects) {
-        loader = internalHttpClient ? new SimpleHttpSourceLoader(internalRedirects, TIMEOUT) : new HttpSourceLoader(TIMEOUT, false);
+    	HttpCache cache = null;
+    	if(internalHttpClient){
+    		if(internalRedirects){
+    			cache = new EmptyHttpCache(new UrlConnectionResolver(5000));
+    		}else{
+    			cache = new EmptyHttpCache(new HttpClientResponseResolver(5000));
+    		}
+    	}else{
+    		cache = new HttpCache4J();
+    	}
+    	loader = new HttpSourceLoader(cache);
     }
 
 }

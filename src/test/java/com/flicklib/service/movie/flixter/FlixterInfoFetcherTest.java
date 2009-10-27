@@ -17,12 +17,17 @@
  */
 package com.flicklib.service.movie.flixter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
+
+import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.HttpSourceLoader;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import com.flicklib.service.cache.HttpCache4J;
 
 /**
  *
@@ -37,7 +42,7 @@ public class FlixterInfoFetcherTest {
     @Test
     public void testFetch() throws IOException {
         FlixsterParser parser = new FlixsterParser();
-        FlixsterInfoFetcher fetcher = new FlixsterInfoFetcher(parser, new HttpSourceLoader(null, false));
+        FlixsterInfoFetcher fetcher = new FlixsterInfoFetcher(parser, new HttpSourceLoader(new HttpCache4J()));
         MoviePage site = fetcher.fetch("The X-Files I Want to Believe");
         assertNotNull(site);
         System.out.println(site.getUrl());

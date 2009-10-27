@@ -17,13 +17,16 @@
  */
 package com.flicklib.service.movie.movieweb;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
+
+import org.junit.Test;
 
 import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.HttpSourceLoader;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import com.flicklib.service.cache.HttpCache4J;
 
 /**
  *
@@ -41,7 +44,7 @@ public class MovieWebInfoFetcherTest {
         Movie movie = new Movie();
         movie.setTitle("Pulp Fiction");
         MovieWebParser parser = new MovieWebParser();
-        MovieWebInfoFetcher fetcher = new MovieWebInfoFetcher(parser, new HttpSourceLoader(null, false));
+        MovieWebInfoFetcher fetcher = new MovieWebInfoFetcher(parser, new HttpSourceLoader(new HttpCache4J()));
         MoviePage site = fetcher.fetch("Pulp Fiction");
         assertNotNull("MovieWebStars is null", site.getScore());
     }

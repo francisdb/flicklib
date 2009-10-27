@@ -21,8 +21,10 @@ import com.flicklib.api.InfoFetcherFactory;
 import com.flicklib.api.MovieInfoFetcher;
 import com.flicklib.api.Parser;
 import com.flicklib.api.SubtitlesLoader;
+import com.flicklib.service.HttpCache;
 import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.service.SourceLoader;
+import com.flicklib.service.cache.HttpEHCache;
 import com.flicklib.service.movie.InfoFetcherFactoryImpl;
 import com.flicklib.service.movie.cinebel.Cinebel;
 import com.flicklib.service.movie.cinebel.CinebelFetcher;
@@ -66,6 +68,13 @@ public class FlicklibModule extends AbstractModule {
 
     @Override
     protected void configure() {
+    	
+        bindConstant().annotatedWith(Names.named(HTTP_TIMEOUT)).to(20 * 1000);
+        bindConstant().annotatedWith(Names.named(HTTP_CACHE)).to(Boolean.TRUE);
+        
+        bind(HttpCache.class).to(HttpEHCache.class);
+        // bind(HttpCache.class).to(HttpCache4J.class);
+    	
         bind(SourceLoader.class).to(HttpSourceLoader.class);
 
         bind(SubtitlesLoader.class).to(OpenSubtitlesLoader.class);
@@ -91,7 +100,5 @@ public class FlicklibModule extends AbstractModule {
         bind(MovieInfoFetcher.class).annotatedWith(Ofdb.class).to(OfdbFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(XpressHu.class).to(XpressHuFetcher.class);
         
-        bindConstant().annotatedWith(Names.named(HTTP_TIMEOUT)).to(20 * 1000);
-        bindConstant().annotatedWith(Names.named(HTTP_CACHE)).to(Boolean.TRUE);
     }
 }
