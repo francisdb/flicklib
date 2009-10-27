@@ -23,8 +23,8 @@ public class CachesTest {
 	public void test(){
 		String url = generateUrlForTitleSearch("Indiana Jones and the Kingdom of the Crystal Skull");
 		System.out.println(url);
-		EmptyHttpCache empty = new EmptyHttpCache(new UrlConnectionResolver());
-		EmptyHttpCache empty2 = new EmptyHttpCache(new HttpClientResponseResolver(5000, false));
+		EmptyHttpCache empty = new EmptyHttpCache(new UrlConnectionResolver(5000));
+		EmptyHttpCache empty2 = new EmptyHttpCache(new HttpClientResponseResolver(5000));
 		HttpCache4J cache4j = new HttpCache4J();
 		
 		String emptyContent = empty.get(url).getContent();

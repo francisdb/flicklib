@@ -14,7 +14,7 @@ public class SimpleHttpSourceLoaderTest {
 
 	@Test
 	public void testPost() throws IOException {
-		SourceLoader loader = new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver()));
+		SourceLoader loader = new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000)));
 		Map<String,String> headers = new HashMap<String, String>();
 		Map<String,String> params = new HashMap<String, String>();
 		params.put("username", "test");
@@ -25,7 +25,7 @@ public class SimpleHttpSourceLoaderTest {
 
 	@Test
 	public void testLoadSource() throws IOException {
-		SourceLoader loader = new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver()));
+		SourceLoader loader = new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000)));
 		Source source = loader.loadSource("http://www.google.com");
 		System.out.println(source.getContent());
 		assertTrue(source.getContent(). startsWith("<!doctype html>"));
@@ -33,7 +33,7 @@ public class SimpleHttpSourceLoaderTest {
 	
 	@Test
 	public void testLoadSourceStringBoolean() throws IOException {
-		SourceLoader loader = new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver()));
+		SourceLoader loader = new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000)));
 		Source source = loader.loadSource("http://www.google.com/search?q=flicklib", true);
 		assertTrue(source.getContent().length() > 0);
 		//System.out.println(source.getContent());
