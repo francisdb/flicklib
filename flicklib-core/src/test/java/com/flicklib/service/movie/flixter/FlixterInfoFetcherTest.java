@@ -43,7 +43,7 @@ public class FlixterInfoFetcherTest {
     @Test
     public void testFetch() throws IOException {
         FlixsterParser parser = new FlixsterParser();
-        FlixsterInfoFetcher fetcher = new FlixsterInfoFetcher(parser, new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000))));
+        FlixsterInfoFetcher fetcher = new FlixsterInfoFetcher(parser, new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(10000))));
         MoviePage site = fetcher.fetch("The X-Files I Want to Believe");
         assertNotNull(site);
         System.out.println(site.getUrl());
