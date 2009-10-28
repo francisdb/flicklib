@@ -30,6 +30,7 @@ public class HttpClientResponseResolver implements ResponseResolver {
     	@Named(value = FlicklibModule.HTTP_TIMEOUT) final Integer timeout) {
 		// http://hc.apache.org/httpclient-3.x/performance.html#Concurrent_execution_of_HTTP_methods
 	    client = new HttpClient(new MultiThreadedHttpConnectionManager());
+	    
 	    if (timeout != null) {
 	        // wait max x sec
 	        client.getParams().setSoTimeout(timeout);
