@@ -20,13 +20,17 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.flicklib.service.HttpCache;
+import com.flicklib.service.ResponseResolver;
+import com.flicklib.service.Source;
 
 
 public class HttpEHCacheTest {
@@ -40,15 +44,18 @@ public class HttpEHCacheTest {
 	}
 
 	@Test
-	public void testHttpCache() {
-		MockResolver resolver = new MockResolver();
-		HttpCache cache = new HttpEHCache(resolver);
-		assertEquals("mock", cache.get("test").getContent());
-		assertEquals(1, resolver.getCallCount());
+	public void testHttpCache() throws IOException {
+		String testValue = UUID.randomUUID().toString();
+		ResponseResolver mockResolver = Mockito.mock(ResponseResolver.class);
+		Mockito.when(mockResolver.get("test")).thenReturn(new Source("test", testValue));
 		
-		// second call should not hit the resolver
-		assertEquals("mock", cache.get("test").getContent());
-		assertEquals(1, resolver.getCallCount());
+		HttpCache cache = new HttpEHCache(mockResolver);
+		assertEquals(testValue, cache.get("test").getContent());
+		assertEquals(testValue, cache.get("test").getContent());
+		
+		// second call should not hit the resolver so we should have only one #get call
+		Mockito.verify(mockResolver).get("test");
+		
 	}
 
 }

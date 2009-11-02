@@ -19,11 +19,6 @@
 			<artifactId>jericho-html</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-		<dependency>
 			<groupId>net.oauth</groupId>
 			<artifactId>core</artifactId>
 			<version>20080621</version>
