@@ -12,6 +12,7 @@
 	<modules>
 		<module>flicklib-core</module>
 		<module>flicklib-httpcache4j</module>
+		<module>flicklib-ehcache</module>
 		<!-- <module>flicklib-omdb</module> -->
 	</modules>
 	

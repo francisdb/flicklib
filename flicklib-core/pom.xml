@@ -19,11 +19,6 @@
 			<artifactId>jericho-html</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-			<version>1.6.1</version>
-		</dependency>
-		<dependency>
 			<groupId>net.oauth</groupId>
 			<artifactId>core</artifactId>
 			<version>20080621</version>
@@ -47,13 +42,6 @@
 			<groupId>com.noelios.restlet</groupId>
 			<artifactId>com.noelios.restlet.ext.httpclient</artifactId>
 			<version>${restlet.version}</version>
-		</dependency>
-		<!-- test -->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>1.4</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

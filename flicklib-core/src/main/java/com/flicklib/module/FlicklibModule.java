@@ -24,7 +24,7 @@ import com.flicklib.api.SubtitlesLoader;
 import com.flicklib.service.HttpCache;
 import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.service.SourceLoader;
-import com.flicklib.service.cache.HttpEHCache;
+import com.flicklib.service.cache.EmptyHttpCache;
 import com.flicklib.service.movie.InfoFetcherFactoryImpl;
 import com.flicklib.service.movie.cinebel.Cinebel;
 import com.flicklib.service.movie.cinebel.CinebelFetcher;
@@ -72,9 +72,10 @@ public class FlicklibModule extends AbstractModule {
         bindConstant().annotatedWith(Names.named(HTTP_TIMEOUT)).to(20 * 1000);
         bindConstant().annotatedWith(Names.named(HTTP_CACHE)).to(Boolean.TRUE);
         
-        bind(HttpCache.class).to(HttpEHCache.class);
+        // bind(HttpCache.class).to(HttpEHCache.class);
         // bind(HttpCache.class).to(HttpCache4J.class);
-    	
+    	bind(HttpCache.class).to(EmptyHttpCache.class);
+        
         bind(SourceLoader.class).to(HttpSourceLoader.class);
 
         bind(SubtitlesLoader.class).to(OpenSubtitlesLoader.class);

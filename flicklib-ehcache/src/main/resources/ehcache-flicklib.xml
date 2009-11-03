@@ -24,7 +24,7 @@
             eternal="false"
             timeToIdleSeconds="604800"
             timeToLiveSeconds="604800"
-            overflowToDisk="true"
+            overflowToDisk="false"
             maxElementsOnDisk="4000"
             diskPersistent="true"
             diskExpiryThreadIntervalSeconds="120"
