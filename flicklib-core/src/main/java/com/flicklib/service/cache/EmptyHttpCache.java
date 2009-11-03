@@ -52,6 +52,7 @@ public class EmptyHttpCache implements HttpCache {
 		try {
 			source = resolver.get(url);
 		} catch (IOException e) {
+			// FIXME throw an exception as the get failed!
 			LOGGER.error(e.getMessage(), e);
 		}
 		return source;
