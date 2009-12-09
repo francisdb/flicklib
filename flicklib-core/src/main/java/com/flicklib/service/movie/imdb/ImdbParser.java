@@ -24,6 +24,7 @@ import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.EndTag;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
+import net.htmlparser.jericho.StartTag;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +132,14 @@ public class ImdbParser extends AbstractJerichoParser {
             } else if (hText.contains("Runtime")) {
                 EndTag next = source.getNextEndTag(end);
                 //System.out.println(next);
-                String runtime = source.subSequence(end, next.getBegin()).toString().trim();
+                StartTag nextStartTag = source.getNextStartTag(end);
+                String runtime;
+                if (nextStartTag.getBegin() < next.getBegin()) {
+                    // There is an extra div tag : <div class="info-content">
+                    runtime = source.subSequence(nextStartTag.getEnd(), next.getBegin()).toString().trim();
+                } else {
+                    runtime = source.subSequence(end, next.getBegin()).toString().trim();
+                }
                 movie.setRuntime(parseRuntime(runtime));
             } else if (hText.contains("User Rating")) {
                 Element aElement = source.getNextElement(end);
