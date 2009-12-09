@@ -19,6 +19,8 @@ package com.flicklib.tools;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -87,4 +89,13 @@ public class IOTools {
     	}
     }
     
+    
+    public static void writeToFile(Reader input, File output) throws IOException {
+        FileWriter fw = new FileWriter(output);
+        char[] b = new char[4096];
+        for (int n; (n = input.read(b)) != -1;) {
+            fw.write(b, 0, n);
+        }
+        close(fw);
+    }
 }

@@ -18,7 +18,10 @@
 package com.flicklib.service.movie.imdb;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 
 import org.junit.Test;
 
@@ -68,4 +71,28 @@ public class ImdbParserTest {
         assertEquals(Integer.valueOf(5), site.getVotes());
     }
 
+    
+    @Test
+    public void testIssue107() throws IOException {
+        Source source = new FileSourceLoader().loadSource("imdb/Matrix.html");
+        MoviePage page = new MoviePage();
+        ImdbParser instance = new ImdbParser();
+        instance.parse(source, page);
+
+        assertEquals("The Matrix", page.getTitle());
+        assertEquals(2, page.getDirectors().size());
+        assertTrue(page.getDirectors().contains("Andy Wachowski"));
+        assertTrue(page.getDirectors().contains("Larry Wachowski"));
+        
+        assertTrue(page.getActors().contains("Keanu Reeves"));
+        assertTrue(page.getActors().contains("Laurence Fishburne"));
+        assertTrue(page.getActors().contains("Carrie-Anne Moss"));          
+        
+        assertNotNull(page.getScore());
+        assertNotNull(page.getPlot());
+        assertTrue(page.getGenres().contains("Action"));
+        assertTrue(page.getGenres().contains("Adventure"));
+        assertTrue(page.getGenres().contains("Sci-Fi"));
+        
+    }
 }

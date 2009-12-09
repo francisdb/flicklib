@@ -74,12 +74,12 @@ public class Source implements Serializable{
 	}
     
 	
-	public net.htmlparser.jericho.Source getJerichoSource() {
-	    if (jerichoSource==null) {
-	        jerichoSource = new net.htmlparser.jericho.Source(content);
-	        jerichoSource.fullSequentialParse();
-	    }
-            return jerichoSource;
+    public net.htmlparser.jericho.Source getJerichoSource() {
+        if (jerichoSource == null) {
+            jerichoSource = new net.htmlparser.jericho.Source(content);
+            jerichoSource.fullSequentialParse();
         }
+        return jerichoSource;
+    }
 	
 }
