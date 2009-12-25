@@ -65,7 +65,7 @@ public class ImdbInfoFetcherTest {
 			assertEquals("The Matrix", page.getTitle());
 			assertEquals(2, page.getDirectors().size());
 			assertTrue(page.getDirectors().contains("Andy Wachowski"));
-			assertTrue(page.getDirectors().contains("Larry Wachowski"));
+			assertTrue(page.getDirectors().contains("Lana Wachowski"));
 			
 			assertTrue(page.getActors().contains("Keanu Reeves"));
 			assertTrue(page.getActors().contains("Laurence Fishburne"));

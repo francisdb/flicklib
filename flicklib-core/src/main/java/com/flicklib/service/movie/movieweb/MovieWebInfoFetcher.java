@@ -102,7 +102,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
         for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
             Element aElement = (Element) i.next();
             String url = aElement.getAttributeValue("href");
-            if (url != null && url.startsWith("/movies/film/")) {
+            if (url != null && (url.startsWith("/movie/") || url.startsWith("/dvd/"))) {
                 String movieName = aElement.getContent().getTextExtractor().toString();
                 if (movieName != null && movieName.trim().length() != 0) {
 

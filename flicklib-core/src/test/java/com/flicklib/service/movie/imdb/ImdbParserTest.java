@@ -52,7 +52,7 @@ public class ImdbParserTest {
         assertEquals("http://ia.media-imdb.com/images/M/MV5BMjE0ODk2NjczOV5BMl5BanBnXkFtZTYwNDQ0NDg4._V1._SX98_SY140_.jpg", site.getImgUrl());
         assertEquals("The lives of two mob hit men, a boxer, a gangster's wife, and a pair of diner bandits intertwine in four tales of violence and redemption.", site.getPlot());
         assertEquals(Integer.valueOf(154), site.getRuntime());
-        assertEquals(Integer.valueOf(369745), site.getVotes());
+        assertEquals(377356, site.getVotes().intValue());
         // TODO test other fields
         
         source = new FileSourceLoader().loadSource("imdb/A Couple of White Chicks at the Hairdresser (2007).html");

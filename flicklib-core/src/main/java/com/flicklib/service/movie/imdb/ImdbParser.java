@@ -126,6 +126,8 @@ public class ImdbParser extends AbstractJerichoParser {
             if (hText.contains("Plot Outline")) {
                 movie.setPlot(source.subSequence(end, source.getNextStartTag(end).getBegin()).toString().trim());
             } else if (hText.contains("Plot:")) {
+            	Element divElement = source.getNextElement(end);
+            	end = divElement.getStartTag().getEnd();
                 movie.setPlot(source.subSequence(end, source.getNextStartTag(end).getBegin()).toString().trim());
             } else if (hText.contains("Runtime")) {
             	Element divElement = source.getNextElement(end);
