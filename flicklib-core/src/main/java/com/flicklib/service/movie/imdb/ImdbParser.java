@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.EndTag;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
 
@@ -129,9 +128,8 @@ public class ImdbParser extends AbstractJerichoParser {
             } else if (hText.contains("Plot:")) {
                 movie.setPlot(source.subSequence(end, source.getNextStartTag(end).getBegin()).toString().trim());
             } else if (hText.contains("Runtime")) {
-                EndTag next = source.getNextEndTag(end);
-                //System.out.println(next);
-                String runtime = source.subSequence(end, next.getBegin()).toString().trim();
+            	Element divElement = source.getNextElement(end);
+                String runtime = divElement.getTextExtractor().toString();
                 movie.setRuntime(parseRuntime(runtime));
             } else if (hText.contains("User Rating")) {
                 Element aElement = source.getNextElement(end);
