@@ -9,6 +9,10 @@
  	-->
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
+        <module name="Header">
+            <property name="headerFile" value="java.header"/>
+			<property name="ignoreLines" value="4"/>
+        </module>
     <!--<module name="PackageHtml"/>-->
     <module name="TreeWalker">
         <module name="RedundantImport"/>
@@ -45,11 +49,5 @@
         <module name="ConstantName"/>
         <module name="AbstractClassName"/>
 
-
-
-        <module name="Header">
-            <property name="headerFile" value="java.header"/>
-			<property name="ignoreLines" value="4"/>
-        </module>
     </module>
 </module>

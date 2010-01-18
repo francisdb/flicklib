@@ -21,10 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.EndTag;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
-import net.htmlparser.jericho.StartTag;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,18 +126,25 @@ public class ImdbParser extends AbstractJerichoParser {
             if (hText.contains("Plot Outline")) {
                 movie.setPlot(source.subSequence(end, source.getNextStartTag(end).getBegin()).toString().trim());
             } else if (hText.contains("Plot:")) {
+            	Element divElement = source.getNextElement(end);
+            	end = divElement.getStartTag().getEnd();
                 movie.setPlot(source.subSequence(end, source.getNextStartTag(end).getBegin()).toString().trim());
             } else if (hText.contains("Runtime")) {
-                EndTag next = source.getNextEndTag(end);
-                //System.out.println(next);
-                StartTag nextStartTag = source.getNextStartTag(end);
-                String runtime;
-                if (nextStartTag.getBegin() < next.getBegin()) {
-                    // There is an extra div tag : <div class="info-content">
-                    runtime = source.subSequence(nextStartTag.getEnd(), next.getBegin()).toString().trim();
-                } else {
-                    runtime = source.subSequence(end, next.getBegin()).toString().trim();
-                }
+
+            	Element divElement = source.getNextElement(end);
+                String runtime = divElement.getTextExtractor().toString();
+
+//                EndTag next = source.getNextEndTag(end);
+//                //System.out.println(next);
+//                StartTag nextStartTag = source.getNextStartTag(end);
+//                String runtime;
+//                if (nextStartTag.getBegin() < next.getBegin()) {
+//                    // There is an extra div tag : <div class="info-content">
+//                    runtime = source.subSequence(nextStartTag.getEnd(), next.getBegin()).toString().trim();
+//                } else {
+//                    runtime = source.subSequence(end, next.getBegin()).toString().trim();
+//                }
+
                 movie.setRuntime(parseRuntime(runtime));
             } else if (hText.contains("User Rating")) {
                 Element aElement = source.getNextElement(end);

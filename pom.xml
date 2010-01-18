@@ -96,11 +96,7 @@
 			<artifactId>guice</artifactId>
 			<version>1.0</version>
 		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
-		</dependency>
+
 
 		<!-- TESTING -->
 
@@ -162,10 +158,12 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jdepend-maven-plugin</artifactId>
+				<version>2.0-beta-2</version>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.4</version>
 				<configuration>
 					<formats>
 						<format>html</format>
@@ -176,6 +174,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.1</version>
 			</plugin>
 			<!--<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -196,6 +195,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.4</version>
 				<configuration>
 					<configLocation>checkstyle.xml</configLocation>
 				</configuration>
@@ -203,6 +203,7 @@
 			<plugin>
 				<groupId>net.sf</groupId>
 				<artifactId>stat-scm</artifactId>
+				<version>1.2.0</version>
 			</plugin>
 		</plugins>
 	</reporting>
