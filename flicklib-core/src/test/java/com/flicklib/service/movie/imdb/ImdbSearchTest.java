@@ -81,8 +81,8 @@ public class ImdbSearchTest extends AlternateLiveTester {
         List<MovieSearchResult> list = fetcher.search("Life Is a Miracle");
         assertNotNull("search result", list);
         assertTrue("more then 2 result", list.size() > 2);
-        assertEquals("1. result:title", "Zivot je cudo", list.get(0).getTitle());
-        assertEquals("1. result:alternate", "Life Is a Miracle", list.get(0).getAlternateTitle());
+        assertEquals("1. result:title", "Hungry Heart", list.get(0).getTitle());
+        assertEquals("1. result:alternate", "Zivot je cudo", list.get(0).getAlternateTitle());
         assertEquals("1. result:year", Integer.valueOf(2004), list.get(0).getYear());
 
         assertEquals("2. result:title", "Sung ming yun oi dung ting", list.get(1).getTitle());

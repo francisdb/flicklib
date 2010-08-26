@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -38,6 +40,7 @@ import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.SourceLoader;
+import com.flicklib.tools.AdvancedTextExtractor;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import com.google.inject.Inject;
 
@@ -111,11 +114,22 @@ public class ImdbSearch {
                             }
                         }
                         
-                        List<Element> emElements = tableElement.getAllElements("em");
-                        if (emElements!=null && emElements.size() >= 2) {
-                            // first contains the aka title, second (DVD title)
-                            String alternateTitle = ((Element)tableElement.getAllElements("em").get(0)).getTextExtractor().toString();
-                            movieSite.setAlternateTitle(ImdbParserRegex.cleanTitle(alternateTitle));
+//                        List<Element> emElements = tableElement.getAllElements("em");
+//                        if (emElements!=null && emElements.size() >= 2) {
+//                            // first contains the aka title, second (DVD title)
+//                            String alternateTitle = ((Element)tableElement.getAllElements("em").get(0)).getTextExtractor().toString();
+//                            movieSite.setAlternateTitle(ImdbParserRegex.cleanTitle(alternateTitle));
+//                        }
+                        List<Element> findAkaElements = tableElement.getAllElements("class","find-aka", false);
+                        if (findAkaElements.size() > 0) {
+                        	// TODO : handle multiple AKA names ...
+                        	// aka "Zivot je cudo"&nbsp;- Serbia and Montenegro 
+                        	String alternateTitle  = new AdvancedTextExtractor(findAkaElements.get(0), false).addExcludedTagName("em").addAllowedTagName("p").toString();
+                        	Matcher matcher = Pattern.compile("aka \"(.*)\".*").matcher(alternateTitle);
+                        	if (matcher.find()) {
+                        		alternateTitle = matcher.group(1);
+                        	}
+                        	movieSite.setAlternateTitle(ImdbParserRegex.cleanTitle(alternateTitle));
                         }
 
                         // only add if not allready in the list
