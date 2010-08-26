@@ -25,15 +25,15 @@ public class TomatoesInfoFetcherTest extends AlternateLiveTester {
 	public void testGetMovieInfo() throws IOException {
 		MoviePage page = fetcher.getMovieInfo("pulp_fiction");
 		assertEquals(MovieService.TOMATOES, page.getService());
-		assertTrue("starts with 'Writer-director Quentin Tarantino revisits the seedier'", 
-				page.getPlot().startsWith("Writer-director Quentin Tarantino revisits the seedier"));
+		assertTrue("starts with 'Prizefighter Butch Coolidge has decided to stop payment on a deal he's made with the devil'", 
+				page.getPlot().startsWith("Prizefighter Butch Coolidge has decided to stop payment on a deal he's made with the devi"));
 		System.out.println("score = "+page.getScore());
 	}
 
 	@Test
 	public void testSearch() throws IOException {
 		List<MovieSearchResult> results = fetcher.search("Pulp Fiction");
-		assertEquals(10, results.size());
+		assertEquals(5, results.size());
 		assertEquals("Pulp Fiction", results.get(0).getTitle());
 		assertEquals(Integer.valueOf(1994), results.get(0).getYear());
 	}
