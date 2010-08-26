@@ -23,6 +23,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -81,11 +83,18 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
         // </a>
 
         
-        List<?> aElements = jerichoSource.getAllElements(HTMLElementName.A);
+        parse(result, jerichoSource);
+        return result;
+    }
+
+	void parse(List<MovieSearchResult> result, Source jerichoSource) {
+		List<?> aElements = jerichoSource.getAllElements(HTMLElementName.A);
         for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
             Element aElement = (Element) i.next();
             String url = aElement.getAttributeValue("href");
-            if (url != null && url.startsWith("/movie/")) {
+            if (url != null && url.startsWith("/movie/") && !url.endsWith("/widget/get") && !url.endsWith("/reviews") && !url.endsWith("/comments")
+            		&& !url.endsWith("/suggestions")
+            		&& !url.endsWith("-photos") && !url.endsWith("-videos")) {
                 String movieName = aElement.getContent().getTextExtractor().toString();
                 if (movieName != null && movieName.trim().length() != 0) {
                     int jsessIdIndex = url.indexOf(";jsessionid=");
@@ -93,18 +102,18 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
                         url = url.substring(0, jsessIdIndex);
                     }
                     String movieUrl = MovieService.FLIXSTER.getUrl() + url;
-
+                    
                     MovieSearchResult m = new MovieSearchResult();
                     m.setIdForSite(movieUrl);
-                    m.setTitle(movieName);
+                    FlixsterParser.parseTitle(movieName, m);
+                    
                     m.setService(MovieService.FLIXSTER);
                     result.add(m);
                     LOGGER.debug("taking result: " + movieName + " -> " + movieUrl);
                 }
             }
         }
-        return result;
-    }
+	}
     
     @Override
     public MoviePage getMovieInfo(String id) {

@@ -19,6 +19,8 @@ package com.flicklib.service.movie.flixter;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -26,6 +28,7 @@ import net.htmlparser.jericho.Source;
 import net.htmlparser.jericho.TextExtractor;
 
 import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.service.movie.AbstractJerichoParser;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import com.google.inject.Singleton;
@@ -48,7 +51,7 @@ public class FlixsterParser extends AbstractJerichoParser{
             for (Iterator<?> i2 = aElements.iterator(); i2.hasNext();) {
                 Element aElement = (Element) i2.next();
                 if(aElement.getAttributeValue("href").contains("/movie/")){
-                    movieSite.setTitle(aElement.getContent().getTextExtractor().toString().trim());
+                	parseTitle(aElement.getContent().getTextExtractor().toString().trim(), movieSite);
                 }
             }
     	}
@@ -69,6 +72,17 @@ public class FlixsterParser extends AbstractJerichoParser{
                 votes = votes.replace("%", "");
                 movieSite.setScore(Integer.valueOf(votes));
             }
+        }
+    }
+    
+    static void parseTitle(String title,MovieSearchResult mv) {
+        Matcher matcher = Pattern.compile("(.*) \\((\\d{4})\\)").matcher(title);
+        if (matcher.find()) {
+        	String year = matcher.group(2);
+        	mv.setYear(Integer.parseInt(year));
+        	mv.setTitle(matcher.group(1));
+        } else {
+        	mv.setTitle(title);
         }
     }
 
