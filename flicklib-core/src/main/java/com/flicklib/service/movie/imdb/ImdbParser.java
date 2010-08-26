@@ -116,6 +116,27 @@ public class ImdbParser extends AbstractJerichoParser {
                 }
             }
         }
+        
+        if (movie.getScore() == null) {
+        	List<Element> elements = source.getAllElements("class","starbar-meta", false);
+        	for (Element e : elements) {
+        		List<Element> boldElements = e.getAllElements(HTMLElementName.B);
+        		if (boldElements.size() > 0) {
+        			String rating = boldElements.get(0).getTextExtractor().toString();
+        			if (!rating.contains("awaiting")) {
+                        parseRatingString(movie, rating);
+        			}
+        		}
+        		List<Element> aElements = e.getAllElements(HTMLElementName.A);
+        		if (aElements.size() > 0) {
+        			String votes= aElements.get(0).getTextExtractor().toString();
+        			if (votes.contains("votes")) {
+        				parseVotes(movie, aElements.get(0));
+        			}
+        		}
+        		
+        	}
+        }
 
         linkElements = source.getAllElements(HTMLElementName.H5);
         String hText;
