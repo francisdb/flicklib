@@ -19,9 +19,8 @@ public class AlternateLiveTester {
 	
 	private static final int TIMEOUT = 30000;
 
-    @SuppressWarnings("unchecked")
     @Parameters
-    public static Collection data() {
+    public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] { 
         		{ Boolean.TRUE, Boolean.TRUE }, 
         		//{ Boolean.TRUE, Boolean.FALSE }, 
