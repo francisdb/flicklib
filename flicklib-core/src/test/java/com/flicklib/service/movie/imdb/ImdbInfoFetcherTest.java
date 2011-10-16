@@ -69,14 +69,14 @@ public class ImdbInfoFetcherTest {
 		public void testGetMovieInfo() throws IOException {
 			MoviePage page = fetcher.getMovieInfo("0133093");
 			assertEquals(MovieService.IMDB, page.getService());
-			assertEquals("The Matrix", page.getTitle());
+			assertEquals("The Matrix", page.getOriginalTitle());
 			assertEquals(2, page.getDirectors().size());
 			assertTrue(page.getDirectors().contains("Andy Wachowski"));
 			assertTrue(page.getDirectors().contains("Lana Wachowski"));
 			
 			assertTrue(page.getActors().contains("Keanu Reeves"));
 			assertTrue(page.getActors().contains("Laurence Fishburne"));
-			assertTrue(page.getActors().contains("Carrie-Anne Moss"));			
+			assertTrue(page.getActors().contains("Carrie-Anne Moss"));
 			
 			assertNotNull(page.getScore());
 			assertNotNull(page.getPlot());

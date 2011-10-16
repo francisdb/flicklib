@@ -110,26 +110,38 @@ public class ImdbParser extends AbstractJerichoParser {
                 movie.setImgUrl(imgUrl);
             }
             String href = linkElement.getAttributeValue("href");
-            if (href != null && href.contains("/Sections/Genres/")) {
-                String genre = linkElement.getContent().getTextExtractor().toString();
+            final String linkContent = linkElement.getContent().getTextExtractor().toString();
+            if (href != null && (href.contains("/Sections/Genres/") || (href.contains("/genre/")))) {
+                String genre = linkContent;
                 // TODO find a better way to parse these out, make sure it are only the movie genres
                 if (!genre.toLowerCase().contains("imdb")) {
-                    movie.addGenre(linkElement.getContent().getTextExtractor().toString());
+                    movie.addGenre(linkContent);
                 }
             }
             if (href != null && href.contains("/Sections/Languages/")) {
-                movie.addLanguage(linkElement.getContent().getTextExtractor().toString());
+                movie.addLanguage(linkContent);
             }
             
             //<a href="/name/nm0000206/" onclick="(new Image()).src='/rg/castlist/position-1/images/b.gif?link=/name/nm0000206/';">Keanu Reeves</a>
             String onclick = linkElement.getAttributeValue("onclick");
-            if(onclick != null && onclick.contains("castlist")){
-            	 movie.getActors().add(linkElement.getContent().getTextExtractor().toString());
-            }
+            if (onclick != null) {
+                if(onclick.contains("castlist")){
+                	 movie.getActors().add(linkContent);
+                }
             //<a href="/name/nm0905154/" onclick="(new Image()).src='/rg/directorlist/position-2/images/b.gif?link=name/nm0905154/';">Larry Wachowski</a><br/> 
-			if (onclick != null && onclick.contains("directorlist")) {
-				movie.getDirectors().add(linkElement.getContent().getTextExtractor().toString());
-			}
+                if (onclick.contains("directorlist")) {
+                    movie.getDirectors().add(linkContent);
+                }
+            }
+            String itemprop = linkElement.getAttributeValue("itemprop");
+            if (itemprop != null) {
+                if ("director".equals(itemprop)) {
+                    movie.getDirectors().add(linkContent);
+                }
+                if ("actors".equals(itemprop)) {
+                    movie.getActors().add(linkContent);
+                }
+            }
         }
 
         linkElements = source.getAllElements(HTMLElementName.B);
@@ -167,6 +179,24 @@ public class ImdbParser extends AbstractJerichoParser {
         		
         	}
         }
+        if (movie.getScore() == null) {
+            for (Element element : source.getAllElements("class", "star-box-details", false)) {
+                for (Element span : element.getAllElements("span")) {
+                    String itemprop = span.getAttributeValue("itemprop");
+                    if ("ratingValue".equals(itemprop)) {
+                        String value = span.getTextExtractor().toString();
+                        parseRatingString(movie, value);
+                    }
+                    if ("ratingCount".equals(itemprop)) {
+                        String value = span.getTextExtractor().toString().replace(",", "").trim();
+                        if (value.length() > 0) {
+                            movie.setVotes(Integer.parseInt(value));
+                        }
+                    }
+                }
+            }
+        }
+        
 
         linkElements = source.getAllElements(HTMLElementName.H5);
         String hText;
@@ -214,7 +244,16 @@ public class ImdbParser extends AbstractJerichoParser {
             }*/
             		
         }
-
+        if (movie.getPlot() == null) {
+            List<Element> descriptions = source.getAllElements("itemprop", "description", false);
+            for (Element desc : descriptions) {
+                String txt = desc.getTextExtractor().toString().trim();
+                if (txt.length() > 0) {
+                    movie.setPlot(txt);
+                }
+            }
+            
+        }
         if (movie.getTitle() == null) {
             //System.out.println(source.toString());
             movie.setPlot("Not found");
