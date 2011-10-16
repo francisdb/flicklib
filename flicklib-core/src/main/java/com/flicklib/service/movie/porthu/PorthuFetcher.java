@@ -48,6 +48,7 @@ import com.flicklib.domain.MovieService;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import com.flicklib.tools.LevenshteinDistance;
+import com.flicklib.tools.StringUtils;
 import com.google.inject.Inject;
 
 
@@ -67,7 +68,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     /**
      * match (x.y)/10 where x and y are numbers.
      */
-    private static final Pattern SCORE_PATTERN = Pattern.compile("(\\d+(\\.\\d)?)/10");
+    private static final Pattern SCORE_PATTERN = Pattern.compile("(\\d+([\\.,]\\d)?)/10");
 
     private final SourceLoader sourceLoader;
 
@@ -109,6 +110,10 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                     String content = span.getTextExtractor().toString();
                     // the first <span class='btxt'> contains the description
                     if (btxtCount == 1) {
+                        Element firstTxt = span.getParentElement().getFirstElement("class", "txt", false);
+                        if (firstTxt != null) {
+                            content = firstTxt.getTextExtractor().toString();
+                        }
                         initDescriptionAndYear(content, mp);
                     } else {
                         if (content.trim().equals("rendező:")) {
@@ -117,6 +122,9 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                             LOGGER.debug("director is : " + nextSpan);
                             mp.getDirectors().add(nextSpan.getTextExtractor().toString());
                         }
+                        // forgatókönyvíró:
+                        // zeneszerző: 
+                        
                         if (content.startsWith("A film értékelése:")) {
 
                             mp.setScore(getScore(content));
@@ -168,6 +176,13 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         // RuntimeException("no <span class='txt'> found next to the title!");
         // }
         // mp.setAlternateTitle(alternateTitleSpan.get(0).getContent().getTextExtractor().toString());*/
+        
+        List<Element> allElements = titleElement.getParentElement().getAllElements("class", "txt", false);
+        if (allElements.size()>0) {
+            String txt = allElements.get(0).getTextExtractor().toString();
+            return StringUtils.unbracket(txt);
+        }
+        
         String fullTag = titleElement.getParentElement().toString();
         // pattern for matching: <span class="txt">(<SOMETHING>)
         Pattern p = Pattern.compile("<span class=\"txt\">\\((.*)\\)");
@@ -440,13 +455,15 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         params.put("i_object_id", id);
         params.put("i_area_id","6");
         params.put("i_is_separator", "0");
+        params.put("i_reload_container","id=\"vote_box\"");
         
         Map<String,String> headers = new LinkedHashMap<String,String>();
         headers.put("X-Requested-With", "XMLHttpRequest");
-        headers.put("X-Prototype-Version", "1.6.0.2");
+        //headers.put("X-Prototype-Version", "1.6.0.2");
         headers.put("Referer", generateUrlForFilmID(id));
         
-        com.flicklib.service.Source content = sourceLoader.post("http://port.hu/pls/fi/VOTE.print_vote_box?", params, headers);
+        // http://port.hu/indiana_jones_es_a_kristalykoponya_kiralysaga_indiana_jones_and_the_kingdom_of_the_crystal_skull/pls/fi/vote.print_vote_box?i_object_id=73047&i_area_id=6&i_reload_container=id%3D%22vote_box%22&i_is_separator=0
+        com.flicklib.service.Source content = sourceLoader.post("http://port.hu/pls/fi/vote.print_vote_box?", params, headers);
         return content.getJerichoSource();
     }
 
