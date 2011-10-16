@@ -17,8 +17,12 @@
  */
 package com.flicklib.service.movie.imdb;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -28,7 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.flicklib.domain.MoviePage;
+import com.flicklib.domain.MovieType;
 import com.flicklib.service.movie.AbstractJerichoParser;
+import com.flicklib.tools.AdvancedTextExtractor;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -41,6 +47,10 @@ import com.google.inject.Singleton;
 public class ImdbParser extends AbstractJerichoParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImdbParser.class);
+    Map<String, MovieType> movieTypeMap = new HashMap<String, MovieType>();
+    {
+        movieTypeMap.put("video", MovieType.VIDEO_MOVIE);
+    }
 
     @Inject
     public ImdbParser() {
@@ -58,14 +68,34 @@ public class ImdbParser extends AbstractJerichoParser {
         title = ImdbParserRegex.cleanTitle(title);
         movie.setTitle(title);
 
+        List<Element> extraTitle = titleHeader.getAllElements("class", "title-extra", false);
+        if (!extraTitle.isEmpty()) {
+            AdvancedTextExtractor at = new AdvancedTextExtractor(extraTitle.get(0), false).addExcludedTagName("i");
+            movie.setOriginalTitle(at.toString());
+        }
+
         List<?> yearLinks = titleHeader.getAllElements(HTMLElementName.A);
         if (yearLinks.size() > 0) {
             Element yearLink = (Element) yearLinks.get(0);
             String year = yearLink.getContent().getTextExtractor().toString();
-            try {
-                movie.setYear(Integer.valueOf(year));
-            } catch (NumberFormatException ex) {
-                LOGGER.error("Could not parse year '" + year + "' to integer", ex);
+            setYear(movie, year);
+        } else {
+            List<Element> spans = titleHeader.getAllElements(HTMLElementName.SPAN);
+            Pattern p = Pattern.compile("\\((\\D*)(\\d+)\\)");
+            for (Element span : spans) {
+                String txt = span.getTextExtractor().toString();
+                Matcher m = p.matcher(txt);
+                if (m.matches()) {
+                    // (Video XYZ)
+                    String type = m.group(1).trim().toLowerCase();
+                    MovieType mType = movieTypeMap.get(type);
+                    String year = m.group(2);
+                    LOGGER.info("found element with year :" + txt + " -> " + year + " type:" + type + ", " + mType);
+                    if (mType != null) {
+                        movie.setType(mType);
+                    }
+                    setYear(movie, year);
+                }
             }
         }
 
@@ -190,6 +220,14 @@ public class ImdbParser extends AbstractJerichoParser {
             movie.setPlot("Not found");
         }
 
+    }
+
+    private void setYear(MoviePage movie, String year) {
+        try {
+            movie.setYear(Integer.valueOf(year));
+        } catch (NumberFormatException ex) {
+            LOGGER.error("Could not parse year '" + year + "' to integer", ex);
+        }
     }
 
     private void parseVotes(MoviePage movieSite, Element element) {

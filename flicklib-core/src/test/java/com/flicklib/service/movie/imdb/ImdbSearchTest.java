@@ -52,11 +52,11 @@ public class ImdbSearchTest extends AlternateLiveTester {
     public void testGetResults_String() throws Exception {
         List<MovieSearchResult> result = instance.getResults("Pulp Fiction");
         assertTrue(result.size() > 0);
-        assertEquals("Pulp Fiction", result.get(0).getTitle());
+        assertEquals("Pulp Fiction", result.get(0).getOriginalTitle());
         
         result = instance.getResults("Die Hard 4");
         assertTrue(result.size() > 0);
-        assertEquals("Live Free or Die Hard", result.get(0).getTitle());
+        assertEquals("Live Free or Die Hard", result.get(0).getOriginalTitle());
         
         result = instance.getResults("Black Tie White Noise");
         assertTrue(result.size() > 0);
@@ -81,13 +81,18 @@ public class ImdbSearchTest extends AlternateLiveTester {
         List<MovieSearchResult> list = fetcher.search("Life Is a Miracle");
         assertNotNull("search result", list);
         assertTrue("more then 2 result", list.size() > 2);
-        assertEquals("1. result:title", "Hungry Heart", list.get(0).getTitle());
-        assertEquals("1. result:alternate", "Zivot je cudo", list.get(0).getAlternateTitle());
+        assertEquals("1. result:title", "Life is a Miracle", list.get(0).getAlternateTitle());
+        assertEquals("1. result:alternate", "Zivot je cudo", list.get(0).getOriginalTitle());
         assertEquals("1. result:year", Integer.valueOf(2004), list.get(0).getYear());
 
-        assertEquals("2. result:title", "Sung ming yun oi dung ting", list.get(1).getTitle());
+        assertEquals("2. result:title", "Mo shu wai zhuan", list.get(1).getTitle());
         assertEquals("2. result:alternate", "Life Is a Miracle", list.get(1).getAlternateTitle());
-        assertEquals("2. result:year", Integer.valueOf(2001), list.get(1).getYear());
+        assertEquals("2. result:year", Integer.valueOf(2011), list.get(1).getYear());
+
+        assertEquals("2. result:title", "Sung ming yun oi dung ting", list.get(2).getTitle());
+        assertEquals("2. result:alternate", "Life Is a Miracle", list.get(2).getAlternateTitle());
+        assertEquals("2. result:year", Integer.valueOf(2001), list.get(2).getYear());
+
     }
 
 

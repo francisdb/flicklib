@@ -40,7 +40,6 @@ import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.SourceLoader;
-import com.flicklib.tools.AdvancedTextExtractor;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import com.google.inject.Inject;
 
@@ -120,17 +119,7 @@ public class ImdbSearch {
 //                            String alternateTitle = ((Element)tableElement.getAllElements("em").get(0)).getTextExtractor().toString();
 //                            movieSite.setAlternateTitle(ImdbParserRegex.cleanTitle(alternateTitle));
 //                        }
-                        List<Element> findAkaElements = tableElement.getAllElements("class","find-aka", false);
-                        if (findAkaElements.size() > 0) {
-                        	// TODO : handle multiple AKA names ...
-                        	// aka "Zivot je cudo"&nbsp;- Serbia and Montenegro 
-                        	String alternateTitle  = new AdvancedTextExtractor(findAkaElements.get(0), false).addExcludedTagName("em").addAllowedTagName("p").toString();
-                        	Matcher matcher = Pattern.compile("aka \"(.*)\".*").matcher(alternateTitle);
-                        	if (matcher.find()) {
-                        		alternateTitle = matcher.group(1);
-                        	}
-                        	movieSite.setAlternateTitle(ImdbParserRegex.cleanTitle(alternateTitle));
-                        }
+                        findOriginalTitleFromAkaList(tableElement, movieSite);
 
                         // only add if not allready in the list
                         if (movieSite.getTitle().length() > 0 && !ids.contains(movieSite.getIdForSite())) {
@@ -187,6 +176,41 @@ public class ImdbSearch {
         }
         return results;
 
+    }
+
+    private void findOriginalTitleFromAkaList(Element parentElement, MovieSearchResult object) {
+        Pattern pattern = Pattern.compile("aka \"(.*)\" - .*");
+        List<String> akaNames = new ArrayList<String>();
+        for (Element p : parentElement.getAllElements("class", "find-aka", false)) {
+            if ("p".equals(p.getName())) {
+                String text = p.getTextExtractor().toString();
+                if (text.contains("(original title)")) {
+                    Matcher matcher = pattern.matcher(text);
+                    if (matcher.find()) {
+                        LOGGER.info("find the original title : '" + matcher.group(1) + "'");
+                        object.setOriginalTitle(matcher.group(1));
+                    }
+                } else if (text.contains("(imdb display title)")) {
+                    Matcher matcher = pattern.matcher(text);
+                    if (matcher.find()) {
+                        LOGGER.info("imdb display title is : '" + matcher.group(1) + "' ");
+                        akaNames.add(matcher.group(1));
+                    }
+                } else {
+                    // String text = new AdvancedTextExtractor(p,
+                    // false).addExcludedTagName("em").addAllowedTagName("p").toString();
+                    Matcher matcher = pattern.matcher(text);
+                    if (matcher.find()) {
+                        LOGGER.info("alternate title is : '" + matcher.group(1) + "' ");
+                        akaNames.add(matcher.group(1));
+                    }
+                }
+            }
+        }
+        if (akaNames.size() > 0) {
+            // TODO : handle multiple alternate title
+            object.setAlternateTitle(akaNames.get(0));
+        }
     }
 
     /**
