@@ -48,6 +48,7 @@ import com.flicklib.domain.MovieService;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import com.flicklib.tools.LevenshteinDistance;
+import com.flicklib.tools.SimpleXPath;
 import com.flicklib.tools.StringUtils;
 import com.google.inject.Inject;
 
@@ -101,38 +102,31 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
             setEnglishAndOriginalTitle(mp, getOriginalAndEnglishTitle(titleElement), titleElement.getContent().getTextExtractor().toString());
         }
         {
+            SimpleXPath xp = new SimpleXPath(source.getAllElements("td")).filter("width", "98%").children().filter("class", "txt").filterTagName("span");
+            if (xp.size()>0) {
+                String content = xp.get(0).getContent().getTextExtractor().toString();
+                initDescriptionAndYear(content, mp);
+            }
+            
             List<Element> spanElements = source.getAllElements("span");
-            int btxtCount = 0;
             for (int i = 0; i < spanElements.size(); i++) {
                 Element span = spanElements.get(i);
                 if ("btxt".equals(span.getAttributeValue("class"))) {
-                    btxtCount++;
                     String content = span.getTextExtractor().toString();
-                    // the first <span class='btxt'> contains the description
-                    if (btxtCount == 1) {
-                        Element firstTxt = span.getParentElement().getFirstElement("class", "txt", false);
-                        if (firstTxt != null) {
-                            content = firstTxt.getTextExtractor().toString();
-                        }
-                        initDescriptionAndYear(content, mp);
-                    } else {
-                        if (content.trim().equals("rendező:")) {
-                            // the next span contains the name of the director
-                            Element nextSpan = spanElements.get(i + 1);
-                            LOGGER.debug("director is : " + nextSpan);
-                            mp.getDirectors().add(nextSpan.getTextExtractor().toString());
-                        }
-                        // forgatókönyvíró:
-                        // zeneszerző: 
-                        
-                        if (content.startsWith("A film értékelése:")) {
-
-                            mp.setScore(getScore(content));
-                            // the next span contains the vote count
-                            Element nextSpan = spanElements.get(i + 1);
-                            LOGGER.debug("vote count : " + nextSpan);
-                            mp.setVotes(getVotes(nextSpan.getTextExtractor().toString()));
-                        }
+                    if (content.trim().equals("rendező:")) {
+                        // the next span contains the name of the director
+                        Element nextSpan = spanElements.get(i + 1);
+                        LOGGER.debug("director is : " + nextSpan);
+                        mp.getDirectors().add(nextSpan.getTextExtractor().toString());
+                    }
+                    // forgatókönyvíró:
+                    // zeneszerző:
+                    if (content.startsWith("A film értékelése:")) {
+                        mp.setScore(getScore(content));
+                        // the next span contains the vote count
+                        Element nextSpan = spanElements.get(i + 1);
+                        LOGGER.debug("vote count : " + nextSpan);
+                        mp.setVotes(getVotes(nextSpan.getTextExtractor().toString()));
                     }
                 }
             }
@@ -148,6 +142,17 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     }
 
     private String getPlot(Source source) {
+        SimpleXPath xp = new SimpleXPath(source.getAllElements("table"));
+        
+        xp = xp.filter("id", null).filter("width","100%").filter("cellpadding", "0").filter("cellspacing", "0");
+        xp = xp.children().filterTagName("tr");
+        xp = xp.children().filterTagName("td").filter("align","left").filter("valign","top");
+        xp = xp.children().filterTagName("span").filter("class","txt");
+        if (xp.size()>0) {
+            Element element = xp.get(0);
+            return element.getContent().getTextExtractor().toString();
+        }
+/*        System.out.println("XPATH:"+xp.size()+" content:"+xp);
         List<Element> tables = source.getAllElements("table");
         // find a table which doesn't have 'id', it's width='100%'
         // cellpadding="0" cellspacing="0' and it's parent a td
@@ -162,7 +167,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                     }
                 }
             }
-        }
+        }*/
         return null;
     }
 
@@ -411,7 +416,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         Matcher matcher = SCORE_PATTERN.matcher(scoreText);
         if (matcher.find()) {
             if (matcher.groupCount() == 2) {
-                float score = Float.parseFloat(matcher.group(1));
+                float score = Float.parseFloat(matcher.group(1).replace(',', '.'));
                 return Integer.valueOf((int) (score * 10));
             }
         }
