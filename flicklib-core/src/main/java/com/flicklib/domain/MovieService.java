@@ -74,7 +74,9 @@ public enum MovieService {
      */
     OFDB("Online-Filmdatenbank", "http://www.ofdb.de", "OFDb"),
     
-    XPRESSHU("Xpress.hu", "http://www.xpress.hu");
+    XPRESSHU("Xpress.hu", "http://www.xpress.hu"),
+    
+    BLIPPR("Blipp.com", "http://www.blippr.com");
 
     private final String name;
     private final String url;

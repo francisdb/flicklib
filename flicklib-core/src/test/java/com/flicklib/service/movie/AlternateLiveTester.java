@@ -15,7 +15,7 @@ import com.flicklib.service.UrlConnectionResolver;
 import com.flicklib.service.cache.EmptyHttpCache;
 
 @RunWith(value = Parameterized.class)
-public class AlternateLiveTester {
+public abstract class AlternateLiveTester {
 	
 	private static final int TIMEOUT = 30000;
 
