@@ -30,7 +30,7 @@ import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.service.movie.AlternateLiveTester;
 
 public class XpressHuLiveFetcherTest extends AlternateLiveTester {
-    private AbstractMovieInfoFetcher fetcher;
+    private final AbstractMovieInfoFetcher fetcher;
 
     
     public XpressHuLiveFetcherTest (boolean internalHttpClient, boolean internalRedirects) {
@@ -42,19 +42,26 @@ public class XpressHuLiveFetcherTest extends AlternateLiveTester {
     public void testBreakfastSearch() throws IOException {
         List<? extends MovieSearchResult> searchResult = fetcher.search("Breakfast");
         Assert.assertNotNull("search result", searchResult);
-        Assert.assertEquals("3 result", 3, searchResult.size());
+        Assert.assertEquals("5 result", 5, searchResult.size());
 
-        Assert.assertEquals("title 1", "Nulladik óra", searchResult.get(0).getTitle());
-        Assert.assertEquals("title 2", "Bajnokok reggelije", searchResult.get(1).getTitle());
-        Assert.assertEquals("title 3", "Reggeli a Plútón", searchResult.get(2).getTitle());
+        Assert.assertEquals("title 1", "Álom luxuskivitelben", searchResult.get(0).getTitle());
 
-        Assert.assertEquals("orig title 1", "The Breakfast Club", searchResult.get(0).getOriginalTitle());
-        Assert.assertEquals("orig title 2", "Breakfast of Champions", searchResult.get(1).getOriginalTitle());
-        Assert.assertEquals("orig title 3", "Breakfast on Pluto", searchResult.get(2).getOriginalTitle());
+
+        Assert.assertEquals("title 2", "Nulladik óra", searchResult.get(1).getTitle());
+        Assert.assertEquals("orig title 2", "The Breakfast Club", searchResult.get(1).getOriginalTitle());
+        Assert.assertEquals("orig year 2", Integer.valueOf(1985), searchResult.get(1).getYear());
+
+        Assert.assertEquals("title 3", "Bajnokok reggelije", searchResult.get(2).getTitle());
+        Assert.assertEquals("orig title 3", "Breakfast of Champions", searchResult.get(2).getOriginalTitle());
+        Assert.assertEquals("orig year 3", Integer.valueOf(1999), searchResult.get(2).getYear());
+
+        Assert.assertEquals("title 4", "Reggeli a Plútón", searchResult.get(3).getTitle());
+        Assert.assertEquals("orig title 4", "Breakfast on Pluto", searchResult.get(3).getOriginalTitle());
+        Assert.assertEquals("orig year 4", Integer.valueOf(2005), searchResult.get(3).getYear());
         
-        Assert.assertEquals("orig year 1", Integer.valueOf(1985), searchResult.get(0).getYear());
-        Assert.assertEquals("orig year 2", Integer.valueOf(1999), searchResult.get(1).getYear());
-        Assert.assertEquals("orig year 3", Integer.valueOf(2005), searchResult.get(2).getYear());
+        Assert.assertEquals("title 5", "Álom luxuskivitelben (!!! CSAK ANGOLUL !!!)", searchResult.get(4).getTitle());
+        Assert.assertEquals("orig title 5", "Breakfast at Tiffany's", searchResult.get(4).getOriginalTitle());
+        Assert.assertEquals("orig year 5", Integer.valueOf(1961), searchResult.get(4).getYear());
         
     }
     @Test
