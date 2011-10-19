@@ -20,11 +20,10 @@ package com.flicklib.service.movie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.flicklib.api.InfoFetcherFactory;
 import com.flicklib.api.MovieInfoFetcher;
 import com.flicklib.domain.MovieService;
+import com.flicklib.service.movie.blippr.Blippr;
 import com.flicklib.service.movie.cinebel.Cinebel;
 import com.flicklib.service.movie.flixter.Flixster;
 import com.flicklib.service.movie.google.Google;
@@ -35,6 +34,8 @@ import com.flicklib.service.movie.ofdb.Ofdb;
 import com.flicklib.service.movie.porthu.PortHu;
 import com.flicklib.service.movie.tomatoes.RottenTomatoes;
 import com.flicklib.service.movie.xpress.XpressHu;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  *
@@ -56,6 +57,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
     private final MovieInfoFetcher cinebelInfoFetcher;
     private final MovieInfoFetcher ofdbInfoFetcher;
     private final MovieInfoFetcher xpressHuFetcher;
+    private final MovieInfoFetcher blipprFetcher;
 
     /**
      * Constructs a new InfoFetcherFactoryImpl
@@ -82,7 +84,8 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
             final @PortHu MovieInfoFetcher porthuFetcher,
             final @Cinebel MovieInfoFetcher cinebelFetcher,
             final @Ofdb MovieInfoFetcher ofdbFetcher,
-            final @XpressHu MovieInfoFetcher xpressHuFetcher) {
+            final @XpressHu MovieInfoFetcher xpressHuFetcher,
+            final @Blippr MovieInfoFetcher blipprFetcher) {
         this.imdbInfoFetcher = imdbInfoFetcher;
         this.movieWebInfoFetcher = movieWebInfoFetcher;
         this.tomatoesInfoFetcher = tomatoesInfoFetcher;
@@ -94,6 +97,7 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
         this.cinebelInfoFetcher = cinebelFetcher;
         this.ofdbInfoFetcher = ofdbFetcher;
         this.xpressHuFetcher = xpressHuFetcher;
+        this.blipprFetcher = blipprFetcher;
     }
     
     
@@ -135,6 +139,9 @@ public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
             case XPRESSHU : 
                 fetcher = xpressHuFetcher;
                 break;
+            case BLIPPR :
+        	fetcher = blipprFetcher;
+        	break;
             default:
             	LOGGER.warn("No fetcher defined for service "+service);
             	// keep this exception in here!
