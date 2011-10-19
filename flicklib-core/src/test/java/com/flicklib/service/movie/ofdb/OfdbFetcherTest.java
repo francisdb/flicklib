@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
@@ -20,6 +22,8 @@ import com.flicklib.service.UrlConnectionResolver;
 import com.flicklib.service.cache.EmptyHttpCache;
 
 public class OfdbFetcherTest {
+	private final static Logger LOG = LoggerFactory.getLogger(OfdbFetcherTest.class);
+	
     private SourceLoader loader;
     private OfdbFetcher fetcher;
 
@@ -37,7 +41,7 @@ public class OfdbFetcherTest {
 		List<? extends MovieSearchResult> res = fetcher.search("Twin Peaks");
 		for(MovieSearchResult result:res){
 			assertEquals(MovieService.OFDB, result.getService());
-			System.out.println(result.getTitle()+" / "+result.getOriginalTitle()+" / "+result.getYear()+" / "+result.getType());
+			LOG.info("result: " + result.getTitle() + " / " + result.getOriginalTitle() + " / " + result.getYear() + " / " + result.getType());
 		}
 		assertEquals("Geheimnis von Twin Peaks, Das", res.get(0).getTitle());
 		assertEquals("Twin Peaks", res.get(0).getOriginalTitle());
@@ -50,7 +54,7 @@ public class OfdbFetcherTest {
 		for(MovieSearchResult result:res2){
 			assertEquals(MovieService.OFDB, result.getService());
 			assertNotNull(result.getIdForSite());
-			System.out.println(result.getTitle()+" / "+result.getOriginalTitle()+" / "+result.getYear()+" / "+result.getType());
+			LOG.info("result 2:" + result.getTitle() + " / " + result.getOriginalTitle() + " / " + result.getYear() + " / " + result.getType());
 		}
 		
 	}

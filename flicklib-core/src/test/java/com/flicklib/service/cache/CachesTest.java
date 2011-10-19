@@ -22,7 +22,6 @@ public class CachesTest {
 	@Test
 	public void test(){
 		String url = generateUrlForTitleSearch("Indiana Jones and the Kingdom of the Crystal Skull");
-		System.out.println(url);
 		EmptyHttpCache empty = new EmptyHttpCache(new UrlConnectionResolver(5000));
 		EmptyHttpCache empty2 = new EmptyHttpCache(new HttpClientResponseResolver(5000));
 		//HttpCache4J cache4j = new HttpCache4J();
@@ -31,7 +30,7 @@ public class CachesTest {
 		String emptyContent2 = empty2.get(url).getContent();
 		//String cache4jContent = cache4j.get(url).getContent();
 		
-		assertEquals(emptyContent, emptyContent2);
+		assertEquals("two response should be the same", emptyContent, emptyContent2);
 		//assertEquals(emptyContent2, cache4jContent);
 	}
 	

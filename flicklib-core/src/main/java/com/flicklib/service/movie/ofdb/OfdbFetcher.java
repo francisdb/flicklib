@@ -27,6 +27,9 @@ import java.util.regex.Pattern;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.flicklib.api.AbstractMovieInfoFetcher;
 import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
@@ -44,7 +47,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class OfdbFetcher extends AbstractMovieInfoFetcher {
 
-    //private static final Logger LOGGER = LoggerFactory.getLogger(OfdbFetcher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OfdbFetcher.class);
     
     private final SourceLoader sourceLoader;
     private final Parser parser;
@@ -60,15 +63,21 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
     }
     
 	@Override
-	public MoviePage getMovieInfo(String idForSite) throws IOException {		
-		MoviePage page = new MoviePage(MovieService.OFDB);
-		String url = generateMovieUrl(idForSite);
-		page.setIdForSite(idForSite);
-		page.setUrl(url);
-		Source source = sourceLoader.loadSource(url);
+	public MoviePage getMovieInfo(String idForSite) throws IOException {
 		
-		parser.parse(source, page);
-        return page; 
+		String url = generateMovieUrl(idForSite);
+		LOGGER.info("getMovieInfo " + idForSite + " from " + url);
+		Source source = sourceLoader.loadSource(url);
+		if (source != null) {
+			MoviePage page = new MoviePage(MovieService.OFDB);
+			page.setIdForSite(idForSite);
+			page.setUrl(url);
+			parser.parse(source, page);
+			return page; 
+		}
+		LOGGER.warn("no response returned from "+url);
+		return null;
+		
 	}
 
 	@Override
