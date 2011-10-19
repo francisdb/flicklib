@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -52,18 +53,21 @@ public class ImdbSearchTest extends AlternateLiveTester {
     public void testGetResults_String() throws Exception {
         List<MovieSearchResult> result = instance.getResults("Pulp Fiction");
         assertTrue(result.size() > 0);
-        assertEquals("Pulp Fiction", result.get(0).getOriginalTitle());
+        assertEquals("pulp fiction - original title:","Pulp Fiction", getOriginalTitle(result.get(0)));
         
         result = instance.getResults("Die Hard 4");
         assertTrue(result.size() > 0);
-        assertEquals("Live Free or Die Hard", result.get(0).getOriginalTitle());
+        assertEquals("Live Free or Die Hard", getOriginalTitle(result.get(0)));
         
         result = instance.getResults("Black Tie White Noise");
         assertTrue(result.size() > 0);
         assertEquals(Integer.valueOf(1993), result.get(0).getYear());
-        assertEquals("David Bowie: Black Tie White Noise", result.get(0).getTitle());
+        assertEquals("David Bowie: Black Tie White Noise", getOriginalTitle(result.get(0)));
     }
 
+    private String getOriginalTitle(MovieSearchResult m) {
+	    return m.getOriginalTitle() != null ? m.getOriginalTitle() : m.getTitle();
+    }
     /**
      * Test of generateImdbTitleSearchUrl method, of class ImdbSearch.
      */
@@ -81,9 +85,11 @@ public class ImdbSearchTest extends AlternateLiveTester {
         List<MovieSearchResult> list = fetcher.search("Life Is a Miracle");
         assertNotNull("search result", list);
         assertTrue("more then 2 result", list.size() > 2);
-        assertEquals("1. result:title", "Life is a Miracle", list.get(0).getAlternateTitle());
-        assertEquals("1. result:alternate", "Zivot je cudo", list.get(0).getOriginalTitle());
-        assertEquals("1. result:year", Integer.valueOf(2004), list.get(0).getYear());
+        final MovieSearchResult first = list.get(0);
+	assertEquals("1. result:alternate ["+first.getAlternateTitle()+']', 
+			Arrays.asList("Life is a Miracle","Hungry Heart").contains(first.getAlternateTitle()));
+        assertEquals("1. result:original", "Zivot je cudo", getOriginalTitle(first));
+        assertEquals("1. result:year", Integer.valueOf(2004), first.getYear());
 
         assertEquals("2. result:title", "Mo shu wai zhuan", list.get(1).getTitle());
         assertEquals("2. result:alternate", "Life Is a Miracle", list.get(1).getAlternateTitle());
