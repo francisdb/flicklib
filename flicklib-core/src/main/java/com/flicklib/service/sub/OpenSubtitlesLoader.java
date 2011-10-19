@@ -94,10 +94,8 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
                     }
                 }
 
-                source = sourceLoader.loadSource(subsUrl);
-                jerichoSource = new Source(source.getContent());
-                jerichoSource.fullSequentialParse();
-                results = loadSubtitlesPage(jerichoSource);
+                source = load(subsUrl);
+                results = loadSubtitlesPage(source.getJerichoSource());
                 
                 //Get links for other pages.
                 List<String> pages = new ArrayList<String>();
@@ -105,10 +103,8 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
                 Iterator<?> k = pages.iterator();
                 while(k.hasNext()) {
                     String link = (String) k.next();
-                    source = sourceLoader.loadSource(SITE + link);
-                    jerichoSource = new Source(source.getContent());
-                    jerichoSource.fullSequentialParse();
-                    results.addAll(loadSubtitlesPage(jerichoSource));
+                    source = load(SITE + link);
+                    results.addAll(loadSubtitlesPage(source.getJerichoSource()));
                 }
             }
             
@@ -120,15 +116,21 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
             Set<String> pages = new HashSet<String>();
             pages.addAll(getPageLinks(jerichoSource));
             for(String link:pages){
-                source = sourceLoader.loadSource(SITE + link);
-                jerichoSource = new Source(source.getContent());
-                jerichoSource.fullSequentialParse();
-                results.addAll(loadSubtitlesPage(jerichoSource));
+                source = load(SITE + link);
+                results.addAll(loadSubtitlesPage(source.getJerichoSource()));
             }
         }
         
         return results;
     }
+
+private com.flicklib.service.Source load(String link) throws IOException {
+	com.flicklib.service.Source source = sourceLoader.loadSource(link);
+	if (source == null) {
+		throw new IOException("loading " + SITE + link + " is failed!");
+	}
+	return source;
+}
     
     /**
      * This method retrieves the links for all pages other than the first page. 
@@ -157,11 +159,8 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
 
         Element tableElement = (Element) jerichoSource.getAllElements("id", "search_results", false).get(0);
 
-        List<?> trElements = tableElement.getAllElements(HTMLElementName.TR);
-        Element trElement;
         Subtitle sub;
-        for (Object trObject : trElements) {
-            trElement = (Element) trObject;
+        for (Element trElement : tableElement.getAllElements(HTMLElementName.TR)) {
             String style = trElement.getAttributeValue("style");
             if (!"display:none".equals(style)) {
 
@@ -174,7 +173,11 @@ public class OpenSubtitlesLoader implements SubtitlesLoader {
 
                     // TITLE/URL
                     Element titleTd = (Element) tdElements.get(0);
-                    Element firstLink = (Element) titleTd.getAllElements(HTMLElementName.A).get(0);
+                    Element firstLink = (Element) titleTd.getFirstElement(HTMLElementName.A);
+                    if (firstLink == null) {
+                	    // TODO : investigate
+                	    continue;
+                    }
                     String fileName = firstLink.getContent().getTextExtractor().toString();
 
                     ElementOnlyTextExtractor extractor = new ElementOnlyTextExtractor(titleTd.getContent());
