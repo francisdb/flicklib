@@ -18,16 +18,20 @@ public class TomatoesInfoFetcherTest extends AlternateLiveTester {
 
     public TomatoesInfoFetcherTest(boolean flag, boolean internalRedirects) {
         super(flag, internalRedirects);
-        fetcher = new TomatoesInfoFetcher(new TomatoesParser(), loader);
+        fetcher = new TomatoesInfoFetcher(loader);
     }
 	
 	@Test
 	public void testGetMovieInfo() throws IOException {
 		MoviePage page = fetcher.getMovieInfo("pulp_fiction");
 		assertEquals(MovieService.TOMATOES, page.getService());
-		assertTrue("starts with 'Prizefighter Butch Coolidge has decided to stop payment on a deal he's made with the devil'", 
-				page.getPlot().startsWith("Prizefighter Butch Coolidge has decided to stop payment on a deal he's made with the devi"));
+		assertTrue("starts with 'Outrageously violent, time-twisting, and in love with language, '", 
+				page.getPlot().startsWith("Outrageously violent, time-twisting, and in love with language, "));
 		System.out.println("score = "+page.getScore());
+	        assertEquals("director count", 1, page.getDirectors().size());
+	        assertEquals("director ","Quentin Tarantino", page.getDirectors().iterator().next());
+	        assertEquals("Title", "Pulp Fiction", page.getTitle());
+		
 	}
 
 	@Test

@@ -17,12 +17,13 @@
  */
 package com.flicklib.service.movie.tomatoes;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.FileSourceLoader;
 import com.flicklib.service.Source;
-
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -40,7 +41,10 @@ public class TomatoesParserTest {
         MoviePage site = new MoviePage();
         TomatoesParser instance = new TomatoesParser();
         instance.parse(source, site);
-        assertEquals(Integer.valueOf(96), site.getScore());
+        assertEquals("Score", Integer.valueOf(95), site.getScore());
+        assertEquals("director count", 1, site.getDirectors().size());
+        assertEquals("director ","Quentin Tarantino", site.getDirectors().iterator().next());
+        assertEquals("Title", "Pulp Fiction", site.getTitle());
     }
     
     @Test
@@ -49,7 +53,9 @@ public class TomatoesParserTest {
         MoviePage site = new MoviePage();
         TomatoesParser instance = new TomatoesParser();
         instance.parse(source, site);
-        assertEquals(Integer.valueOf(26), site.getScore());
+        assertEquals("Score", Integer.valueOf(27), site.getScore());
+        assertEquals("Year", Integer.valueOf(2006), site.getYear());
+        assertEquals("Title", "Waist Deep", site.getTitle());
     }
 
 }
