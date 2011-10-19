@@ -64,12 +64,15 @@ public class ImdbInfoFetcherTest {
 			
 		}
 		
+		    private String getOriginalTitle(MovieSearchResult m) {
+			    return m.getOriginalTitle() != null ? m.getOriginalTitle() : m.getTitle();
+		    }
 
 		@Test
 		public void testGetMovieInfo() throws IOException {
 			MoviePage page = fetcher.getMovieInfo("0133093");
 			assertEquals(MovieService.IMDB, page.getService());
-			assertEquals("The Matrix", page.getOriginalTitle());
+			assertEquals("The Matrix", getOriginalTitle(page));
 			assertEquals(2, page.getDirectors().size());
 			assertTrue(page.getDirectors().contains("Andy Wachowski"));
 			assertTrue(page.getDirectors().contains("Lana Wachowski"));
