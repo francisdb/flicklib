@@ -27,10 +27,9 @@ import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.UrlConnectionResolver;
-import com.flicklib.service.cache.EmptyHttpCache;
+import com.flicklib.service.cache.HttpCacheSourceLoader;
 
 /**
  * @author francisdb
@@ -42,7 +41,7 @@ public class CinebelFetetcherTest {
 	
 	@Before
 	public void setup(){
-		SourceLoader loader = new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000)));
+		SourceLoader loader = new HttpCacheSourceLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT));
 		fetcher = new CinebelFetcher(loader, new CinebelParser());
 	}
 

@@ -2,12 +2,14 @@ package com.flicklib.service.cache;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.junit.Test;
 
-import com.flicklib.service.HttpClientResponseResolver;
+import com.flicklib.service.HttpClientSourceLoader;
+import com.flicklib.service.SourceLoader;
 import com.flicklib.service.UrlConnectionResolver;
 
 /**
@@ -20,14 +22,14 @@ public class CachesTest {
 	private static final String TEST_CITY_ID = "3372";
 
 	@Test
-	public void test(){
+	public void test() throws IOException{
 		String url = generateUrlForTitleSearch("Indiana Jones and the Kingdom of the Crystal Skull");
-		EmptyHttpCache empty = new EmptyHttpCache(new UrlConnectionResolver(5000));
-		EmptyHttpCache empty2 = new EmptyHttpCache(new HttpClientResponseResolver(5000));
+		SourceLoader empty = new HttpCacheSourceLoader(new UrlConnectionResolver(5000));
+		SourceLoader empty2 = new HttpCacheSourceLoader(new HttpClientSourceLoader(5000));
 		//HttpCache4J cache4j = new HttpCache4J();
 		
-		String emptyContent = empty.get(url).getContent();
-		String emptyContent2 = empty2.get(url).getContent();
+		String emptyContent = empty.loadSource(url).getContent();
+		String emptyContent2 = empty2.loadSource(url).getContent();
 		//String cache4jContent = cache4j.get(url).getContent();
 		
 		assertEquals("two response should be the same", emptyContent, emptyContent2);

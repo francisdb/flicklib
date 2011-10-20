@@ -27,9 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import com.flicklib.api.SubtitlesLoader;
 import com.flicklib.domain.Subtitle;
-import com.flicklib.service.HttpSourceLoader;
+import com.flicklib.service.SourceLoader;
 import com.flicklib.service.UrlConnectionResolver;
-import com.flicklib.service.cache.EmptyHttpCache;
 
 /**
  *
@@ -44,7 +43,7 @@ public class OpenSubtitlesLoaderTest {
      */
     @Test
     public void testSearch() throws Exception {
-        SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000))));
+        SubtitlesLoader loader = new OpenSubtitlesLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT));
         Set<Subtitle> result = loader.search("The Science of Sleep", null);
         assertTrue(result.size() > 0);
         for(Subtitle sub:result){
@@ -54,7 +53,7 @@ public class OpenSubtitlesLoaderTest {
     
     @Test
     public void testSearch2() throws Exception {
-    	SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000))));
+    	SubtitlesLoader loader = new OpenSubtitlesLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT));
     	Set<Subtitle> result = loader.search("The.Science.of.Sleep.LIMITED.DVDRip.XViD.-iMBT.avi", null);
         //result = loader.search("The.Science.of.Sleep.LIMITED.DVDRip.XViD", null);
         assertTrue(result.size() > 0);
@@ -65,7 +64,7 @@ public class OpenSubtitlesLoaderTest {
     
     @Test
     public void testSearch3() throws Exception {
-    	SubtitlesLoader loader = new OpenSubtitlesLoader(new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000))));
+    	SubtitlesLoader loader = new OpenSubtitlesLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT));
     	Set<Subtitle> result = loader.search("X-Men", null);
         assertTrue(result.size() > 0);
         for(Subtitle sub:result){

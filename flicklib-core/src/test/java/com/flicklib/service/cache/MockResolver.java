@@ -6,18 +6,23 @@ package com.flicklib.service.cache;
 import java.io.IOException;
 import java.util.Map;
 
-import com.flicklib.service.ResponseResolver;
 import com.flicklib.service.Source;
+import com.flicklib.service.SourceLoader;
 
-final class MockResolver implements ResponseResolver {
+final class MockResolver implements SourceLoader {
 	
 	private int count = 0;
 	
 	@Override
-	public Source get(String url) throws IOException {
+	public Source loadSource(String url) throws IOException {
 		count++;
 		Source source = new Source(url, "mock");
 		return source;
+	}
+	
+	@Override
+	public Source loadSource(String url, boolean useCache) throws IOException {
+		return loadSource(url);
 	}
 
 	@Override

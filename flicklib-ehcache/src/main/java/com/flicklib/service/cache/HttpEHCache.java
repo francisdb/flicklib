@@ -28,25 +28,24 @@ import net.sf.ehcache.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.flicklib.service.HttpCache;
-import com.flicklib.service.ResponseResolver;
 import com.flicklib.service.Source;
+import com.flicklib.service.SourceLoader;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class HttpEHCache implements HttpCache {
+public class HttpEHCache implements SourceLoader {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(HttpEHCache.class);
 
 	private final CacheManager manager;
 	private final Cache cache;
-	private final ResponseResolver resolver;
+	private final SourceLoader resolver;
 
 	@Inject
 	public HttpEHCache(
-			final ResponseResolver resolver) {
+			final SourceLoader resolver) {
 		this.resolver = resolver;
 		URL url = getClass().getResource("/ehcache-flicklib.xml");
 		manager = new CacheManager(url);
@@ -65,20 +64,21 @@ public class HttpEHCache implements HttpCache {
 	}
 
 	@Override
-	public Source get(String url, boolean forceRefresh) {
+	public Source loadSource(String url, boolean useCache) throws IOException {
 		Source source = null;
 		Element element = null;
-		if(!forceRefresh){
+		if(useCache){
 			element = cache.get(url);
 		}
 		if (element != null) {
 			source = (Source) element.getObjectValue();
 		}else{
 			try {
-				source = resolver.get(url);
+				source = resolver.loadSource(url, useCache);
 				put(url, source);
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage(), e);
+				throw e;
 			}
 			
 		}
@@ -86,12 +86,12 @@ public class HttpEHCache implements HttpCache {
 	}
 	
 	@Override
-	public Source get(String url) {
-		return get(url, false);
+	public Source loadSource(String url) throws IOException {
+		return loadSource(url, true);
 	}
 	
 	@Override
-	public Source post(String url, Map<String, String> parameters, Map<String, String> headers) {
+	public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
 		// FIXME what about the parameters, they should be added to the cache
 		Source source = null;
 		Element element = cache.get(url);
@@ -103,6 +103,7 @@ public class HttpEHCache implements HttpCache {
 				put(url, source);
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage(), e);
+				throw e;
 			}
 			
 		}

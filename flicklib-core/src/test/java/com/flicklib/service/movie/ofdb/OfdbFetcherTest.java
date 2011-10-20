@@ -16,10 +16,9 @@ import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MovieType;
-import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.UrlConnectionResolver;
-import com.flicklib.service.cache.EmptyHttpCache;
+import com.flicklib.service.cache.HttpCacheSourceLoader;
 
 public class OfdbFetcherTest {
 	private final static Logger LOG = LoggerFactory.getLogger(OfdbFetcherTest.class);
@@ -30,7 +29,7 @@ public class OfdbFetcherTest {
     
     @Before
     public void setUp() throws Exception {
-        loader = new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000)));
+        loader = new HttpCacheSourceLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT));
         fetcher = new OfdbFetcher(loader, new OfdbParser());
     }
     

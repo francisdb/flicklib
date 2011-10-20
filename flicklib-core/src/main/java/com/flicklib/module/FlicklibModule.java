@@ -21,10 +21,8 @@ import com.flicklib.api.InfoFetcherFactory;
 import com.flicklib.api.MovieInfoFetcher;
 import com.flicklib.api.Parser;
 import com.flicklib.api.SubtitlesLoader;
-import com.flicklib.service.HttpCache;
-import com.flicklib.service.HttpSourceLoader;
+import com.flicklib.service.HttpClientSourceLoader;
 import com.flicklib.service.SourceLoader;
-import com.flicklib.service.cache.EmptyHttpCache;
 import com.flicklib.service.movie.InfoFetcherFactoryImpl;
 import com.flicklib.service.movie.cinebel.Cinebel;
 import com.flicklib.service.movie.cinebel.CinebelFetcher;
@@ -74,9 +72,8 @@ public class FlicklibModule extends AbstractModule {
         
         // bind(HttpCache.class).to(HttpEHCache.class);
         // bind(HttpCache.class).to(HttpCache4J.class);
-    	bind(HttpCache.class).to(EmptyHttpCache.class);
-        
-        bind(SourceLoader.class).to(HttpSourceLoader.class);
+    	
+        bind(SourceLoader.class).to(HttpClientSourceLoader.class);
 
         bind(SubtitlesLoader.class).to(OpenSubtitlesLoader.class);
 

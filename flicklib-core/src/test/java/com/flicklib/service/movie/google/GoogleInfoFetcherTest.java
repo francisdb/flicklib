@@ -22,9 +22,9 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
-import com.flicklib.service.HttpSourceLoader;
+import com.flicklib.service.SourceLoader;
 import com.flicklib.service.UrlConnectionResolver;
-import com.flicklib.service.cache.EmptyHttpCache;
+import com.flicklib.service.cache.HttpCacheSourceLoader;
 
 /**
  *
@@ -40,7 +40,7 @@ public class GoogleInfoFetcherTest {
     @Test
     public void testFetch() throws IOException {
         GoogleParser googleParser = new GoogleParser();
-        GoogleInfoFetcher instance = new GoogleInfoFetcher(googleParser, new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000))));
+        GoogleInfoFetcher instance = new GoogleInfoFetcher(googleParser, new HttpCacheSourceLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT)));
         MoviePage site = instance.fetch("Pulp Fiction");
         // FIXME google movie search now only returns movies in the cinema at the moment
         // assertNotNull("Google score is null", site.getScore());

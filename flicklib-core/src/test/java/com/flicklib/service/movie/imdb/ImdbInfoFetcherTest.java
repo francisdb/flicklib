@@ -15,11 +15,9 @@ import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MovieType;
-import com.flicklib.service.HttpCache;
-import com.flicklib.service.HttpSourceLoader;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.UrlConnectionResolver;
-import com.flicklib.service.cache.EmptyHttpCache;
+import com.flicklib.service.cache.HttpCacheSourceLoader;
 import com.flicklib.service.cache.LoggingHttpCache;
 
 
@@ -27,18 +25,17 @@ public class ImdbInfoFetcherTest {
     private SourceLoader    loader;
     private ImdbInfoFetcher fetcher;
 	    
-	    @Before
-	    public void setUp() throws Exception {
-	        HttpCache cache = new EmptyHttpCache(new UrlConnectionResolver(5000));
-	        if (System.getProperty("flicklib.trace") != null) {
-    	        File tempDir = new File(System.getProperty("java.io.tmpdir"));
-    	        File logDir = new File(tempDir, "flicklib-http-cache");
-    	        logDir.mkdirs();
-    	        cache = new LoggingHttpCache(cache, logDir);
-	        }
-	        loader = new HttpSourceLoader(cache);
-	        fetcher = new ImdbInfoFetcher(loader);
-	    }
+	@Before
+	public void setUp() throws Exception {
+		loader = new HttpCacheSourceLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT));
+		if (System.getProperty("flicklib.trace") != null) {
+			File tempDir = new File(System.getProperty("java.io.tmpdir"));
+			File logDir = new File(tempDir, "flicklib-http-cache");
+			logDir.mkdirs();
+			loader = new LoggingHttpCache(loader, logDir);
+		}
+		fetcher = new ImdbInfoFetcher(loader);
+	}
 
 		@Test
 		public void testSearchString() throws IOException {

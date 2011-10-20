@@ -18,24 +18,30 @@ package com.flicklib.service.cache;
  */
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
-import com.flicklib.service.HttpCache;
+import com.flicklib.service.SourceLoader;
 
 public class EmptyHttpCacheTest {
 	
 	
 
 	@Test
-	public void testPutGet() {
+	public void testPutGet() throws IOException {
 		MockResolver resolver = new MockResolver();
-		HttpCache cache = new EmptyHttpCache(resolver);
+		SourceLoader cache = new HttpCacheSourceLoader(resolver);
 		
-		assertEquals("mock", cache.get("test").getContent());
+		assertEquals("mock", cache.loadSource("test").getContent());
 		assertEquals(1, resolver.getCallCount());
 		
 		// second call should hit the resolver again
-		assertEquals("mock", cache.get("test").getContent());
+		assertEquals("mock", cache.loadSource("test/2").getContent());
+		assertEquals(2, resolver.getCallCount());
+
+		// second call should hit the resolver again
+		assertEquals("mock", cache.loadSource("test").getContent());
 		assertEquals(2, resolver.getCallCount());
 	}
 

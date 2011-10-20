@@ -7,18 +7,18 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.Map;
 
-import com.flicklib.service.HttpCache;
 import com.flicklib.service.Source;
+import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.IOTools;
 
-public class LoggingHttpCache implements HttpCache {
+public class LoggingHttpCache implements SourceLoader {
 
-    final HttpCache internal;
+    final SourceLoader internal;
     File dumpPath;
     int reqNum;
     PrintWriter logFile;
     
-    public LoggingHttpCache(HttpCache internal, File dumpPath) throws IOException {
+    public LoggingHttpCache(SourceLoader internal, File dumpPath) throws IOException {
         this.internal = internal;
         this.dumpPath = dumpPath;
         this.logFile = new PrintWriter(new FileWriter(new File(dumpPath, "request.log"), true));
@@ -28,8 +28,8 @@ public class LoggingHttpCache implements HttpCache {
     }
 
     @Override
-    public Source get(String url) {
-        return log(url, internal.get(url));
+    public Source loadSource(String url) throws IOException {
+        return log(url, internal.loadSource(url));
     }
 
     private synchronized Source log(String reqUrl, Source source) {
@@ -51,12 +51,12 @@ public class LoggingHttpCache implements HttpCache {
     }
 
     @Override
-    public Source get(String url, boolean forceRefresh) {
-        return log(url, internal.get(url, forceRefresh));
+    public Source loadSource(String url, boolean useCache) throws IOException {
+        return log(url, internal.loadSource(url, useCache));
     }
 
     @Override
-    public Source post(String url, Map<String, String> parameters, Map<String, String> headers) {
+    public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
         return log(url, internal.post(url, parameters, headers));
     }
 

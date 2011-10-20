@@ -25,135 +25,140 @@ import com.flicklib.module.FlicklibModule;
 import com.flicklib.tools.IOTools;
 import com.google.inject.name.Named;
 
-public class UrlConnectionResolver implements ResponseResolver {
-	
+public class UrlConnectionResolver implements SourceLoader {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(UrlConnectionResolver.class);
 
 	static {
-        try {
-            CookieManager manager = new CookieManager(null, new CookiePolicy() {
-                @Override
-                public boolean shouldAccept(URI uri, HttpCookie cookie) {
-                    if (cookie.getMaxAge() == 0) {
-                        cookie.setMaxAge(-1);
-                    }
-                    if (cookie.getDomain() == null) {
-                        cookie.setDomain(uri.getHost());
-                    }
-                    return true;
-                }
-            });
-            try {
-                CookieHandler.setDefault(manager);
-            } catch (AccessControlException ace) {
-            	LOGGER.warn("cookie handler initialization failed!");
-            }
-        } catch (java.lang.NoClassDefFoundError ncde) {
-        	LOGGER.warn("CookieManager is not accessible " + ncde.getMessage(), ncde);
-        }
-    }
-	
+		try {
+			CookieManager manager = new CookieManager(null, new CookiePolicy() {
+				@Override
+				public boolean shouldAccept(URI uri, HttpCookie cookie) {
+					if (cookie.getMaxAge() == 0) {
+						cookie.setMaxAge(-1);
+					}
+					if (cookie.getDomain() == null) {
+						cookie.setDomain(uri.getHost());
+					}
+					return true;
+				}
+			});
+			try {
+				CookieHandler.setDefault(manager);
+			} catch (AccessControlException ace) {
+				LOGGER.warn("cookie handler initialization failed!");
+			}
+		} catch (java.lang.NoClassDefFoundError ncde) {
+			LOGGER.warn("CookieManager is not accessible " + ncde.getMessage(), ncde);
+		}
+	}
+
 	// TODO detect encoding?
-    private static final String ENCODING = "UTF-8";
-	
-    private boolean hideAgent = true;
-    private Integer timeOut = null;
-    private boolean internalRedirects = true;
-	
-    public UrlConnectionResolver(
-    		@Named(value = FlicklibModule.HTTP_TIMEOUT) final Integer timeout) {
+	private static final String ENCODING = "UTF-8";
+
+	private final boolean hideAgent = true;
+	private Integer timeOut = null;
+	private final boolean internalRedirects = true;
+
+	public UrlConnectionResolver(@Named(value = FlicklibModule.HTTP_TIMEOUT) final Integer timeout) {
 		this.timeOut = timeout;
 	}
-    
+
 	@Override
-	public Source get(String url) throws IOException {
+	public Source loadSource(String url) throws IOException {
 		URL httpUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
-        setupConnection(connection);
-        return processRequest(connection);
-    }
+		HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
+		setupConnection(connection);
+		return processRequest(connection);
+	}
 
-    private Source processRequest(HttpURLConnection connection) throws IOException, UnsupportedEncodingException {
-        InputStream input = null;
-        Source source = null;
-        Reader reader = null;
-        try {
-            input = connection.getInputStream();
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP  || responseCode == HttpURLConnection.HTTP_MOVED_PERM) {
-                String newLocation = connection.getHeaderField("Location");
-                if(newLocation != null){
-	                URL redirectUrl = new URL(connection.getURL(), newLocation);
-	                LOGGER.info("redirect to "+redirectUrl.toString());
-	                return get(redirectUrl.toExternalForm());
-                }
-            } else {
-	            String encoding = connection.getContentEncoding();
-	            String contentType = connection.getHeaderField("Content-Type");
-	            if (encoding == null) {
-	                if (contentType != null && contentType.indexOf("charset") != -1) {
-	                    encoding = contentType.replaceAll(".*charset=(.*)", "$1");
-	                }
-	            }
-	            if (encoding == null) {
-	                // the old default ...
-	                encoding = "ISO-8859-1";
-	            }
-	            reader = new InputStreamReader(input, encoding);
-	            String content = IOTools.readerToString(reader);
-	            source = new Source(connection.getURL().toString(), content, contentType);
-	            LOGGER.info("request for " + connection.getURL().toString() + " processed, result content type : " + contentType + ", encoding :" + encoding
-	                    + ", size:" + source.getContent().length());
-            }
-        } finally {
-            IOTools.close(reader);
-            IOTools.close(input);
-        }
-       
-        return source;
-    }
+	@Override
+	public Source loadSource(String url, boolean useCache) throws IOException {
+		return loadSource(url);
+	}
 
-    private void setupConnection(final HttpURLConnection connection) {
-        if (hideAgent) {
-            connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
-        }
-        connection.setInstanceFollowRedirects(internalRedirects);
-        if (timeOut != null) {
-            connection.setReadTimeout(timeOut);
-        }
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
-        URL httpUrl = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
-        setupConnection(connection);
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-        for (Entry<String, String> entry : headers.entrySet()) {
-            connection.setRequestProperty(entry.getKey(), entry.getValue());
-        }
+	private Source processRequest(HttpURLConnection connection) throws IOException, UnsupportedEncodingException {
+		InputStream input = null;
+		Source source = null;
+		Reader reader = null;
+		try {
+			input = connection.getInputStream();
+			int responseCode = connection.getResponseCode();
+			if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM) {
+				String newLocation = connection.getHeaderField("Location");
+				if (newLocation != null) {
+					URL redirectUrl = new URL(connection.getURL(), newLocation);
+					LOGGER.info("redirect to " + redirectUrl.toString());
+					return loadSource(redirectUrl.toExternalForm());
+				}
+			} else {
+				String encoding = connection.getContentEncoding();
+				String contentType = connection.getHeaderField("Content-Type");
+				if (encoding == null) {
+					if (contentType != null && contentType.indexOf("charset") != -1) {
+						encoding = contentType.replaceAll(".*charset=(.*)", "$1");
+					}
+				}
+				if (encoding == null) {
+					// the old default ...
+					encoding = "ISO-8859-1";
+				}
+				reader = new InputStreamReader(input, encoding);
+				String content = IOTools.readerToString(reader);
+				source = new Source(connection.getURL().toString(), content, contentType);
+				LOGGER.info("request for " + connection.getURL().toString() + " processed, result content type : " + contentType
+						+ ", encoding :" + encoding + ", size:" + source.getContent().length());
+			}
+		} finally {
+			IOTools.close(reader);
+			IOTools.close(input);
+		}
 
-        StringBuilder buf = new StringBuilder();
-        boolean first = true;
-        for (Entry<String, String> entry : parameters.entrySet()) {
-            if (first) {
-                first = false;
-            } else {
-                buf.append('&');
-            }
-            buf.append(URLEncoder.encode(entry.getKey(), ENCODING)).append('=').append(URLEncoder.encode(entry.getValue(), ENCODING));
-        }
-        OutputStream outputStream = null;
-        try{
-        	outputStream = connection.getOutputStream();
-            outputStream.write(buf.toString().getBytes(ENCODING));
-        }finally{
-        	IOTools.close(outputStream);
-        }
+		return source;
+	}
 
-        return processRequest(connection);
-    }
+	private void setupConnection(final HttpURLConnection connection) {
+		if (hideAgent) {
+			connection.addRequestProperty("User-Agent",
+					"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5");
+		}
+		connection.setInstanceFollowRedirects(internalRedirects);
+		if (timeOut != null) {
+			connection.setReadTimeout(timeOut);
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
+		URL httpUrl = new URL(url);
+		HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
+		setupConnection(connection);
+		connection.setRequestMethod("POST");
+		connection.setDoOutput(true);
+		for (Entry<String, String> entry : headers.entrySet()) {
+			connection.setRequestProperty(entry.getKey(), entry.getValue());
+		}
+
+		StringBuilder buf = new StringBuilder();
+		boolean first = true;
+		for (Entry<String, String> entry : parameters.entrySet()) {
+			if (first) {
+				first = false;
+			} else {
+				buf.append('&');
+			}
+			buf.append(URLEncoder.encode(entry.getKey(), ENCODING)).append('=').append(URLEncoder.encode(entry.getValue(), ENCODING));
+		}
+		OutputStream outputStream = null;
+		try {
+			outputStream = connection.getOutputStream();
+			outputStream.write(buf.toString().getBytes(ENCODING));
+		} finally {
+			IOTools.close(outputStream);
+		}
+
+		return processRequest(connection);
+	}
 
 }

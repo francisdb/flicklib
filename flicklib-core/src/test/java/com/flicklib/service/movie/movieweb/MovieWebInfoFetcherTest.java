@@ -19,13 +19,14 @@ package com.flicklib.service.movie.movieweb;
 
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
-import com.flicklib.service.HttpSourceLoader;
+import com.flicklib.service.SourceLoader;
 import com.flicklib.service.UrlConnectionResolver;
-import com.flicklib.service.cache.EmptyHttpCache;
+import com.flicklib.service.cache.HttpCacheSourceLoader;
 
 /**
  *
@@ -43,8 +44,9 @@ public class MovieWebInfoFetcherTest {
         Movie movie = new Movie();
         movie.setTitle("Pulp Fiction");
         MovieWebParser parser = new MovieWebParser();
-        MovieWebInfoFetcher fetcher = new MovieWebInfoFetcher(parser, new HttpSourceLoader(new EmptyHttpCache(new UrlConnectionResolver(5000))));
+        MovieWebInfoFetcher fetcher = new MovieWebInfoFetcher(parser, new HttpCacheSourceLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT)));
         MoviePage site = fetcher.fetch("Pulp Fiction");
+        Assert.assertNotNull("site ",site);
         // TODO reenable when they fix their search :-s
         //assertNotNull("MovieWebStars is null", site.getScore());
     }
