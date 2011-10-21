@@ -23,9 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
-import com.flicklib.service.SourceLoader;
-import com.flicklib.service.UrlConnectionResolver;
-import com.flicklib.service.cache.HttpCacheSourceLoader;
+import com.flicklib.service.TestUtil;
 
 /**
  *
@@ -41,7 +39,7 @@ public class MovieWebInfoFetcherTest {
     @Test
     public void testFetch() throws IOException {
         MovieWebParser parser = new MovieWebParser();
-        MovieWebInfoFetcher fetcher = new MovieWebInfoFetcher(parser, new HttpCacheSourceLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT)));
+        MovieWebInfoFetcher fetcher = new MovieWebInfoFetcher(parser, TestUtil.createLoader());
         MoviePage site = fetcher.fetch("Pulp Fiction");
         Assert.assertNotNull("site ",site);
         Assert.assertEquals("title", "Pulp Fiction Blu-ray", site.getTitle());

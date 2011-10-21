@@ -21,14 +21,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.flicklib.api.SubtitlesLoader;
 import com.flicklib.domain.Subtitle;
-import com.flicklib.service.SourceLoader;
-import com.flicklib.service.UrlConnectionResolver;
+import com.flicklib.service.TestUtil;
 
 /**
  *
@@ -37,13 +37,19 @@ import com.flicklib.service.UrlConnectionResolver;
 public class OpenSubtitlesLoaderTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenSubtitlesLoaderTest.class);
 
+    SubtitlesLoader loader = null;
+    
+    @Before
+    public void setup() {
+    	loader = new OpenSubtitlesLoader(TestUtil.createLoader());
+    }
+
     /**
      * Test of search method, of class OpenSubtitlesLoader.
      * @throws Exception 
      */
     @Test
     public void testSearch() throws Exception {
-        SubtitlesLoader loader = new OpenSubtitlesLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT));
         Set<Subtitle> result = loader.search("The Science of Sleep", null);
         assertTrue(result.size() > 0);
         for(Subtitle sub:result){
@@ -53,7 +59,6 @@ public class OpenSubtitlesLoaderTest {
     
     @Test
     public void testSearch2() throws Exception {
-    	SubtitlesLoader loader = new OpenSubtitlesLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT));
     	Set<Subtitle> result = loader.search("The.Science.of.Sleep.LIMITED.DVDRip.XViD.-iMBT.avi", null);
         //result = loader.search("The.Science.of.Sleep.LIMITED.DVDRip.XViD", null);
         assertTrue(result.size() > 0);
@@ -64,7 +69,6 @@ public class OpenSubtitlesLoaderTest {
     
     @Test
     public void testSearch3() throws Exception {
-    	SubtitlesLoader loader = new OpenSubtitlesLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT));
     	Set<Subtitle> result = loader.search("X-Men", null);
         assertTrue(result.size() > 0);
         for(Subtitle sub:result){

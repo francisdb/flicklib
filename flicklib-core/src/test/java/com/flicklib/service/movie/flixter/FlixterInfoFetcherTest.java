@@ -26,9 +26,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
-import com.flicklib.service.SourceLoader;
-import com.flicklib.service.UrlConnectionResolver;
-import com.flicklib.service.cache.HttpCacheSourceLoader;
+import com.flicklib.service.TestUtil;
 
 /**
  *
@@ -43,7 +41,7 @@ public class FlixterInfoFetcherTest {
     @Test
     public void testFetch() throws IOException {
         FlixsterParser parser = new FlixsterParser();
-        FlixsterInfoFetcher fetcher = new FlixsterInfoFetcher(parser, new HttpCacheSourceLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT)));
+        FlixsterInfoFetcher fetcher = new FlixsterInfoFetcher(parser, TestUtil.createLoader());
         MoviePage site = fetcher.fetch("The X-Files I Want to Believe");
         assertNotNull(site);
         System.out.println(site.getUrl());
@@ -51,6 +49,8 @@ public class FlixterInfoFetcherTest {
         assertNotNull("MovieWebStars is null", site.getScore());
 
         site = fetcher.fetch("pulp fiction");
+        assertNotNull("movie info for 'pulp fiction'", site);
+        assertNotNull("site.url", site.getUrl());
         assertTrue(site.getUrl().contains("http://www.flixster.com/movie/pulp-fiction"));
         assertEquals("Pulp Fiction", site.getTitle());
         
