@@ -17,63 +17,51 @@
  */
 package com.flicklib.service.movie.movieweb;
 
-import com.flicklib.tools.ElementOnlyTextExtractor;
+import java.util.regex.Matcher;
+
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
-import net.htmlparser.jericho.TextExtractor;
-import com.flicklib.domain.MoviePage;
-import com.google.inject.Singleton;
-import com.flicklib.service.movie.AbstractJerichoParser;
-import java.util.Iterator;
-import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.flicklib.domain.MoviePage;
+import com.flicklib.service.movie.AbstractJerichoParser;
+import com.flicklib.tools.SimpleXPath;
+import com.google.inject.Singleton;
 
 /**
  *
  * @author francisdb
  */
 @Singleton
-public class MovieWebParser extends AbstractJerichoParser{
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(MovieWebParser.class);
+public class MovieWebParser extends AbstractJerichoParser {
 
-    @Override
-    public void parse(final String html, Source source, MoviePage movieSite) {
-         List<?> divElements = source.getAllElements(HTMLElementName.DIV);
-        for (Iterator<?> i = divElements.iterator(); i.hasNext();) {
-            Element divElement = (Element) i.next();
-            TextExtractor extractor = new ElementOnlyTextExtractor(divElement.getContent());
-            String content = extractor.toString();
-            if (content.startsWith("Average Rating:")) {
-                List<?> childs = divElement.getChildElements();
-                if (childs.size() > 0) {
-                    String score = ((Element) childs.get(0)).getContent().getTextExtractor().toString().trim();
-                    if (score.length() > 0) {
-                        try {
-                            float theScore = Float.valueOf(score).floatValue() * 20;
-                            int intScore = Math.round(theScore);
-                            // TODO if check reviews and ratings count because if they are 0 the score is 0
-                            // we ignore 0 score for now
-                            if(intScore != 0){
-                            	movieSite.setScore(intScore);
-                            }
-                        } catch (NumberFormatException ex) {
-                            LOGGER.error("Could not parse " + score + " to Float", ex);
-                        }
-                    }
-                }
-            } 
-//            else if (content.startsWith("The Critics:")) {
-//                List<?> childs = divElement.getChildElements();
-//                if (childs.size() > 0) {
-//                    String score = ((Element) childs.get(0)).getContent().getTextExtractor().toString();
-//                    LOGGER.debug("Critics score: " + score);
-//                    // TODO use?
-//                }
-//            }
-        }
-    }
+	private static final Logger LOGGER = LoggerFactory.getLogger(MovieWebParser.class);
+
+	@Override
+	public void parse(final String html, Source source, MoviePage movieSite) {
+
+		Element rater = new SimpleXPath(source.getElementById("module_rater")).getAllTagByAttributes("class", "score").children()
+				.unique();
+		String xp = rater.getTextExtractor().toString();
+		Matcher matcher = java.util.regex.Pattern.compile("\\d+[.]\\d*").matcher(xp);
+		if (matcher.find()) {
+			String txt = matcher.group();
+			try {
+				movieSite.setScore((int) (Double.parseDouble(txt) * 20));
+			} catch (NumberFormatException ex) {
+				LOGGER.error("Could not parse " + txt + " to Double", ex);
+			}
+		}
+		Element title = new SimpleXPath(source.getElementById("colC")).getTags(HTMLElementName.H1).getTags(HTMLElementName.A).unique();
+		movieSite.setTitle(title.getTextExtractor().toString());
+		SimpleXPath img = new SimpleXPath(source.getElementById("colL")).getAllTagByAttributes("class", "moduleTB").getTags(HTMLElementName.A).getTags(HTMLElementName.IMG);
+		if (img.size()>0) {
+			Element imgTag = img.unique();
+			movieSite.setImgUrl(imgTag.getAttributeValue("src"));
+		}
+	}
 
 }

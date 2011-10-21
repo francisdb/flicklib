@@ -22,7 +22,6 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.flicklib.domain.Movie;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.UrlConnectionResolver;
@@ -41,14 +40,13 @@ public class MovieWebInfoFetcherTest {
      */
     @Test
     public void testFetch() throws IOException {
-        Movie movie = new Movie();
-        movie.setTitle("Pulp Fiction");
         MovieWebParser parser = new MovieWebParser();
         MovieWebInfoFetcher fetcher = new MovieWebInfoFetcher(parser, new HttpCacheSourceLoader(new UrlConnectionResolver(SourceLoader.DEFAULT_TIMEOUT)));
         MoviePage site = fetcher.fetch("Pulp Fiction");
         Assert.assertNotNull("site ",site);
-        // TODO reenable when they fix their search :-s
-        //assertNotNull("MovieWebStars is null", site.getScore());
+        Assert.assertEquals("title", "Pulp Fiction Blu-ray", site.getTitle());
+        Assert.assertNotNull("score", site.getScore());
+        Assert.assertEquals("imgUrl", "http://c181311.r11.cf0.rackcdn.com/DVHtxZN5RWSAMI_1_m.jpg", site.getImgUrl());
     }
 
 }

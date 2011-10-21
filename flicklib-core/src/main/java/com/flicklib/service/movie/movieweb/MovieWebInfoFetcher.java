@@ -38,6 +38,7 @@ import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.SourceLoader;
+import com.flicklib.tools.SimpleXPath;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -90,28 +91,37 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
 
         com.flicklib.service.Source source = sourceLoader.loadSource(urlToLoad);
         Source jerichoSource = source.getJerichoSource();
-        //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
-
-        //Element titleElement = (Element)source.getAllElements(HTMLElementName.TITLE).get(0);
-        //System.out.println(titleElement.getContent().extractText());
-
-        // <div id="bubble_allCritics" class="percentBubble" style="display:none;">     57%    </div>
 
         String movieUrl = null;
-        List<?> aElements = jerichoSource.getAllElements(HTMLElementName.A);
-        for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
-            Element aElement = (Element) i.next();
+        SimpleXPath searchResult = new SimpleXPath(jerichoSource.getElementById("search_results"));
+
+        /*List<Element> imgList = searchResult.getAllTagByAttributes("class", "img").filterTagName(HTMLElementName.DIV).getTags(HTMLElementName.A).toList();
+        Map<String, String> imgMap = new HashMap<String, String>();
+        for (Element e : imgList) {
+        	String dvdPath = e.getAttributeValue("href");
+        	Element imgElement = e.getFirstElement(HTMLElementName.IMG);
+        	if (imgElement != null) {
+        		String src = imgElement.getAttributeValue("src");
+        		if (src != null) {
+        			imgMap.put(dvdPath, src);
+        		}
+        	}
+        }*/
+        
+        for (Element aElement : searchResult.getTags(HTMLElementName.H2).getTags(HTMLElementName.A).toList()) {
             String url = aElement.getAttributeValue("href");
             if (url != null && (url.startsWith("/movie/") || url.startsWith("/dvd/"))) {
                 String movieName = aElement.getContent().getTextExtractor().toString();
                 if (movieName != null && movieName.trim().length() != 0) {
-
+                    // String imgUrl = imgMap.get(url);
                     movieUrl = "http://www.movieweb.com" + url;
 
                     MovieSearchResult m = new MovieSearchResult();
                     m.setIdForSite(movieUrl);
                     m.setTitle(movieName);
                     m.setService(MovieService.MOVIEWEB);
+                    m.setUrl(movieUrl);
+                    //m.setImgUrl(imgUrl);
                     result.add(m);
                     
                     LOGGER.debug("found title: " + movieName + " -> " + movieUrl);

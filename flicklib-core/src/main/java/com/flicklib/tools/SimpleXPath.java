@@ -149,6 +149,14 @@ public class SimpleXPath {
     public Element get(int index) {
         return root.get(index);
     }
+    
+    public Element unique() {
+	    if (root.size() == 1) {
+		    return root.get(0);
+	    } else {
+		    throw new RuntimeException("Element list is not unique, size:"+root.size()+"\n content:"+root);
+	    }
+    }
 
     @Override
     public String toString() {
