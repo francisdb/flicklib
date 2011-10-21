@@ -118,7 +118,7 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 	
 	private String generateMovieUrl(final String id){
 		//http://www.cinebel.be/nl/film/102-.htm
-		return MovieService.CINEBEL.getUrl()+"/"+LANG+"/film/"+id+"-.htm";
+		return MovieService.CINEBEL.getUrl()+"/"+LANG+"/film/"+id+"/";
 	}
 
 	private String generateSearchUrl(final String title, final int maxResults) {
@@ -128,7 +128,8 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("utf-8 encoding not supported" ,e);
 		}
-		String url = MovieService.CINEBEL.getUrl()+"/portal/faces/public/exo/search?portal:componentId=SearchContentPortlet&portal:type=render&portal:isSecure=false&lng="+LANG+"&query="+encoded+"&itemsPerPage="+maxResults+"&fuzzy=true&fieldToSearch=movieTitle&category=movie&movieWithSchedules=false";
+		//String url = MovieService.CINEBEL.getUrl()+"/portal/faces/public/exo/search?portal:componentId=SearchContentPortlet&portal:type=render&portal:isSecure=false&lng="+LANG+"&query="+encoded+"&itemsPerPage="+maxResults+"&fuzzy=true&fieldToSearch=movieTitle&category=movie&movieWithSchedules=false";
+		String url =  MovieService.CINEBEL.getUrl() + "/nl/zoek?query="+encoded+"&x=13&y=13";
 		return url;
 	}
 
