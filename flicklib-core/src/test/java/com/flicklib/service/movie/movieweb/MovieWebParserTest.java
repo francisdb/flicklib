@@ -41,7 +41,7 @@ public class MovieWebParserTest {
         MoviePage site = new MoviePage();
         MovieWebParser instance = new MovieWebParser();
         instance.parse(source, site);
-        assertEquals(Integer.valueOf(100), site.getScore());
+        assertEquals(Integer.valueOf(94), site.getScore());
     }
 
 
