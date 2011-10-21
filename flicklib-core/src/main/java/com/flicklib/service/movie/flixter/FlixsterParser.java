@@ -41,8 +41,9 @@ public class FlixsterParser extends AbstractJerichoParser{
 
     //private static final Logger LOGGER = LoggerFactory.getLogger(FlixsterParser.class);
     
-    @Override
-    public void parse(String html, Source source, MoviePage movieSite) {
+
+@Override
+    public void parse(Source source, MoviePage movieSite) {
     	
     	List<?> h1Elements = source.getAllElements(HTMLElementName.H1);
     	for (Iterator<?> i = h1Elements.iterator(); i.hasNext();) {

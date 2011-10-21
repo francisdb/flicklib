@@ -17,15 +17,18 @@
  */
 package com.flicklib.service.movie.google;
 
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.Source;
-import com.flicklib.domain.MoviePage;
-import com.google.inject.Singleton;
-import com.flicklib.service.movie.AbstractJerichoParser;
 import java.util.Iterator;
 import java.util.List;
+
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.Source;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.flicklib.domain.MoviePage;
+import com.flicklib.service.movie.AbstractJerichoParser;
+import com.google.inject.Singleton;
 
 /**
  *
@@ -36,8 +39,9 @@ public class GoogleParser extends AbstractJerichoParser{
     
     private static final Logger LOGGER = LoggerFactory.getLogger(GoogleParser.class);
 
+
     @Override
-    public void parse(final String html, final Source source, final MoviePage movieSite) {
+    public void parse(final Source source, final MoviePage movieSite) {
         List<?> nobrElements = source.getAllElements("nobr");
         for (Iterator<?> i = nobrElements.iterator(); i.hasNext();) {
             Element nobrElement = (Element) i.next();

@@ -41,7 +41,7 @@ public class MovieWebParser extends AbstractJerichoParser {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MovieWebParser.class);
 
 	@Override
-	public void parse(final String html, Source source, MoviePage movieSite) {
+	public void parse(Source source, MoviePage movieSite) {
 
 		Element rater = new SimpleXPath(source.getElementById("module_rater")).getAllTagByAttributes("class", "score").children()
 				.unique();

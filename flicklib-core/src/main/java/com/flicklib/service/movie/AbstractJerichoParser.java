@@ -18,6 +18,7 @@
 package com.flicklib.service.movie;
 
 import net.htmlparser.jericho.Source;
+
 import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
 
@@ -31,14 +32,14 @@ public abstract class AbstractJerichoParser implements Parser{
     public final void parse(com.flicklib.service.Source htmlSource, MoviePage movieSite) {
         Source source = htmlSource.getJerichoSource();
         //source.setLogWriter(new OutputStreamWriter(System.err)); // send log messages to stderr
-        parse(htmlSource.getContent(), source, movieSite);
+        parse(source, movieSite);
     }
 
-    /**
+
+/**
      * Parses jericho source to MovieSite
-     * @param html
-     * @param source
-     * @param movieSite
+ * @param source
+ * @param movieSite
      */
-    public abstract void parse(String html, Source source, MoviePage movieSite);
+    public abstract void parse(Source source, MoviePage movieSite);
 }

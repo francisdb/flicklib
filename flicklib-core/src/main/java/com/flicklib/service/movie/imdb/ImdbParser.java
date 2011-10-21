@@ -31,9 +31,9 @@ import net.htmlparser.jericho.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieType;
-import com.flicklib.service.movie.AbstractJerichoParser;
 import com.flicklib.tools.AdvancedTextExtractor;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import com.google.inject.Inject;
@@ -44,7 +44,7 @@ import com.google.inject.Singleton;
  * @author francisdb
  */
 @Singleton
-public class ImdbParser extends AbstractJerichoParser {
+public class ImdbParser implements Parser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImdbParser.class);
     Map<String, MovieType> movieTypeMap = new HashMap<String, MovieType>();
@@ -56,8 +56,11 @@ public class ImdbParser extends AbstractJerichoParser {
     public ImdbParser() {
     }
 
+    @Override
+    public final void parse(com.flicklib.service.Source htmlSource, MoviePage movieSite) {
+        parse(htmlSource.getContent(), htmlSource.getJerichoSource(), movieSite);
+    }
 
-	@Override
     public void parse(final String html, Source source, MoviePage movie) {
 
         ImdbParserRegex regexParser = new ImdbParserRegex(html);
