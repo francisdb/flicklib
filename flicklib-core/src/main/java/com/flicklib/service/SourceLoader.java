@@ -26,9 +26,6 @@ import java.util.Map;
  */
 public interface SourceLoader {
 
-	public static final int DEFAULT_TIMEOUT = 5000;
-	
-	
     /**
      * Loads a http request and parses it to a jericho source
      * @param url
