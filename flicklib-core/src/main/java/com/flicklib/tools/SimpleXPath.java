@@ -7,11 +7,11 @@ import java.util.List;
 
 import net.htmlparser.jericho.Element;
 
-public class SimpleXPath {
+public class SimpleXPath implements Iterable<Element> {
     List<Element> root;
 
     public SimpleXPath() {
-        this.root = new ArrayList();
+        this.root = new ArrayList<Element>();
     }
 
     public SimpleXPath(List<Element> root) {
@@ -127,6 +127,10 @@ public class SimpleXPath {
      */
     public Iterator<Element> iterator() {
         return root.iterator();
+    }
+    
+    public Iterable<Element> iterable() {
+	    return root;
     }
 
     public List<Element> toList() {
