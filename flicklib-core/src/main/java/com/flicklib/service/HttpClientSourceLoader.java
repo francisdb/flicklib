@@ -62,7 +62,7 @@ public class HttpClientSourceLoader implements SourceLoader {
 			}
 			String contentType = httpMethod.getResponseHeader("Content-Type").getValue();
 			// String contentType = URLConnection.guessContentTypeFromName(url)
-			return new Source(httpMethod.getURI().toString(), IOTools.readerToString(is), contentType);
+			return new Source(httpMethod.getURI().toString(), IOTools.readerToString(is), contentType, url);
 		} finally {
 			IOTools.close(is);
 			if (httpMethod != null) {
@@ -109,7 +109,7 @@ public class HttpClientSourceLoader implements SourceLoader {
 			}
 			String contentType = httpMethod.getResponseHeader("Content-Type").getValue();
 			// String contentType = URLConnection.guessContentTypeFromName(url)
-			return new Source(httpMethod.getURI().toString(), IOTools.readerToString(is), contentType);
+			return new Source(httpMethod.getURI().toString(), IOTools.readerToString(is), contentType, url);
 		} finally {
 			IOTools.close(is);
 			if (httpMethod != null) {

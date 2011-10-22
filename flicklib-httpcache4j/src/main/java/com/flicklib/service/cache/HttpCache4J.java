@@ -54,18 +54,14 @@ public class HttpCache4J implements SourceLoader {
 
 	/** {@inheritDoc} */
 	@Override
-	public Source loadSource(String url, boolean useCache) {
+	public Source loadSource(final String url, boolean useCache) {
 		HTTPRequest request = new HTTPRequest(URI.create(url));
 		HTTPResponse response = cache.doCachedRequest(request, !useCache);
 		String content = payloadToString(response);
 		String respUrl = response.getHeaders().getFirstHeaderValue("Content-Location");
 		//System.err.println(response.getHeaders().toString());
-		String theUrl = url;
-		if(respUrl != null){
-			System.err.println(respUrl);
-			theUrl = respUrl;
-		}
-		Source source = new Source(theUrl, content);
+		final String theUrl = respUrl != null ? respUrl : url;
+		Source source = new Source(theUrl, content, response.getPayload().getMimeType().toString(), url);
 		return source;
 	}
 	
@@ -112,12 +108,9 @@ public class HttpCache4J implements SourceLoader {
 		HTTPResponse response = cache.doCachedRequest(request, false);
 		String content = payloadToString(response);
 		
-		String respUrl = response.getHeaders().getFirstHeaderValue("Content-Location");
-		String theUrl = url;
-		if(respUrl != null){
-			theUrl = respUrl;
-		}
-		Source source = new Source(theUrl, content);
+		final String respUrl = response.getHeaders().getFirstHeaderValue("Content-Location");
+		final String theUrl = (respUrl != null) ? respUrl : url;
+		Source source = new Source(theUrl, content, response.getPayload().getMimeType().toString(), url);
 		return source;
 	}
 	
@@ -134,7 +127,6 @@ public class HttpCache4J implements SourceLoader {
 			is = response.getPayload().getInputStream();
 			 //httpMethod.addRequestHeader("Content-Type","text/html; charset=UTF-8");
 			String contentType = response.getHeaders().getFirstHeaderValue("Content-Type");
-			System.out.println(contentType);
 			MIMEType mimeType = new MIMEType(contentType);
 			// default as described in: http://hc.apache.org/httpclient-3.x/charencodings.html
 			String encoding = "ISO-8859-1";
@@ -145,7 +137,6 @@ public class HttpCache4J implements SourceLoader {
 					}
 				}
 			}
-			System.out.println(encoding);
 			content = IOTools.inputSreamToString(is, encoding);
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage(),e);

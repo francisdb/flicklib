@@ -26,6 +26,7 @@ public class Source implements Serializable{
     private final String url;
     private final String content;
     private final String contentType;
+    private final String requestUrl;
     
     private transient net.htmlparser.jericho.Source jerichoSource;
     
@@ -35,10 +36,11 @@ public class Source implements Serializable{
      * @param content
      * @param contentType 
      */
-    public Source(final String url, final String content, final String contentType) {
+    public Source(final String url, final String content, final String contentType, final String requestUrl) {
     	this.url = url;
         this.content = content;
         this.contentType = contentType;
+        this.requestUrl = requestUrl;
 	}
     
     /**
@@ -46,10 +48,11 @@ public class Source implements Serializable{
      * @param url
      * @param content
      */
-    public Source(final String url, final String content) {
+    public Source(final String url, final String content, final String reqUrl) {
         this.url = url;
         this.content = content;
         this.contentType = "text/html";
+        this.requestUrl = reqUrl;
     }
 
     /**
@@ -72,6 +75,10 @@ public class Source implements Serializable{
 	public String getUrl() {
 		return url;
 	}
+	
+	public String getRequestUrl() {
+            return requestUrl;
+        }
     
 	
     public net.htmlparser.jericho.Source getJerichoSource() {

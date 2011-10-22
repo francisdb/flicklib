@@ -16,7 +16,7 @@ final class MockResolver implements SourceLoader {
 	@Override
 	public Source loadSource(String url) throws IOException {
 		count++;
-		Source source = new Source(url, "mock");
+		Source source = new Source(url, "mock", url);
 		return source;
 	}
 	
@@ -28,7 +28,7 @@ final class MockResolver implements SourceLoader {
 	@Override
 	public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
 		count++;
-		Source source = new Source(url, "mock");
+		Source source = new Source(url, "mock", url);
 		return source;
 	}
 	

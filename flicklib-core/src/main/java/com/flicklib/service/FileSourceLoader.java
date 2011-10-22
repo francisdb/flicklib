@@ -61,7 +61,7 @@ public class FileSourceLoader implements SourceLoader {
     	String contentType = null;
     	contentType = URLConnection.guessContentTypeFromName(url);
     	LOGGER.trace("Content-Type: "+contentType);
-        return new Source(url, getOrPost(url, charsetName), contentType);
+        return new Source(url, getOrPost(url, charsetName), contentType, url);
     }
     
     

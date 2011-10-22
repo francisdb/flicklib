@@ -69,7 +69,7 @@ public class UrlConnectionResolver implements SourceLoader {
 		URL httpUrl = new URL(url);
 		HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
 		setupConnection(connection);
-		return processRequest(connection);
+		return processRequest(url, connection);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class UrlConnectionResolver implements SourceLoader {
 		return loadSource(url);
 	}
 
-	private Source processRequest(HttpURLConnection connection) throws IOException, UnsupportedEncodingException {
+	private Source processRequest(String reqUrl, HttpURLConnection connection) throws IOException, UnsupportedEncodingException {
 		InputStream input = null;
 		Source source = null;
 		Reader reader = null;
@@ -105,7 +105,7 @@ public class UrlConnectionResolver implements SourceLoader {
 				}
 				reader = new InputStreamReader(input, encoding.toUpperCase());
 				String content = IOTools.readerToString(reader);
-				source = new Source(connection.getURL().toString(), content, contentType);
+				source = new Source(connection.getURL().toString(), content, contentType, reqUrl);
 				LOGGER.info("request for " + connection.getURL().toString() + " processed, result content type : " + contentType
 						+ ", encoding :" + encoding + ", size:" + source.getContent().length());
 			}
@@ -158,7 +158,7 @@ public class UrlConnectionResolver implements SourceLoader {
 			IOTools.close(outputStream);
 		}
 
-		return processRequest(connection);
+		return processRequest(url, connection);
 	}
 
 }

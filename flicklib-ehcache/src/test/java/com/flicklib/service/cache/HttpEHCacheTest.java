@@ -53,7 +53,7 @@ public class HttpEHCacheTest {
 	public void testHttpCache() throws IOException {
 		String testValue = UUID.randomUUID().toString();
 		SourceLoader mockResolver = Mockito.mock(SourceLoader.class);
-		Mockito.when(mockResolver.loadSource("test", true)).thenReturn(new Source("test", testValue));
+		Mockito.when(mockResolver.loadSource("test", true)).thenReturn(new Source("test", testValue, "test"));
 		
 		SourceLoader cache = new HttpEHCache(mockResolver);
 		{
