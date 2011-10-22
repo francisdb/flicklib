@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.HTMLElementName;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +36,7 @@ import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MovieType;
 import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
+import com.flicklib.tools.SimpleXPath;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -47,78 +47,79 @@ import com.google.inject.Singleton;
 @Singleton
 public class CinebelFetcher extends AbstractMovieInfoFetcher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CinebelFetcher.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CinebelFetcher.class);
 
-    /**
-     * TODO add support for en and fr
-     * TODO add support for fetching info curently available in the movies (find count link and go to page)
-     */
-    private static final String LANG = "nl";
-    
-    private final SourceLoader sourceLoader;
-    private final Parser parser;
-    
-    @Inject
-    public CinebelFetcher(final SourceLoader sourceLoader, @Cinebel final Parser parser) {
+	/**
+	 * TODO add support for en and fr
+	 * TODO add support for fetching info curently available in the movies (find count link and go to page)
+	 */
+	private static final String LANG = "nl";
+
+	private static final String PREFIX = "/" + LANG + "/film/";
+
+	private final SourceLoader sourceLoader;
+	private final Parser parser;
+
+	@Inject
+	public CinebelFetcher(final SourceLoader sourceLoader, @Cinebel final Parser parser) {
 		this.sourceLoader = sourceLoader;
 		this.parser = parser;
 	}
-    
-    public CinebelFetcher(final SourceLoader loader) {
-        this(loader, new CinebelParser());
-    }
-    
+
+	public CinebelFetcher(final SourceLoader loader) {
+		this(loader, new CinebelParser());
+	}
+
 	@Override
-	public MoviePage getMovieInfo(String idForSite) throws IOException {		
+	public MoviePage getMovieInfo(String idForSite) throws IOException {
 		MoviePage page = new MoviePage(MovieService.CINEBEL);
 		// No other movie types for this site?
 		page.setType(MovieType.MOVIE);
 		String url = generateMovieUrl(idForSite);
 		page.setUrl(url);
 		Source source = sourceLoader.loadSource(url);
-		
+
 		parser.parse(source, page);
-		
-		
-        return page; 
+
+		return page;
 	}
 
 	@Override
 	public List<? extends MovieSearchResult> search(String title) throws IOException {
-		LOGGER.trace("search for "+title);
+		LOGGER.trace("search for " + title);
 		List<MovieSearchResult> list = new ArrayList<MovieSearchResult>();
 		String url = generateSearchUrl(title, 30);
 		Source source = sourceLoader.loadSource(url);
-		net.htmlparser.jericho.Source jerichoSource = source.getJerichoSource();
-        
-    	// find all links
-    	//<a href="/nl/film/102-Forrest-gump.htm" class="blink">
-		//<h1 class='blink'><b>Forrest gump</b></h1>
-		//</a>
-        List<Element> linkElements = jerichoSource.getAllElements(HTMLElementName.A);
-    	for(Element linkElement: linkElements){
-	        String href = linkElement.getAttributeValue("href");
-	        String cssClass = linkElement.getAttributeValue("class");
-	        if ("blink".equals(cssClass) && href.startsWith("/"+LANG+"/film") && href.endsWith(".htm")) {
-	        	MovieSearchResult movieSite = new MovieSearchResult();
-		        String movieTitle = linkElement.getContent().getTextExtractor().toString();
-	        	movieSite.setTitle(movieTitle);
-	        	movieSite.setUrl(MovieService.CINEBEL.getUrl() + href);
-	        	String id = href.substring(("/"+LANG+"/film/").length(), href.indexOf('-'));
-	        	movieSite.setIdForSite(id);
-	        	// TODO pick up the year
-	        	// movieSite.setYear(year);
-	        	list.add(movieSite);
-	        }
-    	}
+		net.htmlparser.jericho.Source document = source.getJerichoSource();
 
-		
-        return list;
+		SimpleXPath xp = new SimpleXPath(document.getAllElements("class", "searchResultsBox", true)).getAllTagByAttributes("class",
+				"subSection snippet movieSnippet");
+		for (Element e : xp) {
+			// movie found
+			MovieSearchResult rs = new MovieSearchResult();
+			rs.setService(MovieService.CINEBEL);
+			for (Element name : new SimpleXPath(e).getAllTagByAttributes("class", "snippetTitle")) {
+				String href = name.getAttributeValue("href");
+				if (href.startsWith(PREFIX)) {
+					rs.setTitle(name.getTextExtractor().toString());
+					rs.setUrl(MovieService.CINEBEL.getUrl() + href);
+					href = href.substring(PREFIX.length());
+					int end = href.indexOf('/');
+					if (end >= 0) {
+						href = href.substring(0, end);
+						rs.setIdForSite(href);
+					}
+				}
+			}
+			list.add(rs);
+		}
+
+		return list;
 	}
-	
-	private String generateMovieUrl(final String id){
+
+	private String generateMovieUrl(final String id) {
 		//http://www.cinebel.be/nl/film/102-.htm
-		return MovieService.CINEBEL.getUrl()+"/"+LANG+"/film/"+id+"/";
+		return MovieService.CINEBEL.getUrl() + PREFIX + id + "/";
 	}
 
 	private String generateSearchUrl(final String title, final int maxResults) {
@@ -126,10 +127,10 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 		try {
 			encoded = URLEncoder.encode(title, "utf-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("utf-8 encoding not supported" ,e);
+			throw new RuntimeException("utf-8 encoding not supported", e);
 		}
 		//String url = MovieService.CINEBEL.getUrl()+"/portal/faces/public/exo/search?portal:componentId=SearchContentPortlet&portal:type=render&portal:isSecure=false&lng="+LANG+"&query="+encoded+"&itemsPerPage="+maxResults+"&fuzzy=true&fieldToSearch=movieTitle&category=movie&movieWithSchedules=false";
-		String url =  MovieService.CINEBEL.getUrl() + "/nl/zoek?query="+encoded+"&x=13&y=13";
+		String url = MovieService.CINEBEL.getUrl() + "/nl/zoek?query=" + encoded + "&x=13&y=13";
 		return url;
 	}
 

@@ -54,7 +54,7 @@ public class CinebelParser implements Parser {
 	}
 
 	private void parseMisc(MoviePage page, Source document) {
-		for (Element e : new SimpleXPath(document.getAllElements("class", "movieInfosGroup", true)).children().filterTagName(HTMLElementName.DIV).toList()) {
+		for (Element e : new SimpleXPath(document.getAllElements("class", "movieInfosGroup", true)).children().filterTagName(HTMLElementName.DIV)) {
 			Element strong = e.getFirstElement(HTMLElementName.STRONG);
 			if (strong != null) {
 				String strongValue = strong.getTextExtractor().toString();
@@ -72,7 +72,7 @@ public class CinebelParser implements Parser {
 	}
 
 	private void fillSet(Collection<String> values, SimpleXPath tags) {
-		for (Element e : tags.toList()) {
+		for (Element e : tags) {
 			String value = e.getTextExtractor().toString().trim();
 			values.add(value);
 		}
