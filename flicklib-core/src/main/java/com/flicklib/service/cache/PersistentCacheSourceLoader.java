@@ -62,7 +62,12 @@ public class PersistentCacheSourceLoader extends HttpCacheSourceLoader {
 				o = new ObjectInputStream(new FileInputStream(file));
 				Source src = (Source) o.readObject();
 				o.close();
-				return src;
+				
+				if (url.equals(src.getUrl())) {
+					return src;
+				} else {
+					LOG.warn("url mismatch:" + url + " not equals to " + src.getUrl());
+				}
 			} catch (FileNotFoundException e) {
 				LOG.warn("error opening "+file.getAbsolutePath()+" : "+e.getMessage(), e);
 			} catch (IOException e) {
