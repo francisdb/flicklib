@@ -38,15 +38,15 @@ import org.codehaus.httpcache4j.payload.Payload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.flicklib.service.HttpCache;
 import com.flicklib.service.Source;
+import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.IOTools;
 
-public class HttpCache4J implements HttpCache{
+public class HttpCache4J implements SourceLoader {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(HttpCache4J.class);
 	
-	private HTTPCache cache;
+	private final HTTPCache cache;
 	
 	public HttpCache4J() {
 		this.cache = new HTTPCache(new MemoryCacheStorage(), new HTTPClientResponseResolver(new HttpClient()));
@@ -54,9 +54,9 @@ public class HttpCache4J implements HttpCache{
 
 	/** {@inheritDoc} */
 	@Override
-	public Source get(String url, boolean forceRefresh) {
+	public Source loadSource(String url, boolean useCache) {
 		HTTPRequest request = new HTTPRequest(URI.create(url));
-		HTTPResponse response = cache.doCachedRequest(request, forceRefresh);
+		HTTPResponse response = cache.doCachedRequest(request, !useCache);
 		String content = payloadToString(response);
 		String respUrl = response.getHeaders().getFirstHeaderValue("Content-Location");
 		//System.err.println(response.getHeaders().toString());
@@ -121,10 +121,10 @@ public class HttpCache4J implements HttpCache{
 		return source;
 	}
 	
-	/** {@inheritDoc} */
+
 	@Override
-	public Source get(String url) {
-		return get(url, false);
+	public Source loadSource(String url) throws IOException {
+		return loadSource(url, true);
 	}
 	
 	private String payloadToString(HTTPResponse response){
