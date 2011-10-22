@@ -17,72 +17,65 @@
  */
 package com.flicklib.service.movie.apple;
 
-import com.flicklib.api.TrailerFinder;
-import com.flicklib.tools.Param;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.restlet.Client;
-import org.restlet.data.MediaType;
-import org.restlet.data.Method;
-import org.restlet.data.Preference;
-import org.restlet.data.Protocol;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
-import org.restlet.resource.Representation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.flicklib.api.TrailerFinder;
+import com.flicklib.service.Source;
+import com.flicklib.service.SourceLoader;
+import com.flicklib.tools.Param;
 
 /**
  * TODO get rid of the restlet dependency
  * @author francisdb
  */
 public class AppleTrailerFinder implements TrailerFinder {
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(AppleTrailerFinder.class);
-    
-    @Override
-    public String findTrailerUrl(String title, String localId){
-        String url = null;
-        String query = Param.encode(title+" site:www.apple.com");
-        String queryUrl = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q="+query;
-        Request request = new Request(Method.GET, queryUrl);
-        Preference<MediaType> preference = new Preference<MediaType>(MediaType.APPLICATION_JSON);
-        List<Preference<MediaType>> types = new ArrayList<Preference<MediaType>>();
-        types.add(preference);
-        request.getClientInfo().setAcceptedMediaTypes(types);
-        //request.setReferrerRef("http://www.nosite.org");
 
-        
-        // TODO get rid of the restlet dependency
-        Client client = new Client(Protocol.HTTP);
-        try {
-            Response response = client.handle(request);
-            LOGGER.info(response.getStatus().toString());
-            Representation entity = response.getEntity();
-            StringWriter stringWriter = new StringWriter();
-            entity.write(stringWriter);
-            JSONObject object = new JSONObject(stringWriter.toString());
-            JSONArray results = object.getJSONObject("responseData").getJSONArray("results");
-            String unescapedUrl;
-            for(int i = 0; i<results.length() && url == null;i++){
-                unescapedUrl = results.getJSONObject(i).getString("unescapedUrl");
-                if(unescapedUrl.startsWith("http://www.apple.com/trailers")){
-                    url = unescapedUrl;
-                }
-            }
-            
-        } catch (JSONException ex) {
-            LOGGER.error("Could not parse google json rest query: "+queryUrl, ex);
-        } catch (IOException ex) {
-            LOGGER.error("Could not load rest: "+ queryUrl,ex);
-        }
-        return url;
-    }
-    
-    
+	private static final Logger LOGGER = LoggerFactory.getLogger(AppleTrailerFinder.class);
+
+	final SourceLoader loader;
+
+	public AppleTrailerFinder(SourceLoader loader) {
+		this.loader = loader;
+	}
+
+	@Override
+	public String findTrailerUrl(String title, String localId) {
+		JSONObject obj;
+		String url = null;
+		try {
+			obj = getJSON(title);
+			JSONArray array = obj.getJSONObject("responseData").getJSONArray("results");
+			for (int i = 0; i< array.length();i++) {
+				JSONObject o = array.getJSONObject(i);
+				LOGGER.info("results:"+o);
+				String unescapedUrl = o.optString("unescapedUrl", "");
+				if (unescapedUrl.startsWith("http://trailers.apple.com")) {
+					return unescapedUrl;
+				}
+			}
+			
+			
+		} catch (IOException e) {
+			LOGGER.info("error :"+e.getMessage(), e);
+		} catch (JSONException e) {
+			LOGGER.info("error :"+e.getMessage(), e);
+		}
+		
+		return url;
+	}
+
+	protected JSONObject getJSON(String title) throws IOException, JSONException {
+		//String url = "http://trailers.apple.com/trailers/home/scripts/quickfind.php?"+Param.paramString("q", title);
+		String url = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q="+Param.encode(title+ " site:apple.com");
+		Source src = loader.loadSource(url, true);
+		JSONObject obj = new JSONObject(src.getContent());
+		return obj;
+	}
+
 }

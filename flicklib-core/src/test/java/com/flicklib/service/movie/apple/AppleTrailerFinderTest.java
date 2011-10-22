@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.flicklib.domain.MoviePage;
+import com.flicklib.service.TestUtil;
 
 /**
  *
@@ -34,11 +34,9 @@ public class AppleTrailerFinderTest {
      */
     @Test
     public void testFindTrailerUrl() {
-        MoviePage site = new MoviePage();
-        site.setTitle("Big fish");
-        AppleTrailerFinder instance = new AppleTrailerFinder();
-        String url = instance.findTrailerUrl(site.getTitle(), null);
-        assertEquals("http://www.apple.com/trailers/sony_pictures/big_fish/", url);
+        AppleTrailerFinder instance = new AppleTrailerFinder(TestUtil.createLoader());
+        String url = instance.findTrailerUrl("The descendants", null);
+        assertEquals("http://trailers.apple.com/trailers/fox_searchlight/thedescendants/", url);
     }
 
 }
