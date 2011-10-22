@@ -20,14 +20,24 @@ public class SimpleXPath implements Iterable<Element> {
 
     public SimpleXPath(Element element) {
         this();
-        this.root.add(element);
+        this.add(element);
     }
 
     public void add(Element el) {
+	if (el == null) {
+	    throw new NullPointerException("Trying to add null!");
+	}
         this.root.add(el);
     }
 
     public void addAll(Collection<Element> el) {
+	for (Element e: el) {
+	    if (e!=null) {
+		root.add(e);
+	    } else {
+		throw new NullPointerException("Trying to add null!");
+	    }
+	}
         this.root.addAll(el);
     }
 

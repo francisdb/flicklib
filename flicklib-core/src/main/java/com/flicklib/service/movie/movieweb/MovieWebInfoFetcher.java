@@ -18,8 +18,6 @@
 package com.flicklib.service.movie.movieweb;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +36,7 @@ import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.SourceLoader;
+import com.flicklib.tools.Param;
 import com.flicklib.tools.SimpleXPath;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -177,13 +176,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
     }
 
     private String createMovieWebSearchUrl(String title) {
-        String encoded = "";
-        try {
-            encoded = URLEncoder.encode(title, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            LOGGER.error("Could not cencode UTF-8", ex);
-        }
-        return "http://www.movieweb.com/search/?search=" + encoded;
+        return "http://www.movieweb.com/search/?" + Param.paramString("search", title);
     }
 
 }
