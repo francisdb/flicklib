@@ -24,6 +24,8 @@ import com.flicklib.api.SubtitlesLoader;
 import com.flicklib.service.HttpClientSourceLoader;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.movie.InfoFetcherFactoryImpl;
+import com.flicklib.service.movie.blippr.Blippr;
+import com.flicklib.service.movie.blippr.BlipprInfoFetcher;
 import com.flicklib.service.movie.cinebel.Cinebel;
 import com.flicklib.service.movie.cinebel.CinebelFetcher;
 import com.flicklib.service.movie.cinebel.CinebelParser;
@@ -97,6 +99,7 @@ public class FlicklibModule extends AbstractModule {
         bind(MovieInfoFetcher.class).annotatedWith(Cinebel.class).to(CinebelFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Ofdb.class).to(OfdbFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(XpressHu.class).to(XpressHuFetcher.class);
+        bind(MovieInfoFetcher.class).annotatedWith(Blippr.class).to(BlipprInfoFetcher.class);
         
     }
 }
