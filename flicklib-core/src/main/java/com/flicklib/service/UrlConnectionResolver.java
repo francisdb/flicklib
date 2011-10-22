@@ -96,14 +96,14 @@ public class UrlConnectionResolver implements SourceLoader {
 				String contentType = connection.getHeaderField("Content-Type");
 				if (encoding == null) {
 					if (contentType != null && contentType.indexOf("charset") != -1) {
-						encoding = contentType.replaceAll(".*charset=(.*)", "$1");
+						encoding = contentType.replaceAll(".*charset=([\\w-]*)(;*)", "$1");
 					}
 				}
 				if (encoding == null) {
 					// the old default ...
 					encoding = "ISO-8859-1";
 				}
-				reader = new InputStreamReader(input, encoding);
+				reader = new InputStreamReader(input, encoding.toUpperCase());
 				String content = IOTools.readerToString(reader);
 				source = new Source(connection.getURL().toString(), content, contentType);
 				LOGGER.info("request for " + connection.getURL().toString() + " processed, result content type : " + contentType
