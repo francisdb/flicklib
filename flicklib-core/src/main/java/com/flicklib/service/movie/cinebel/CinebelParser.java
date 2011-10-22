@@ -17,15 +17,17 @@
  */
 package com.flicklib.service.movie.cinebel;
 
+import java.util.Collection;
 import java.util.List;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
 
 import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
-import com.flicklib.domain.MovieService;
-import com.flicklib.service.Source;
+import com.flicklib.tools.AdvancedTextExtractor;
+import com.flicklib.tools.SimpleXPath;
 
 /**
  * @author francisdb
@@ -37,55 +39,88 @@ public class CinebelParser implements Parser {
 	 * @see com.flicklib.api.Parser#parse(com.flicklib.service.Source, com.flicklib.domain.MoviePage)
 	 */
 	@Override
-	public void parse(Source source, MoviePage page) {
+	public void parse(com.flicklib.service.Source source, MoviePage page) {
 
-		net.htmlparser.jericho.Source jerichoSource = source.getJerichoSource();
-        
-        // <span class="movieMainTitle">The Matrix</span>
-        List<Element> spanElements = jerichoSource.getAllElements(HTMLElementName.SPAN);
-        for(Element spanElement: spanElements){
-        	if("movieMainTitle".equals(spanElement.getAttributeValue("class"))){
-        		page.setTitle(spanElement.getContent().getTextExtractor().toString());
-        	}
-        }
-        
-//        <img id="imgFilmPoster"
-//			onmouseout="document.getElementById('big_poster').className='textRemovedWithCSS';"
-//			onmouseover="document.getElementById('big_poster').className='';"
-//		src="/portal/resources/movie/2920/ma2920.jpg"
-// 		width="120" height="160" alt="De affiche van de film The Matrix"
-// 	/>
-        
-        // <img src="/portal/resources/common/cineb9_off.gif" title="93%" alt="93%" width="48"  height="9" />
-        
-        // TODO support big images?
-        List<Element> imgElements = jerichoSource.getAllElements(HTMLElementName.IMG);
-        for(Element imgElement: imgElements){
-        	if("imgFilmPoster".equals(imgElement.getAttributeValue("id"))){
-        		page.setImgUrl(MovieService.CINEBEL.getUrl() + imgElement.getAttributeValue("src"));
-        	}else{
-        		String src = imgElement.getAttributeValue("src");
-        		if(src.startsWith("/portal/resources/common/cineb9_off.gif") && src.endsWith("_off.gif")){
-        			page.setScore(Integer.valueOf(imgElement.getAttributeValue("title").replace("%", "")));
-        		}
-        	}
-        }
-        
-//        <div id="synopsis">
-//		<h2 class="textRemovedWithCSS">Synopsis</h2>
-//		<p>Thomas, een informaticus met een ongelukkig privéleven, neemt buiten ...</p>
-//	</div>
-        List<Element> divElements = jerichoSource.getAllElements(HTMLElementName.DIV);
-        for(Element divElement: divElements){
-        	if("synopsis".equals(divElement.getAttributeValue("id"))){
-        		Element par = (Element) divElement.getAllElements(HTMLElementName.P).get(0);
-        		String synopsis = par.getContent().getTextExtractor().toString();
-        		page.setDescription(synopsis);
-        		page.setPlot(synopsis);
-        	}
-        }
-        
-        // TODO get genre, runtime, director, length
+		Source document = source.getJerichoSource();
+
+		parseTitle(page, document);
+
+		parseImageUrl(page, document);
+		parseRating(page, document);
+		parseSynopsis(page, document);
+		parseYear(page, document);
+		parseMisc(page, document);
+
+	}
+
+	private void parseMisc(MoviePage page, Source document) {
+		for (Element e : new SimpleXPath(document.getAllElements("class", "movieInfosGroup", true)).children().filterTagName(HTMLElementName.DIV).toList()) {
+			Element strong = e.getFirstElement(HTMLElementName.STRONG);
+			if (strong != null) {
+				String strongValue = strong.getTextExtractor().toString();
+				if ("Regie".equals(strongValue)) {
+					fillSet(page.getDirectors(), new SimpleXPath(e).getTags(HTMLElementName.LI));
+				}
+				if ("Cast".equals(strongValue)) {
+					fillSet(page.getActors(), new SimpleXPath(e).getTags(HTMLElementName.LI));
+				}
+				if ("Genre".equals(strongValue)) {
+					fillSet(page.getGenres(), new SimpleXPath(e).getTags(HTMLElementName.LI));
+				}
+			}
+		}
+	}
+
+	private void fillSet(Collection<String> values, SimpleXPath tags) {
+		for (Element e : tags.toList()) {
+			String value = e.getTextExtractor().toString().trim();
+			values.add(value);
+		}
+	}
+
+	private void parseYear(MoviePage page, Source document) {
+		List<Element> elements = document.getAllElements("class", "productionDate", true);
+		if (elements.size()> 0) {
+			String value = excludeStrong(elements);
+			page.setYear(Integer.parseInt(value.replace(':', ' ').trim()));
+		}
+	}
+
+	protected void parseTitle(MoviePage page, Source document) {
+		Element movieDetails = document.getElementById("movieDetails");
+		Element title = new SimpleXPath(movieDetails).children().filterTagName(HTMLElementName.H1).children().unique();
+		page.setTitle(title.getTextExtractor().toString());
+	}
+
+	protected void parseImageUrl(MoviePage page, Source document) {
+		Element fullPosterLink = document.getElementById("fullPosterLink");
+		if (fullPosterLink != null) {
+			page.setImgUrl(fullPosterLink.getAttributeValue("href"));
+		}
+	}
+
+	protected void parseRating(MoviePage page, Source document) {
+		Element rating = document.getElementById("userRating");
+		if (rating != null) {
+			Element average = new SimpleXPath(rating).getAllTagByAttributes("class", "average").unique();
+			String averageText = average.getTextExtractor().toString();
+			double score = Double.parseDouble(averageText);
+			page.setScore((int) (score * 10));
+		}
+	}
+
+	protected void parseSynopsis(MoviePage page, Source document) {
+		List<Element> synopsis = document.getAllElements("class", "synopsis", true);
+		if (synopsis.size() > 0) {
+
+			String syn = excludeStrong(synopsis);
+			page.setDescription(syn);
+			page.setPlot(syn);
+		}
+	}
+
+	protected String excludeStrong(List<Element> synopsis) {
+		return new AdvancedTextExtractor(synopsis.get(0), false).addExcludedTagName(HTMLElementName.STRONG).toString();
 	}
 
 }

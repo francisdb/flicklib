@@ -65,10 +65,18 @@ public class CinebelFetetcherTest {
 		MoviePage page = fetcher.getMovieInfo("2920");
 		Assert.assertNotNull(page);
 		Assert.assertEquals("The Matrix", page.getTitle());
-		Assert.assertNotNull(page.getDescription());
-		Assert.assertNotNull(page.getPlot());
-		Assert.assertNotNull(page.getImgUrl());
-		Assert.assertNotNull(page.getScore());
+		Assert.assertNotNull("description", page.getDescription());
+		Assert.assertNotNull("plot",page.getPlot());
+		Assert.assertNotNull("img url", page.getImgUrl());
+		Assert.assertNotNull("score", page.getScore());
+		Assert.assertEquals("year", Integer.valueOf(1999), page.getYear());
+		Assert.assertTrue("directors", !page.getDirectors().isEmpty());
+		Assert.assertTrue("cast", !page.getActors().isEmpty());
+		Assert.assertTrue("genre", !page.getGenres().isEmpty());
+		Assert.assertTrue("directors["+page.getDirectors()+']', page.getDirectors().contains("Andy Wachowski"));
+		Assert.assertTrue("cast["+page.getActors()+']', page.getActors().contains("Keanu Reeves"));
+		Assert.assertTrue("genre["+page.getGenres()+']', page.getGenres().contains("Sciencefiction"));
+
 	}
 	
 }
