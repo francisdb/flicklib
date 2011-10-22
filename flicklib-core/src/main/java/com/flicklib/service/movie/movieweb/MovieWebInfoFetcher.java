@@ -176,7 +176,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
     }
 
     private String createMovieWebSearchUrl(String title) {
-        return "http://www.movieweb.com/search/?" + Param.paramString("search", title);
+        return "http://www.movieweb.com/search" + Param.paramString("search", title);
     }
 
 }
