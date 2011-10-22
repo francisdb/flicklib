@@ -102,11 +102,17 @@ public class SimpleXPath implements Iterable<Element> {
     }
 
     public SimpleXPath first() {
-        if (root.size() > 1) {
+        if (root.size() > 0) {
             return new SimpleXPath(root.get(0));
         }
         return this;
-
+    }
+    
+    public Element firstElement() {
+	if (root.size() > 0) {
+	    return root.get(0);
+	}
+	return null;
     }
 
     public boolean isEmpty() {
@@ -160,6 +166,13 @@ public class SimpleXPath implements Iterable<Element> {
 	    } else {
 		    throw new RuntimeException("Element list is not unique, size:"+root.size()+"\n content:"+root);
 	    }
+    }
+    
+    public String getValue() {
+	    if (root.size() > 0) {
+		    return root.get(0).getTextExtractor().toString();
+	    }
+	    return null;
     }
 
     @Override

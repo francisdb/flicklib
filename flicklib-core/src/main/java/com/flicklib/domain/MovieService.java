@@ -47,7 +47,7 @@ public enum MovieService {
     /**
      * http://www.google.com/movies
      */
-    GOOGLE("Google movies", "http://www.google.com/movies", "Google"),
+    GOOGLE("Google movies", "http://www.google.com", "Google"),
     
     /**
      * http://www.flixster.com
