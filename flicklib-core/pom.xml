@@ -21,10 +21,16 @@
 			<artifactId>core</artifactId>
 			<version>20080621</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20090211</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.1.2</version>
 		</dependency>
 	</dependencies>
 </project>
