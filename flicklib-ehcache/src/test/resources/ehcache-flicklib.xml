@@ -17,7 +17,7 @@
 <ehcache
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://ehcache.sf.net/ehcache.xsd">
-    <diskStore path="user.home/.moviebrowser.test/sitecache"/>
+    <diskStore path="${java.io.tmpdir}/.moviebrowser.test"/>
     <!-- 604800 sec = 7 days -->
     <defaultCache
             maxElementsInMemory="100"

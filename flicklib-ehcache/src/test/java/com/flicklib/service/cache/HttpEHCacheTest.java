@@ -22,39 +22,49 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.flicklib.service.HttpCache;
-import com.flicklib.service.ResponseResolver;
 import com.flicklib.service.Source;
+import com.flicklib.service.SourceLoader;
 
 
 public class HttpEHCacheTest {
 	
 	@Before 
+	public void setup() throws IOException{
+		// getCacheDir().mkdirs();
+	}
 	@After
 	public void cleanup() throws IOException{
+		// FileUtils.deleteDirectory(getCacheDir());
+	}
+
+	protected File getCacheDir() {
 		String userHome = System.getProperty("user.home");
 		File browserHome = new File(userHome, ".moviebrowser.test");
-		FileUtils.deleteDirectory(browserHome);
+		return browserHome;
 	}
 
 	@Test
 	public void testHttpCache() throws IOException {
 		String testValue = UUID.randomUUID().toString();
-		ResponseResolver mockResolver = Mockito.mock(ResponseResolver.class);
-		Mockito.when(mockResolver.get("test")).thenReturn(new Source("test", testValue));
+		SourceLoader mockResolver = Mockito.mock(SourceLoader.class);
+		Mockito.when(mockResolver.loadSource("test", true)).thenReturn(new Source("test", testValue));
 		
-		HttpCache cache = new HttpEHCache(mockResolver);
-		assertEquals(testValue, cache.get("test").getContent());
-		assertEquals(testValue, cache.get("test").getContent());
-		
+		SourceLoader cache = new HttpEHCache(mockResolver);
+		{
+			Source source = cache.loadSource("test");
+			assertEquals(testValue, source.getContent());
+		}
+		{
+			Source source = cache.loadSource("test");
+			assertEquals(testValue, source.getContent());
+		}
 		// second call should not hit the resolver so we should have only one #get call
-		Mockito.verify(mockResolver).get("test");
+		Mockito.verify(mockResolver).loadSource("test", true);
 		
 	}
 

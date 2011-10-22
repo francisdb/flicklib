@@ -69,7 +69,7 @@ public class HttpEHCache extends HttpCacheSourceLoader {
 
 	@Override
 	protected void put(String url, Source page) {
-		LOGGER.debug("Caching result for " + url + " (" + page.getContentType()
+		LOGGER.debug("Caching result for " + url + " (" + (page != null ? page.getContentType() : "null")
 				+ ")");
 		cache.put(new Element(url, page));
 	}
