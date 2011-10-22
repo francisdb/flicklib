@@ -6,7 +6,7 @@ import com.flicklib.service.cache.PersistentCacheSourceLoader;
 public abstract class TestUtil {
 
 	public static SourceLoader wrapCache(SourceLoader realLoader) {
-		String rootPath = "target/cache";
+		String rootPath = System.getProperty("java.io.tmpdir", "target")+"/.cache/";
 		return new MemoryCacheSourceLoader(new PersistentCacheSourceLoader(realLoader, rootPath, "yyyy-MM-dd"));
 		
 	}
