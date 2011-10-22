@@ -67,7 +67,7 @@ public enum MovieService {
     /**
      * http://www.cinebel.be
      */
-    CINEBEL("Cinebel", "http://www.cinebel.com"),
+    CINEBEL("Cinebel", "http://www.cinebel.be"),
     
     /**
      * http://www.ofdb.de
