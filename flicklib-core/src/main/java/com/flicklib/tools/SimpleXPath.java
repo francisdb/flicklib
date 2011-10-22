@@ -38,7 +38,6 @@ public class SimpleXPath implements Iterable<Element> {
 		throw new NullPointerException("Trying to add null!");
 	    }
 	}
-        this.root.addAll(el);
     }
 
     public SimpleXPath getTags(String tagName) {
