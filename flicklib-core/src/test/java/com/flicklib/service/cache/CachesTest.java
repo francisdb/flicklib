@@ -24,8 +24,8 @@ public class CachesTest {
 	@Test
 	public void test() throws IOException{
 		String url = generateUrlForTitleSearch("Indiana Jones and the Kingdom of the Crystal Skull");
-		SourceLoader empty = new HttpCacheSourceLoader(new UrlConnectionResolver(5000));
-		SourceLoader empty2 = new HttpCacheSourceLoader(new HttpClientSourceLoader(5000));
+		SourceLoader empty = new MemoryCacheSourceLoader(new UrlConnectionResolver(5000));
+		SourceLoader empty2 = new MemoryCacheSourceLoader(new HttpClientSourceLoader(5000));
 		//HttpCache4J cache4j = new HttpCache4J();
 		
 		String emptyContent = empty.loadSource(url).getContent();

@@ -17,9 +17,7 @@
  */
 package com.flicklib.service.cache;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -34,19 +32,18 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class HttpEHCache implements SourceLoader {
+public class HttpEHCache extends HttpCacheSourceLoader {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(HttpEHCache.class);
 
 	private final CacheManager manager;
 	private final Cache cache;
-	private final SourceLoader resolver;
 
 	@Inject
 	public HttpEHCache(
 			final SourceLoader resolver) {
-		this.resolver = resolver;
+		super(resolver);
 		URL url = getClass().getResource("/ehcache-flicklib.xml");
 		manager = new CacheManager(url);
 		manager.addCache("httpCache");
@@ -64,53 +61,14 @@ public class HttpEHCache implements SourceLoader {
 	}
 
 	@Override
-	public Source loadSource(String url, boolean useCache) throws IOException {
-		Source source = null;
-		Element element = null;
-		if(useCache){
-			element = cache.get(url);
-		}
-		if (element != null) {
-			source = (Source) element.getObjectValue();
-		}else{
-			try {
-				source = resolver.loadSource(url, useCache);
-				put(url, source);
-			} catch (IOException e) {
-				LOGGER.error(e.getMessage(), e);
-				throw e;
-			}
-			
-		}
-		return source;
-	}
-	
-	@Override
-	public Source loadSource(String url) throws IOException {
-		return loadSource(url, true);
-	}
-	
-	@Override
-	public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
-		// FIXME what about the parameters, they should be added to the cache
-		Source source = null;
+	protected Source getFromCache(String url) {
 		Element element = cache.get(url);
-		if (element != null) {
-			source = (Source) element.getObjectValue();
-		}else{
-			try {
-				source = resolver.post(url, parameters, headers);
-				put(url, source);
-			} catch (IOException e) {
-				LOGGER.error(e.getMessage(), e);
-				throw e;
-			}
-			
-		}
-		return source;
+		return (Source) (element != null ? element.getObjectValue() : null);
 	}
+	
 
-	private void put(String url, Source page) {
+	@Override
+	protected void put(String url, Source page) {
 		LOGGER.debug("Caching result for " + url + " (" + page.getContentType()
 				+ ")");
 		cache.put(new Element(url, page));

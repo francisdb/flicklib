@@ -31,7 +31,7 @@ public class EmptyHttpCacheTest {
 	@Test
 	public void testPutGet() throws IOException {
 		MockResolver resolver = new MockResolver();
-		SourceLoader cache = new HttpCacheSourceLoader(resolver);
+		SourceLoader cache = new MemoryCacheSourceLoader(resolver);
 		
 		assertEquals("mock", cache.loadSource("test").getContent());
 		assertEquals(1, resolver.getCallCount());

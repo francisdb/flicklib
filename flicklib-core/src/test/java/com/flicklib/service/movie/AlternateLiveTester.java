@@ -9,8 +9,8 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.flicklib.service.HttpClientSourceLoader;
 import com.flicklib.service.SourceLoader;
+import com.flicklib.service.TestUtil;
 import com.flicklib.service.UrlConnectionResolver;
-import com.flicklib.service.cache.HttpCacheSourceLoader;
 
 @RunWith(value = Parameterized.class)
 public abstract class AlternateLiveTester {
@@ -28,14 +28,14 @@ public abstract class AlternateLiveTester {
     protected SourceLoader loader;
 
     public AlternateLiveTester(boolean internalHttpClient, boolean internalRedirects) {
-    	SourceLoader cache = null;
+    	SourceLoader loader = null;
     	if(internalHttpClient){
     		//if(internalRedirects){
-    		cache = new UrlConnectionResolver(TIMEOUT);
+    		loader = new UrlConnectionResolver(TIMEOUT);
     	}else{
-    		cache = new HttpClientSourceLoader(TIMEOUT);
+    		loader = new HttpClientSourceLoader(TIMEOUT);
     	}
-    	loader = new HttpCacheSourceLoader(cache);
+    	loader = TestUtil.wrapCache(loader);
     }
 
 }
