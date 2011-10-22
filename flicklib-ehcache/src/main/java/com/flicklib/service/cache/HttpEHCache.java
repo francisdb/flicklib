@@ -54,7 +54,11 @@ public class HttpEHCache extends HttpCacheSourceLoader {
 			@Override
 			public void run() {
 				LOGGER.debug(cache.getStatistics().toString());
-				manager.shutdown();
+				try {
+					manager.shutdown();
+				} catch (Exception e) {
+					LOGGER.info("error during shutdown:" + e.getMessage(), e);
+				}
 				LOGGER.debug("shut down cache.");
 			}
 		});

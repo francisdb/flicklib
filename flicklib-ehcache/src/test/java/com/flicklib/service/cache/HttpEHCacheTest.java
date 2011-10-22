@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,15 +36,15 @@ public class HttpEHCacheTest {
 	
 	@Before 
 	public void setup() throws IOException{
-		// getCacheDir().mkdirs();
+		getCacheDir().mkdirs();
 	}
 	@After
 	public void cleanup() throws IOException{
-		// FileUtils.deleteDirectory(getCacheDir());
+		FileUtils.deleteDirectory(getCacheDir());
 	}
 
 	protected File getCacheDir() {
-		String userHome = System.getProperty("user.home");
+		String userHome = System.getProperty("java.io.tmpdir");
 		File browserHome = new File(userHome, ".moviebrowser.test");
 		return browserHome;
 	}
