@@ -28,14 +28,14 @@ public abstract class AlternateLiveTester {
     protected SourceLoader loader;
 
     public AlternateLiveTester(boolean internalHttpClient, boolean internalRedirects) {
-    	SourceLoader loader = null;
+    	SourceLoader internal = null;
     	if(internalHttpClient){
     		//if(internalRedirects){
-    		loader = new UrlConnectionResolver(TIMEOUT);
+    		internal = new UrlConnectionResolver(TIMEOUT);
     	}else{
-    		loader = new HttpClientSourceLoader(TIMEOUT);
+    		internal = new HttpClientSourceLoader(TIMEOUT);
     	}
-    	loader = TestUtil.wrapCache(loader);
+    	loader = TestUtil.wrapCache(internal);
     }
 
 }
