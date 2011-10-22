@@ -20,7 +20,10 @@ import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class BlipprInfoFetcher implements MovieInfoFetcher {
 
     final static Logger LOG = LoggerFactory.getLogger(BlipprInfoFetcher.class);
@@ -29,6 +32,7 @@ public class BlipprInfoFetcher implements MovieInfoFetcher {
 
     private final SourceLoader sourceLoader;
 
+    @Inject
     public BlipprInfoFetcher(final SourceLoader sourceLoader) {
         this.sourceLoader = sourceLoader;
     }

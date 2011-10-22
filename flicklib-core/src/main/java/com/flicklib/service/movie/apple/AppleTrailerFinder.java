@@ -29,17 +29,21 @@ import com.flicklib.api.TrailerFinder;
 import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.Param;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * TODO get rid of the restlet dependency
  * @author francisdb
  */
+@Singleton
 public class AppleTrailerFinder implements TrailerFinder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppleTrailerFinder.class);
 
 	final SourceLoader loader;
 
+	@Inject
 	public AppleTrailerFinder(SourceLoader loader) {
 		this.loader = loader;
 	}

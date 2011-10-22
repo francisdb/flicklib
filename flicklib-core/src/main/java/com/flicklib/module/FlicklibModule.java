@@ -21,9 +21,11 @@ import com.flicklib.api.InfoFetcherFactory;
 import com.flicklib.api.MovieInfoFetcher;
 import com.flicklib.api.Parser;
 import com.flicklib.api.SubtitlesLoader;
+import com.flicklib.api.TrailerFinder;
 import com.flicklib.service.HttpClientSourceLoader;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.movie.InfoFetcherFactoryImpl;
+import com.flicklib.service.movie.apple.AppleTrailerFinder;
 import com.flicklib.service.movie.blippr.Blippr;
 import com.flicklib.service.movie.blippr.BlipprInfoFetcher;
 import com.flicklib.service.movie.cinebel.Cinebel;
@@ -100,6 +102,8 @@ public class FlicklibModule extends AbstractModule {
         bind(MovieInfoFetcher.class).annotatedWith(Ofdb.class).to(OfdbFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(XpressHu.class).to(XpressHuFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Blippr.class).to(BlipprInfoFetcher.class);
+        
+        bind(TrailerFinder.class).to(AppleTrailerFinder.class);
         
     }
 }
