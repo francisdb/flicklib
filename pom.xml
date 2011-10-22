@@ -65,8 +65,8 @@
 		<url>http://code.google.com/p/flicklib/issues/list</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:hg:https://flicklib.googlecode.com/hg/</connection>
-		<developerConnection>scm:hg:https://flicklib.googlecode.com/hg/</developerConnection>
+		<connection>scm:git:https://code.google.com/p/flicklib/</connection>
+		<developerConnection>scm:git:https://code.google.com/p/flicklib/</developerConnection>
 		<url>http://code.google.com/p/flicklib/source/browse/</url>
 	</scm>
 	
