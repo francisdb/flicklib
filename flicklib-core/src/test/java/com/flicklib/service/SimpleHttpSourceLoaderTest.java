@@ -25,7 +25,6 @@ public class SimpleHttpSourceLoaderTest {
 	public void testLoadSource() throws IOException {
 		SourceLoader loader = new UrlConnectionResolver(5000);
 		Source source = loader.loadSource("http://www.google.com");
-		System.out.println(source.getContent());
 		assertTrue(source.getContent(). startsWith("<!doctype html>"));
 	}
 	

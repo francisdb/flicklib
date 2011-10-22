@@ -20,7 +20,9 @@ public class SimpleXPath implements Iterable<Element> {
 
     public SimpleXPath(Element element) {
         this();
-        this.add(element);
+        if (element != null) {
+            root.add(element);
+        }
     }
 
     public void add(Element el) {
