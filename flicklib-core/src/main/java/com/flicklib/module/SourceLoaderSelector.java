@@ -43,7 +43,10 @@ public class SourceLoaderSelector implements Provider<SourceLoader> {
     }
     
     @Inject
-    public SourceLoaderSelector(@Named(value = FlicklibModule.USE_HTTPCOMPONENTS) boolean httpClient, @Named(value = FlicklibModule.CACHE_ROOT) String cacheRoot, @Named(value = FlicklibModule.HTTP_TIMEOUT) Integer timeOut) {
+    public SourceLoaderSelector(
+            @Named(value = FlicklibModule.USE_HTTPCOMPONENTS) boolean httpClient, 
+            @Named(value = FlicklibModule.CACHE_ROOT) String cacheRoot, 
+            @Named(value = FlicklibModule.HTTP_TIMEOUT) Integer timeOut) {
         super();
         this.httpClient = httpClient;
         this.cacheRoot = cacheRoot;

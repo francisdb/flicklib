@@ -57,6 +57,7 @@ import com.flicklib.service.movie.xpress.XpressHuFetcher;
 import com.flicklib.service.sub.OpenSubtitlesLoader;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 /**
@@ -119,11 +120,11 @@ public class FlicklibModule extends AbstractModule {
         // bind(HttpCache.class).to(HttpCache4J.class);
 
         if (loader != null) {
-            bind(SourceLoader.class).toProvider(loader);
+            bind(SourceLoader.class).toProvider(loader).in(Singleton.class);
         } else if (loaderClass != null) {
-            bind(SourceLoader.class).toProvider(loaderClass);
+            bind(SourceLoader.class).toProvider(loaderClass).in(Singleton.class);
         } else {
-            bind(SourceLoader.class).toProvider(SourceLoaderSelector.class);
+            bind(SourceLoader.class).toProvider(SourceLoaderSelector.class).in(Singleton.class);
         }
 
         bind(SubtitlesLoader.class).to(OpenSubtitlesLoader.class);
