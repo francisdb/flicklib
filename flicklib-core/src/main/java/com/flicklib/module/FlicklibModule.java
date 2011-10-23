@@ -22,7 +22,6 @@ import com.flicklib.api.MovieInfoFetcher;
 import com.flicklib.api.Parser;
 import com.flicklib.api.SubtitlesLoader;
 import com.flicklib.api.TrailerFinder;
-import com.flicklib.service.HttpClientSourceLoader;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.movie.InfoFetcherFactoryImpl;
 import com.flicklib.service.movie.apple.AppleTrailerFinder;
@@ -57,27 +56,75 @@ import com.flicklib.service.movie.xpress.XpressHu;
 import com.flicklib.service.movie.xpress.XpressHuFetcher;
 import com.flicklib.service.sub.OpenSubtitlesLoader;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provider;
 import com.google.inject.name.Names;
 
 /**
- *
+ * 
  * @author francisdb
  */
 public class FlicklibModule extends AbstractModule {
-	
-	public static final String HTTP_TIMEOUT = "http.timeout";
-	public static final String HTTP_CACHE = "http.cache";
+
+    public static final String HTTP_TIMEOUT = "http.timeout";
+    public static final String HTTP_CACHE = "http.cache";
+    public static final String USE_HTTPCOMPONENTS = "use.http.components";
+    public static final String CACHE_ROOT = "cache.root";
+
+    Provider<SourceLoader> loader;
+    Class<Provider<SourceLoader>> loaderClass;
+    
+    String cacheRoot = "";
+    boolean httpComponents = true;
+    
+    public FlicklibModule() {
+    }
+
+    public FlicklibModule setLoader(Provider<SourceLoader> loader) {
+        this.loader = loader;
+        return this;
+    }
+    
+    public FlicklibModule setLoaderClass(Class<Provider<SourceLoader>> loaderClass) {
+        this.loaderClass = loaderClass;
+        return this;
+    }
+    
+    /**
+     * @param cacheRoot the cacheRoot to set
+     * @return 
+     */
+    public FlicklibModule setCacheRoot(String cacheRoot) {
+        this.cacheRoot = cacheRoot != null ? cacheRoot : "";
+        return this;
+    }
+
+    /**
+     * @param httpComponents the httpComponents to set
+     * @return 
+     */
+    public FlicklibModule setUseHttpComponents(boolean httpComponents) {
+        this.httpComponents = httpComponents;
+        return this;
+    }
 
     @Override
     protected void configure() {
-    	
+
         bindConstant().annotatedWith(Names.named(HTTP_TIMEOUT)).to(20 * 1000);
         bindConstant().annotatedWith(Names.named(HTTP_CACHE)).to(Boolean.TRUE);
-        
+        bindConstant().annotatedWith(Names.named(CACHE_ROOT)).to(cacheRoot);
+        bindConstant().annotatedWith(Names.named(USE_HTTPCOMPONENTS)).to(httpComponents);
+
         // bind(HttpCache.class).to(HttpEHCache.class);
         // bind(HttpCache.class).to(HttpCache4J.class);
-    	
-        bind(SourceLoader.class).to(HttpClientSourceLoader.class);
+
+        if (loader != null) {
+            bind(SourceLoader.class).toProvider(loader);
+        } else if (loaderClass != null) {
+            bind(SourceLoader.class).toProvider(loaderClass);
+        } else {
+            bind(SourceLoader.class).toProvider(SourceLoaderSelector.class);
+        }
 
         bind(SubtitlesLoader.class).to(OpenSubtitlesLoader.class);
 
@@ -102,8 +149,8 @@ public class FlicklibModule extends AbstractModule {
         bind(MovieInfoFetcher.class).annotatedWith(Ofdb.class).to(OfdbFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(XpressHu.class).to(XpressHuFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(Blippr.class).to(BlipprInfoFetcher.class);
-        
+
         bind(TrailerFinder.class).to(AppleTrailerFinder.class);
-        
+
     }
 }

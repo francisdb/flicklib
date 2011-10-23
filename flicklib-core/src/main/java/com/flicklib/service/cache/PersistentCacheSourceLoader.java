@@ -39,18 +39,26 @@ public class PersistentCacheSourceLoader extends HttpCacheSourceLoader {
 	
 	File dir;
 
-	public PersistentCacheSourceLoader(SourceLoader resolver, String rootPath, String datePattern) {
-		super(resolver);
-		File file = new File(rootPath);
-		File flicklib = new File(file, "flicklib");
-		SimpleDateFormat df = new SimpleDateFormat(datePattern);
-		String path = df.format(new Date());
-		dir = new File(flicklib, path);
-		LOG.info("rootPath : " + rootPath + ", datePattern:" + datePattern + " -> " + dir.getAbsolutePath());
-		if (dir.mkdirs()) {
-			LOG.info("path created [" + dir + "]");
-		}
-	}
+    public PersistentCacheSourceLoader(SourceLoader resolver, String rootPath) {
+        this(resolver, rootPath, null);
+    }
+
+    public PersistentCacheSourceLoader(SourceLoader resolver, String rootPath, String datePattern) {
+        super(resolver);
+        File file = new File(rootPath);
+        File flicklib = new File(file, "flicklib");
+        if (datePattern != null) {
+            SimpleDateFormat df = new SimpleDateFormat(datePattern);
+            String path = df.format(new Date());
+            dir = new File(flicklib, path);
+            LOG.info("rootPath : " + rootPath + ", datePattern:" + datePattern + " -> " + dir.getAbsolutePath());
+        } else {
+            dir = new File(flicklib,"httpcache");
+        }
+        if (dir.mkdirs()) {
+            LOG.info("path created [" + dir + "]");
+        }
+    }
 
 	@Override
 	protected Source getFromCache(String url) {
