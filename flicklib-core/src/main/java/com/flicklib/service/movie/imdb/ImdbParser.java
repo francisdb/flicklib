@@ -36,6 +36,7 @@ import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieType;
 import com.flicklib.tools.AdvancedTextExtractor;
 import com.flicklib.tools.ElementOnlyTextExtractor;
+import com.flicklib.tools.SimpleXPath;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -261,7 +262,15 @@ public class ImdbParser implements Parser {
             //System.out.println(source.toString());
             movie.setPlot("Not found");
         }
-
+        if (movie.getImgUrl() == null) {
+            for (Element e : new SimpleXPath(source.getElementById("img_primary")).getAllTagByAttributes("itemprop", "image")) {
+                final String src = e.getAttributeValue("src");
+                if (src != null) {
+                    LOGGER.info("found image : " + src);
+                    movie.setImgUrl(src);
+                }
+            }
+        }        
     }
 
     private void setYear(MoviePage movie, String year) {

@@ -95,4 +95,21 @@ public class ImdbParserTest {
         assertTrue(page.getGenres().contains("Sci-Fi"));
         
     }
+    
+    @Test
+    public void testCoverLoading() throws IOException {
+        Source source = new FileSourceLoader().loadSource("imdb/kingspeech.html");
+        MoviePage page = new MoviePage();
+        ImdbParser instance = new ImdbParser();
+        instance.parse(source, page);
+        
+        assertEquals("A király beszéde", page.getTitle());
+        assertEquals("The King's Speech", page.getOriginalTitle());
+        assertEquals(1, page.getDirectors().size());
+        assertTrue(page.getDirectors().contains("Tom Hooper"));
+
+        assertNotNull("cover found", page.getImgUrl());
+        assertEquals("cover image found", "http://ia.media-imdb.com/images/M/MV5BMzU5MjEwMTg2Nl5BMl5BanBnXkFtZTcwNzM3MTYxNA@@._V1._SY317_CR1,0,214,317_.jpg", page.getImgUrl());
+        
+    }
 }
