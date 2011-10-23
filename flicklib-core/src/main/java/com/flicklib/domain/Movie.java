@@ -30,7 +30,7 @@ public class Movie {
     private String title;
     private String plot;
     private Integer year;
-    private Set<String> directors;
+    private List<String> directors;
     private MovieType type;
     /**
      * Runtime in minutes
@@ -101,7 +101,7 @@ public class Movie {
     /**
      * @return the director
      */
-    public Set<String> getDirectors() {
+    public List<String> getDirectors() {
         return directors;
     }
 
@@ -109,7 +109,7 @@ public class Movie {
      * @param director
      *            the director to set
      */
-    public void setDirectors(Set<String> directors) {
+    public void setDirectors(List<String> directors) {
         this.directors = directors;
     }
 
