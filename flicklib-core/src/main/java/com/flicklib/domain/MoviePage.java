@@ -17,7 +17,9 @@
  */
 package com.flicklib.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -45,8 +47,8 @@ public class MoviePage extends MovieSearchResult {
     
     private Set<String> genres;
     private Set<String> languages;
-    private Set<String> directors;
-    private Set<String> actors;
+    private List<String> directors;
+    private List<String> actors;
 
     public MoviePage() {
     	this(null);
@@ -54,10 +56,10 @@ public class MoviePage extends MovieSearchResult {
 
     public MoviePage(MovieService service) {
         super(service);
-        this.directors = new HashSet<String>();
+        this.directors = new ArrayList<String>();
         this.languages = new HashSet<String>();
         this.genres = new HashSet<String>();
-        this.actors = new HashSet<String>();
+        this.actors = new ArrayList<String>();
     }
 
     /**
@@ -151,7 +153,7 @@ public class MoviePage extends MovieSearchResult {
     /**
      * @return the directors
      */
-    public Set<String> getDirectors() {
+    public List<String> getDirectors() {
         return directors;
     }
 
@@ -159,15 +161,15 @@ public class MoviePage extends MovieSearchResult {
      * @param directors
      *            the directors to set
      */
-    public void setDirectors(Set<String> directors) {
+    public void setDirectors(List<String> directors) {
         this.directors = directors;
     }
     
-    public Set<String> getActors() {
+    public List<String> getActors() {
 		return actors;
 	}
     
-    public void setActors(Set<String> actors) {
+    public void setActors(List<String> actors) {
 		this.actors = actors;
 	}
 
