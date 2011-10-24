@@ -76,7 +76,7 @@ public enum MovieService {
     
     XPRESSHU("Xpress.hu", "http://www.xpress.hu"),
     
-    BLIPPR("Blipp.com", "http://www.blippr.com");
+    BLIPPR("Blippr.com", "http://www.blippr.com");
 
     private final String name;
     private final String url;
