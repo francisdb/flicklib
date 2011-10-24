@@ -105,6 +105,7 @@ public class ImdbParserTest {
         
         assertEquals("A király beszéde", page.getTitle());
         assertEquals("The King's Speech", page.getOriginalTitle());
+        assertEquals("The King's Speech", page.getPreferredTitle());
         assertEquals(1, page.getDirectors().size());
         assertTrue(page.getDirectors().contains("Tom Hooper"));
 

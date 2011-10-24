@@ -157,6 +157,14 @@ public class MovieSearchResult {
         return type;
     }
     
+    /**
+     * 
+     * @return the original title if specified, or the title if not.
+     */
+    public String getPreferredTitle() {
+        return originalTitle != null && !originalTitle.trim().isEmpty() ? originalTitle : title;
+    }
+    
     @Override
     public String toString() {
         return "MovieSearchResult["+title+'/'+alternateTitle+'/'+idForSite+'/'+url+']';

@@ -41,7 +41,7 @@ public class ImdbInfoFetcherTest {
 			List<? extends MovieSearchResult> res = fetcher.search("Twin Peaks");
 			for(MovieSearchResult result:res){
 				assertEquals(MovieService.IMDB, result.getService());
-				System.out.println(result.getTitle()+" / "+result.getOriginalTitle()+" / "+result.getYear()+" / "+result.getType());
+				//System.out.println(result.getTitle()+" / "+result.getOriginalTitle()+" / "+result.getYear()+" / "+result.getType());
 			}
 			assertEquals("Twin Peaks", res.get(0).getTitle());
 			//assertEquals("Twin Peaks", res.get(0).getOriginalTitle());
@@ -59,16 +59,12 @@ public class ImdbInfoFetcherTest {
 			}
 			
 		}
-		
-		    private String getOriginalTitle(MovieSearchResult m) {
-			    return m.getOriginalTitle() != null ? m.getOriginalTitle() : m.getTitle();
-		    }
 
 		@Test
 		public void testGetMovieInfo() throws IOException {
 			MoviePage page = fetcher.getMovieInfo("0133093");
 			assertEquals(MovieService.IMDB, page.getService());
-			assertEquals("The Matrix", getOriginalTitle(page));
+			assertEquals("The Matrix", page.getPreferredTitle());
 			assertEquals(2, page.getDirectors().size());
 			assertTrue(page.getDirectors().contains("Andy Wachowski"));
 			assertTrue(page.getDirectors().contains("Lana Wachowski"));

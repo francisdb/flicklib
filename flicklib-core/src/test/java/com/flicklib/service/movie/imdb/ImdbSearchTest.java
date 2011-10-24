@@ -53,16 +53,16 @@ public class ImdbSearchTest extends AlternateLiveTester {
     public void testGetResults_String() throws Exception {
         List<MovieSearchResult> result = instance.getResults("Pulp Fiction");
         assertTrue(result.size() > 0);
-        assertEquals("pulp fiction - original title:","Pulp Fiction", getOriginalTitle(result.get(0)));
+        assertEquals("pulp fiction - original title:","Pulp Fiction", result.get(0).getPreferredTitle());
         
         result = instance.getResults("Die Hard 4");
         assertTrue(result.size() > 0);
-        assertEquals("Live Free or Die Hard", getOriginalTitle(result.get(0)));
+        assertEquals("Live Free or Die Hard", result.get(0).getPreferredTitle());
         
         result = instance.getResults("Black Tie White Noise");
         assertTrue(result.size() > 0);
         assertEquals(Integer.valueOf(1993), result.get(0).getYear());
-        assertEquals("David Bowie: Black Tie White Noise", getOriginalTitle(result.get(0)));
+        assertEquals("David Bowie: Black Tie White Noise", result.get(0).getPreferredTitle());
     }
 
     private String getOriginalTitle(MovieSearchResult m) {
@@ -88,7 +88,7 @@ public class ImdbSearchTest extends AlternateLiveTester {
         final MovieSearchResult first = list.get(0);
 	assertTrue("1. result:alternate ["+first.getAlternateTitle()+']', 
 			Arrays.asList("Life is a Miracle","Hungry Heart").contains(first.getAlternateTitle()));
-        assertEquals("1. result:original", "Zivot je cudo", getOriginalTitle(first));
+        assertEquals("1. result:original", "Zivot je cudo", first.getPreferredTitle());
         assertEquals("1. result:year", Integer.valueOf(2004), first.getYear());
 
         assertEquals("2. result:title", "Mo shu wai zhuan", list.get(1).getTitle());
