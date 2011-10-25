@@ -48,6 +48,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
 
+    private static final String MOVIE_PREFIX = "http://www.flixster.com/movie/";
     private static final Logger LOGGER = LoggerFactory.getLogger(FlixsterInfoFetcher.class);
     private final SourceLoader sourceLoader;
     private final Parser parser;
@@ -80,6 +81,16 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
         // The X-Files: I Want to Believe (The X Files 2)
         // </a>
 
+        String url = source.getUrl();
+        if (url.startsWith(MOVIE_PREFIX)) {
+            MoviePage site = new MoviePage(MovieService.FLIXSTER);
+            String id = url.substring(MOVIE_PREFIX.length());
+            site.setIdForSite(id);
+            site.setUrl(source.getUrl());
+            parser.parse(source, site);
+            result.add(site);
+            return result;
+        }
         
         parse(result, jerichoSource);
         return result;

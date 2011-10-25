@@ -17,20 +17,17 @@
  */
 package com.flicklib.service.movie.flixter;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
-import net.htmlparser.jericho.TextExtractor;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.service.movie.AbstractJerichoParser;
-import com.flicklib.tools.ElementOnlyTextExtractor;
+import com.flicklib.tools.SimpleXPath;
 import com.google.inject.Singleton;
 /**
  *
@@ -44,36 +41,28 @@ public class FlixsterParser extends AbstractJerichoParser{
 
 @Override
     public void parse(Source source, MoviePage movieSite) {
-    	
-    	List<?> h1Elements = source.getAllElements(HTMLElementName.H1);
-    	for (Iterator<?> i = h1Elements.iterator(); i.hasNext();) {
-    		Element h1Element = (Element) i.next();
-    		List<?> aElements = h1Element.getAllElements(HTMLElementName.A);
-            for (Iterator<?> i2 = aElements.iterator(); i2.hasNext();) {
-                Element aElement = (Element) i2.next();
-                if(aElement.getAttributeValue("href").contains("/movie/")){
-                	parseTitle(aElement.getContent().getTextExtractor().toString().trim(), movieSite);
-                }
-            }
-    	}
-    	
-        
-        
-        List<?> h4Elements = source.getAllElements(HTMLElementName.H4);
-        for (Iterator<?> i = h4Elements.iterator(); i.hasNext();) {
-            Element h4Element = (Element) i.next();
-            TextExtractor extractor = new ElementOnlyTextExtractor(h4Element.getContent());
-            String content = extractor.toString().trim();
-            
-            // TODO use "Critics" score
-            if (content.equals("Flixster Users")) {
-                Element next = source.getNextElement(h4Element.getEnd());
-                next = (Element) next.getAllElements(HTMLElementName.SPAN).get(0);
-                String votes = new ElementOnlyTextExtractor(next.getContent()).toString().trim();
-                votes = votes.replace("%", "");
-                movieSite.setScore(Integer.valueOf(votes));
-            }
+        Element movieTitle = new SimpleXPath(source.getElementById("movieTitle")).getTags(HTMLElementName.SPAN).firstElement();
+        if (movieTitle != null) {
+            parseTitle(movieTitle.getTextExtractor().toString(), movieSite);
         }
+        final SimpleXPath details = new SimpleXPath(source.getElementById("details"));
+        Element imgPic = details.getAllTagByAttributes("class", "leftSide")
+                .getAllTagByAttributes("class", "poster").getTags("img").firstElement();
+        if (imgPic != null) {
+            movieSite.setImgUrl(imgPic.getAttributeValue("src"));
+        }
+        SimpleXPath minibox = details.getAllTagByAttributes("class", "minibox");
+        String ratingPerc = minibox.getAllTagByAttributes("class", "rating percentage").getValue();
+        if (ratingPerc != null) {
+            String votes = ratingPerc.replace("%", "");
+            movieSite.setScore(Integer.valueOf(votes));
+        }
+        String ratingCount = minibox.getAllTagByAttributes("class", "ratingCount").getValue();
+        if (ratingCount != null) {
+            String r = ratingCount.replace("ratings", "").replace(",", "").trim();
+            movieSite.setVotes(Integer.parseInt(r));
+        }
+
     }
     
     static void parseTitle(String title,MovieSearchResult mv) {
