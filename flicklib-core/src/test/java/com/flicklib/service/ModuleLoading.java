@@ -22,6 +22,9 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import com.flicklib.api.InfoFetcherFactory;
+import com.flicklib.api.MovieInfoFetcher;
+import com.flicklib.domain.MovieService;
 import com.flicklib.module.FlicklibModule;
 import com.flicklib.module.NetFlixAuthModule;
 import com.flicklib.service.cache.PersistentCacheSourceLoader;
@@ -77,6 +80,7 @@ public class ModuleLoading {
         
         InfoFetcherFactory instance = injector.getInstance(InfoFetcherFactory.class);
         assertNotNull("InfoFetcherFactory", instance);
+
         String[] SERVICE_NAMES = new String[] { "IMDB", "PORTHU", "XPRESSHU", "BLIPPR", "CINEBEL" };
         for (String service : SERVICE_NAMES) {
             MovieInfoFetcher infoFetcher = instance.get(MovieService.getById(service));
