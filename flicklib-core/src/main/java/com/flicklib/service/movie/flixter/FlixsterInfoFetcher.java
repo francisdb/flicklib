@@ -47,6 +47,10 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
+    /**
+     * http://www.flixster.com
+     */
+    final static MovieService FLIXSTER = new MovieService("FLIXSTER", "Flixster", "http://www.flixster.com");
 
     private static final String MOVIE_PREFIX = "http://www.flixster.com/movie/";
     private static final Logger LOGGER = LoggerFactory.getLogger(FlixsterInfoFetcher.class);
@@ -83,7 +87,7 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
 
         String url = source.getUrl();
         if (url.startsWith(MOVIE_PREFIX)) {
-            MoviePage site = new MoviePage(MovieService.FLIXSTER);
+            MoviePage site = new MoviePage(FLIXSTER);
             String id = url.substring(MOVIE_PREFIX.length());
             site.setIdForSite(id);
             site.setUrl(source.getUrl());
@@ -110,13 +114,13 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
                     if (jsessIdIndex!=-1) {
                         url = url.substring(0, jsessIdIndex);
                     }
-                    String movieUrl = MovieService.FLIXSTER.getUrl() + url;
+                    String movieUrl = FLIXSTER.getUrl() + url;
                     
                     MovieSearchResult m = new MovieSearchResult();
                     m.setIdForSite(movieUrl);
                     FlixsterParser.parseTitle(movieName, m);
                     
-                    m.setService(MovieService.FLIXSTER);
+                    m.setService(FLIXSTER);
                     result.add(m);
                     LOGGER.debug("taking result: " + movieName + " -> " + movieUrl);
                 }
@@ -127,9 +131,9 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
     @Override
     public MoviePage getMovieInfo(String id) {
         try {
-            if (id.startsWith(MovieService.FLIXSTER.getUrl())) {
+            if (id.startsWith(FLIXSTER.getUrl())) {
                 com.flicklib.service.Source source = sourceLoader.loadSource(id);
-                MoviePage site = new MoviePage(MovieService.FLIXSTER);
+                MoviePage site = new MoviePage(FLIXSTER);
                 site.setIdForSite(id);
                 site.setUrl(id);
                 parser.parse(source, site);
@@ -141,12 +145,16 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
         }
         return null;
     }
+    @Override
+    public MovieService getService() {
+        return FLIXSTER;
+    }
     
     @Deprecated
     public MoviePage fetch(Movie movie, String id) {
         MoviePage site = new MoviePage();
         //site.setMovie(movie);
-        site.setService(MovieService.FLIXSTER);
+        site.setService(FLIXSTER);
         try {
             com.flicklib.service.Source source = sourceLoader.loadSource(createFlixterSearchUrl(movie.getTitle()));
             Source jerichoSource = source.getJerichoSource();
@@ -165,7 +173,7 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
                     String movieName = aElement.getContent().getTextExtractor().toString();
                     if (movieUrl == null && movieName != null && movieName.trim().length() != 0) {
 
-                        movieUrl = MovieService.FLIXSTER.getUrl() + url;
+                        movieUrl = FLIXSTER.getUrl() + url;
                         LOGGER.trace("taking first result: " + movieName + " -> " + movieUrl);
                     }
                 }
@@ -191,6 +199,6 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
         } catch (UnsupportedEncodingException ex) {
             LOGGER.error("Could not cencode UTF-8", ex);
         }
-        return MovieService.FLIXSTER.getUrl()+"/search?q=" + encoded;
+        return FLIXSTER.getUrl()+"/search?q=" + encoded;
     }
 }

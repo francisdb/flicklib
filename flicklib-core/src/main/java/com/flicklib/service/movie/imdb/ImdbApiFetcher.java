@@ -18,6 +18,10 @@ import com.flicklib.service.SourceLoader;
 
 public class ImdbApiFetcher extends AbstractMovieInfoFetcher {
 	final static Logger LOG = LoggerFactory.getLogger(ImdbApiFetcher.class);
+	    /**
+	     * http://www.imdb.com
+	     */
+	    final static MovieService IMDB_API = new MovieService("IMDB", "IMDB Api", "http://www.imdbapi.com");
 
 	private final SourceLoader loader;
 
@@ -53,7 +57,7 @@ public class ImdbApiFetcher extends AbstractMovieInfoFetcher {
 	}
 
 	private MoviePage parseInfo(JSONObject obj) throws JSONException {
-		MoviePage mp = new MoviePage(MovieService.IMDB);
+		MoviePage mp = new MoviePage(IMDB_API);
 		mp.setIdForSite(obj.getString("ID"));
 		mp.setTitle(obj.getString("Title"));
 		mp.setYear(obj.optInt("Year"));
@@ -81,4 +85,8 @@ public class ImdbApiFetcher extends AbstractMovieInfoFetcher {
 		return "http://www.imdbapi.com/?t=" + id + "&plot=full&r=JSON&tomatoes=true";
 	}
 	
+	@Override
+	public MovieService getService() {
+	    return IMDB_API;
+	}
 }

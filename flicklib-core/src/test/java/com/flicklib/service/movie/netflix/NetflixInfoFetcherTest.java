@@ -25,7 +25,6 @@ import java.io.IOException;
 import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
-import com.flicklib.domain.MovieService;
 
 /**
  * @author francisdb
@@ -49,7 +48,7 @@ public class NetflixInfoFetcherTest {
         assertNotNull("ID is null", site.getIdForSite());
         assertNotNull("ImgUrl is null", site.getImgUrl());
         assertNotNull("Url is null", site.getUrl());
-        assertEquals(MovieService.NETFLIX, site.getService());
+        assertEquals("NETFLIX", site.getService().getId());
         System.out.println(site.getScore());
         System.out.println(site.getUrl());
     }

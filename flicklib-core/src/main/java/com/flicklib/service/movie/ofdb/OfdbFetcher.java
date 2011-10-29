@@ -48,6 +48,10 @@ import com.google.inject.Singleton;
 public class OfdbFetcher extends AbstractMovieInfoFetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OfdbFetcher.class);
+    /**
+     * http://www.ofdb.de
+     */
+    final static MovieService OFDB =  new MovieService("OFDB", "Online-Filmdatenbank", "http://www.ofdb.de", "OFDb");
     
     private final SourceLoader sourceLoader;
     private final Parser parser;
@@ -69,7 +73,7 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 		LOGGER.info("getMovieInfo " + idForSite + " from " + url);
 		Source source = sourceLoader.loadSource(url);
 		if (source != null) {
-			MoviePage page = new MoviePage(MovieService.OFDB);
+			MoviePage page = new MoviePage(OFDB);
 			page.setIdForSite(idForSite);
 			page.setUrl(url);
 			parser.parse(source, page);
@@ -95,7 +99,7 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 	        String href = linkElement.getAttributeValue("href");
 	        if (href.startsWith("film/")) {
 	        	MovieSearchResult movieSite = new MovieSearchResult();
-	        	movieSite.setService(MovieService.OFDB);
+	        	movieSite.setService(OFDB);
 		        String movieTitles = linkElement.getContent().getTextExtractor().toString();
 		        String[] titles = movieTitles.split(Pattern.quote("/"));
 		        String germanTitle = titles[0].trim();
@@ -106,7 +110,7 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 	        		theTitle = OfdbTools.handleYear(originalTitleYear, movieSite);
 	        		movieSite.setOriginalTitle(theTitle);
 	        	}
-	        	movieSite.setUrl(MovieService.OFDB.getUrl() + href);
+	        	movieSite.setUrl(OFDB.getUrl() + href);
 	        	String id = href.substring("film/".length());
 	        	movieSite.setIdForSite(id);
 	        	list.add(movieSite);
@@ -127,7 +131,7 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("utf-8 encoding not supported" ,e);
 		}
-		return MovieService.OFDB.getUrl()+"/film/"+encoded;
+		return OFDB.getUrl()+"/film/"+encoded;
 	}
 
 	private String generateSearchUrl(final String title) {
@@ -137,8 +141,13 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("utf-8 encoding not supported" ,e);
 		}
-		String url = MovieService.OFDB.getUrl()+"/view.php?page=suchergebnis&Kat=Titel&SText="+encoded;
+		String url = OFDB.getUrl()+"/view.php?page=suchergebnis&Kat=Titel&SText="+encoded;
 		return url;
+	}
+	
+	@Override
+	public MovieService getService() {
+	    return OFDB;
 	}
 
 }

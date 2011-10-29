@@ -37,7 +37,11 @@ import com.google.inject.Singleton;
 public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
 
     //private static final Logger LOGGER = LoggerFactory.getLogger(ImdbInfoFetcher.class);
-
+    /**
+     * http://www.imdb.com
+     */
+    final static MovieService IMDB = new MovieService("IMDB", "IMDB", "http://www.imdb.com");
+    
     private final ImdbSearch imdbSearch;
     private final Parser imdbParser;
     private final SourceLoader loader;
@@ -64,7 +68,7 @@ public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
 
     @Override
     public MoviePage getMovieInfo(String id) throws IOException {
-        MoviePage site = new MoviePage(MovieService.IMDB);
+        MoviePage site = new MoviePage(IMDB);
         site.setUrl(ImdbUrlGenerator.generateImdbUrl(id));
         site.setIdForSite(id);
 
@@ -72,5 +76,10 @@ public class ImdbInfoFetcher extends AbstractMovieInfoFetcher {
         imdbParser.parse(source, site);
 
         return site;
+    }
+    
+    @Override
+    public MovieService getService() {
+        return IMDB;
     }
 }

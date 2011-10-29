@@ -49,7 +49,12 @@ import com.google.inject.Singleton;
 public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TomatoesInfoFetcher.class);
-
+        /**
+         * http://www.rottentomatoes.com
+         */
+        final static MovieService TOMATOES = new MovieService("TOMATOES", "Rotten Tomatoes", "http://www.rottentomatoes.com", "Tomatoes");
+        
+    
 	private final SourceLoader sourceLoader;
 	private final Parser tomatoesParser = new TomatoesParser();
 
@@ -60,7 +65,7 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 
 	@Override
 	public MoviePage getMovieInfo(String id) throws IOException {
-		MoviePage site = new MoviePage(MovieService.TOMATOES);
+		MoviePage site = new MoviePage(TOMATOES);
 		String url = generateTomatoesUrl(id);
 		site.setUrl(url);
 		com.flicklib.service.Source source = sourceLoader.loadSource(site.getUrl());
@@ -86,7 +91,7 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 		if (ul != null) {
 			for (Element li : ul.getAllElements(HTMLElementName.LI)) {
 				MoviePage m = new MoviePage();
-				m.setService(MovieService.TOMATOES);
+				m.setService(TOMATOES);
 				
 				Element tmeter = li.getFirstElement("class", "tmeter", true);
 				if (tmeter != null) {
@@ -176,7 +181,7 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 	public MoviePage fetch(Movie movie, String imdbId) {
 		MoviePage site = new MoviePage();
 		//site.setMovie(movie);
-		site.setService(MovieService.TOMATOES);
+		site.setService(TOMATOES);
 		if (imdbId == null || "".equals(imdbId)) {
 			LOGGER.error("IMDB id missing", new IOException("No imdb id available, not implemented"));
 		} else {
@@ -199,7 +204,7 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 		} catch (UnsupportedEncodingException ex) {
 			LOGGER.error("Could not cencode UTF-8", ex);
 		}
-		return MovieService.TOMATOES.getUrl() + "/search/?search=" + encoded;
+		return TOMATOES.getUrl() + "/search/?search=" + encoded;
 	}
 
 	/**
@@ -208,7 +213,7 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 	 * @return the tomatoes url
 	 */
 	private String generateTomatoesUrlForImdb(String imdbId) {
-		return MovieService.TOMATOES.getUrl() + "/alias?type=imdbid&s=" + imdbId;
+		return TOMATOES.getUrl() + "/alias?type=imdbid&s=" + imdbId;
 	}
 
 	/**
@@ -217,6 +222,11 @@ public class TomatoesInfoFetcher extends AbstractMovieInfoFetcher {
 	* @return the tomatoes url
 	*/
 	private String generateTomatoesUrl(String id) {
-		return MovieService.TOMATOES.getUrl() + "/m/" + id;
+		return TOMATOES.getUrl() + "/m/" + id;
+	}
+	
+	@Override
+	public MovieService getService() {
+	    return TOMATOES;
 	}
 }

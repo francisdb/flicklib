@@ -17,83 +17,65 @@
  */
 package com.flicklib.domain;
 
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author francisdb
  */
-public enum MovieService {
-    /**
-     * http://www.imdb.com
-     */
-    IMDB("IMDB", "http://www.imdb.com"),
+public class MovieService {
     
-    /**
-     * http://www.rottentomatoes.com
-     */
-    TOMATOES("Rotten Tomatoes", "http://www.rottentomatoes.com", "Tomatoes"),
+    private final static Logger LOG = LoggerFactory.getLogger(MovieService.class);
     
-    /**
-     * http://www.movieweb.com
-     */
-    MOVIEWEB("MovieWeb", "http://www.movieweb.com", "MWeb"),
-    
-    
-    /* TODO add http/jericho based parser */
-//    /**
-//     * http://www.omdb.com
-//     */
-//    OMDB("OMDB", "http://www.omdb.com"),
-    
-    /**
-     * http://www.google.com/movies
-     */
-    GOOGLE("Google movies", "http://www.google.com", "Google"),
-    
-    /**
-     * http://www.flixster.com
-     */
-    FLIXSTER("Flixster", "http://www.flixster.com"),
-    
-    /**
-     * http://www.port.hu
-     */
-    PORTHU("Port.hu", "http://www.port.hu"),
-    
-    /**
-     * http://www.netflix.com
-     */
-    NETFLIX("Netflix", "http://www.netflix.com"),
-    
-    /**
-     * http://www.cinebel.be
-     */
-    CINEBEL("Cinebel", "http://www.cinebel.be"),
-    
-    /**
-     * http://www.ofdb.de
-     */
-    OFDB("Online-Filmdatenbank", "http://www.ofdb.de", "OFDb"),
-    
-    XPRESSHU("Xpress.hu", "http://www.xpress.hu"),
-    
-    BLIPPR("Blippr.com", "http://www.blippr.com");
+    private static Map<String, MovieService> services = new LinkedHashMap<String,MovieService>();
 
+    private final String id;
     private final String name;
     private final String url;
     private final String shortName;
     
-    MovieService(final String name, final String url) {
-        this.name = name;
-        this.url = url;
-        this.shortName = name;
-    }
-    
-    MovieService(final String name, final String url, final String shortName) {
+    public MovieService(String id, String name, String url, String shortName) {
+        this.id = id;
         this.name = name;
         this.url = url;
         this.shortName = shortName;
+        synchronized(services) {
+            if (services.containsKey(id)) {
+                throw new RuntimeException("MovieService with ID:"+id+" is already registered:"+services.get(id));
+            }
+            LOG.info("registering "+this);
+            services.put(id, this);
+        }
+    }
+    
+    public MovieService(String id, String name, String url) {
+        this(id, name, url, name);
+    }
+    
+
+    public String getId() {
+        return id;
     }
 
+    public static MovieService getById(String id) {
+        return services.get(id);
+    }
+    
+    public static Collection<MovieService> values() {
+        return services.values();
+    }
+    
+    protected void remove() {
+        LOG.warn("remove called for "+this+", services registered previously :" + services+" for ");
+        services.remove(this.getId());
+    }
+    
+    
     /**
      * Gets the full name for this service
      * @return the name
@@ -117,5 +99,37 @@ public enum MovieService {
     public String getShortName() {
         return shortName;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return obj==this;
+    }
+    
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return "MovieService["+id+']';
+    }
+    
+    /**
+     * Compatibility method for the enums
+     * @return
+     */
+    @Deprecated()
+    public String name() {
+        return id;
+    }
 
+    public static MovieService valueOf(String id) {
+        MovieService s = services.get(id);
+        if (s == null) {
+            throw new IllegalArgumentException("Service description for id:"+id+" not found!");
+        }
+        return s;
+    }
+    
 }

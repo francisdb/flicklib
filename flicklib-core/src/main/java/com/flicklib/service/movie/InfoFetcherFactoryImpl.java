@@ -17,135 +17,54 @@
  */
 package com.flicklib.service.movie;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.flicklib.api.InfoFetcherFactory;
 import com.flicklib.api.MovieInfoFetcher;
 import com.flicklib.domain.MovieService;
-import com.flicklib.service.movie.blippr.Blippr;
-import com.flicklib.service.movie.cinebel.Cinebel;
-import com.flicklib.service.movie.flixter.Flixster;
-import com.flicklib.service.movie.google.Google;
-import com.flicklib.service.movie.imdb.Imdb;
-import com.flicklib.service.movie.movieweb.MovieWeb;
-import com.flicklib.service.movie.netflix.Netflix;
-import com.flicklib.service.movie.ofdb.Ofdb;
-import com.flicklib.service.movie.porthu.PortHu;
-import com.flicklib.service.movie.tomatoes.RottenTomatoes;
-import com.flicklib.service.movie.xpress.XpressHu;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- *
+ * 
  * @author francisdb
  */
 @Singleton
-public class InfoFetcherFactoryImpl implements InfoFetcherFactory{
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(InfoFetcherFactoryImpl.class);
-    
-    private final MovieInfoFetcher imdbInfoFetcher;
-    private final MovieInfoFetcher movieWebInfoFetcher;
-    private final MovieInfoFetcher tomatoesInfoFetcher;
-    private final MovieInfoFetcher googleInfoFetcher;
-    private final MovieInfoFetcher flixterInfoFetcher;
-    //private final MovieInfoFetcher omdbInfoFetcher;
-    private final MovieInfoFetcher netflixInfoFetcher;
-    private final MovieInfoFetcher porthuInfoFetcher;
-    private final MovieInfoFetcher cinebelInfoFetcher;
-    private final MovieInfoFetcher ofdbInfoFetcher;
-    private final MovieInfoFetcher xpressHuFetcher;
-    private final MovieInfoFetcher blipprFetcher;
+public class InfoFetcherFactoryImpl implements InfoFetcherFactory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(InfoFetcherFactoryImpl.class);
+
+    private final Map<MovieService, MovieInfoFetcher> services = new HashMap<MovieService, MovieInfoFetcher>();
 
     /**
      * Constructs a new InfoFetcherFactoryImpl
-     * @param imdbInfoFetcher
-     * @param movieWebInfoFetcher
-     * @param tomatoesInfoFetcher
-     * @param googleInfoFetcher
-     * @param flixterInfoFetcher
-     * @param omdbInfoFetcher
-     * @param netflixInfoFetcher 
-     * @param porthuFetcher 
-     * @param cinebelFetcher 
-     * @param ofdbFetcher 
+     * 
      */
     @Inject
-    public InfoFetcherFactoryImpl(
-            final @Imdb MovieInfoFetcher imdbInfoFetcher,
-            final @MovieWeb MovieInfoFetcher movieWebInfoFetcher,
-            final @RottenTomatoes MovieInfoFetcher tomatoesInfoFetcher,
-            final @Google MovieInfoFetcher googleInfoFetcher,
-            final @Flixster MovieInfoFetcher flixterInfoFetcher,
-            //final @Omdb MovieInfoFetcher omdbInfoFetcher,
-            final @Netflix MovieInfoFetcher netflixInfoFetcher,
-            final @PortHu MovieInfoFetcher porthuFetcher,
-            final @Cinebel MovieInfoFetcher cinebelFetcher,
-            final @Ofdb MovieInfoFetcher ofdbFetcher,
-            final @XpressHu MovieInfoFetcher xpressHuFetcher,
-            final @Blippr MovieInfoFetcher blipprFetcher) {
-        this.imdbInfoFetcher = imdbInfoFetcher;
-        this.movieWebInfoFetcher = movieWebInfoFetcher;
-        this.tomatoesInfoFetcher = tomatoesInfoFetcher;
-        this.googleInfoFetcher = googleInfoFetcher;
-        this.flixterInfoFetcher = flixterInfoFetcher;
-        //this.omdbInfoFetcher = omdbInfoFetcher;
-        this.netflixInfoFetcher = netflixInfoFetcher;
-        this.porthuInfoFetcher = porthuFetcher;
-        this.cinebelInfoFetcher = cinebelFetcher;
-        this.ofdbInfoFetcher = ofdbFetcher;
-        this.xpressHuFetcher = xpressHuFetcher;
-        this.blipprFetcher = blipprFetcher;
+    public InfoFetcherFactoryImpl(Set<MovieInfoFetcher> fetchers) {
+        for (MovieInfoFetcher f : fetchers) {
+            add(f);
+        }
     }
     
-    
+    protected InfoFetcherFactoryImpl() {
+    }
+
+    protected void add(MovieInfoFetcher f) {
+        services.put(f.getService(), f);
+    }
 
     @Override
     public MovieInfoFetcher get(MovieService service) {
-        MovieInfoFetcher fetcher = null;
-        switch(service){
-            case FLIXSTER:
-                fetcher = flixterInfoFetcher;
-                break;
-            case GOOGLE:
-                fetcher = googleInfoFetcher;
-                break;
-            case IMDB:
-                fetcher = imdbInfoFetcher;
-                break;
-            case MOVIEWEB:
-                fetcher = movieWebInfoFetcher;
-                break;
-//            case OMDB:
-//                fetcher = omdbInfoFetcher;
-//                break;
-            case TOMATOES:
-                fetcher = tomatoesInfoFetcher;
-                break;
-            case NETFLIX:
-                fetcher = netflixInfoFetcher;
-                break;
-            case PORTHU :
-                fetcher = porthuInfoFetcher;
-                break;
-            case CINEBEL :
-                fetcher = cinebelInfoFetcher;
-                break;
-            case OFDB :
-                fetcher = ofdbInfoFetcher;
-                break;
-            case XPRESSHU : 
-                fetcher = xpressHuFetcher;
-                break;
-            case BLIPPR :
-        	fetcher = blipprFetcher;
-        	break;
-            default:
-            	LOGGER.warn("No fetcher defined for service "+service);
-            	// keep this exception in here!
-                throw new RuntimeException("Unknown service: "+service);
+        MovieInfoFetcher fetcher = services.get(service);
+        if (fetcher == null) {
+            LOGGER.warn("No fetcher defined for service " + service);
+            throw new IllegalArgumentException("Unknown service: " + service);
         }
         return fetcher;
     }

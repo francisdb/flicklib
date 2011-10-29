@@ -47,6 +47,8 @@ import com.flicklib.service.SourceLoader;
 import com.google.inject.Inject;
 
 public class XpressHuFetcher extends AbstractMovieInfoFetcher {
+    final static MovieService XPRESSHU = new MovieService("XPRESSHU" ,"Xpress.hu", "http://www.xpress.hu");
+    
 
     private static final Pattern ORIG_TITLE_WITH_YEAR_PATTERN = Pattern.compile("(.*) - ([0-9]+)");
 
@@ -81,7 +83,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
         final MoviePage result = new MoviePage();
         result.setIdForSite(idForSite);
         result.setUrl(url);
-        result.setService(MovieService.XPRESSHU);
+        result.setService(XPRESSHU);
 
         final List<Element> trLines = jerichoSource.getAllElements("tr");
         // search for <tr valign='top' align='center'> with 2 child
@@ -280,7 +282,7 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
      */
     private MovieSearchResult parseRow(List<Element> childs) {
         MovieSearchResult msr = new MovieSearchResult();
-        msr.setService(MovieService.XPRESSHU);
+        msr.setService(XPRESSHU);
         
         {
             Element imageCell = childs.get(1);
@@ -388,5 +390,10 @@ public class XpressHuFetcher extends AbstractMovieInfoFetcher {
                 params.put(name, value);
             }
         }
+    }
+    
+    @Override
+    public MovieService getService() {
+        return XPRESSHU;
     }
 }

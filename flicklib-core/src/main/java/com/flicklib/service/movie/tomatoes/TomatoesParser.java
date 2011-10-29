@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
-import com.flicklib.domain.MovieService;
 import com.flicklib.service.Source;
 import com.google.inject.Singleton;
 
@@ -47,7 +46,7 @@ public class TomatoesParser implements Parser {
 
 	@Override
 	public void parse(Source source, MoviePage movieSite) {
-		movieSite.setService(MovieService.TOMATOES);
+		movieSite.setService(TomatoesInfoFetcher.TOMATOES);
 		net.htmlparser.jericho.Source html = source.getJerichoSource();
 		
 		List<Element> metas = html.getAllElements(HTMLElementName.META);

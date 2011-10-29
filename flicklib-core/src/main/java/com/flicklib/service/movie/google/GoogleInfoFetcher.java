@@ -52,6 +52,11 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GoogleInfoFetcher.class);
 
+	/**
+         * http://www.google.com/movies
+         */
+        final static MovieService GOOGLE = new MovieService("GOOGLE", "Google movies", "http://www.google.com", "Google");
+
 	private final Parser googleParser;
 	private final SourceLoader httpLoader;
 
@@ -73,7 +78,7 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
 	@Override
 	public MoviePage getMovieInfo(String id) throws IOException {
 		if (id.startsWith("http://www.google.com/movies/reviews")) {
-			MoviePage site = new MoviePage(MovieService.GOOGLE);
+			MoviePage site = new MoviePage(GOOGLE);
 			site.setUrl(id);
 			com.flicklib.service.Source source = httpLoader.loadSource(id);
 			googleParser.parse(source, site);
@@ -84,7 +89,7 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
 
 	@Override
 	public List<MovieSearchResult> search(String title) throws IOException {
-		String url = MovieService.GOOGLE.getUrl() + "/movies" + Param.paramString("q", title);
+		String url = GOOGLE.getUrl() + "/movies" + Param.paramString("q", title);
 
 		com.flicklib.service.Source sourceString = httpLoader.loadSource(url);
 		Source source = sourceString.getJerichoSource();
@@ -118,13 +123,13 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
 			} else {
 				m = new MovieSearchResult();
 			}
-			m.setService(MovieService.GOOGLE);
+			m.setService(GOOGLE);
 			m.setTitle(foundTitle);
 
 			Element link = xpath.getAllTagByAttributes("class", "info links").getTags(HTMLElementName.A).firstElement();
 			if (link != null) {
 				String href = link.getAttributeValue("href");
-				m.setUrl(MovieService.GOOGLE.getUrl() + href);
+				m.setUrl(GOOGLE.getUrl() + href);
 				Matcher matcher = Pattern.compile("mid=(\\w+)").matcher(href);
 				if (matcher.find()) {
 					m.setIdForSite(matcher.group(1));
@@ -168,7 +173,7 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
 	public MoviePage fetch(Movie movie, String id) {
 		MoviePage site = new MoviePage();
 		//site.setMovie(movie);
-		site.setService(MovieService.GOOGLE);
+		site.setService(GOOGLE);
 		try {
 			String params = Param.paramString("q", movie.getTitle());
 			com.flicklib.service.Source httpSource = httpLoader.loadSource("http://www.google.com/movies" + params);
@@ -202,6 +207,11 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
 			LOGGER.error("Loading from Google failed", ex);
 		}
 		return site;
+	}
+	
+	@Override
+	public MovieService getService() {
+	    return GOOGLE;
 	}
 
 }

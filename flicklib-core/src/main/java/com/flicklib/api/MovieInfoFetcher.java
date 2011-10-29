@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
+import com.flicklib.domain.MovieService;
 
 
 /**
@@ -70,4 +71,9 @@ public interface MovieInfoFetcher {
      */
     MoviePage getMovieInfo(String idForSite) throws IOException;
     
+    /**
+     * 
+     * @return the service ID which this fetcher returns informations for.
+     */
+    MovieService getService();
 }

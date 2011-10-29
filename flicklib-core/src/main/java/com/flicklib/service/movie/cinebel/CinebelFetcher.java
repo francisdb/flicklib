@@ -49,6 +49,8 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CinebelFetcher.class);
 
+	private final static MovieService CINEBEL = new MovieService("CINEBEL", "Cinebel", "http://www.cinebel.be");
+
 	/**
 	 * TODO add support for en and fr
 	 * TODO add support for fetching info curently available in the movies (find count link and go to page)
@@ -72,7 +74,7 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 
 	@Override
 	public MoviePage getMovieInfo(String idForSite) throws IOException {
-		MoviePage page = new MoviePage(MovieService.CINEBEL);
+		MoviePage page = new MoviePage(CINEBEL);
 		// No other movie types for this site?
 		page.setType(MovieType.MOVIE);
 		String url = generateMovieUrl(idForSite);
@@ -97,12 +99,12 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 		for (Element e : xp) {
 			// movie found
 			MovieSearchResult rs = new MovieSearchResult();
-			rs.setService(MovieService.CINEBEL);
+			rs.setService(CINEBEL);
 			for (Element name : new SimpleXPath(e).getAllTagByAttributes("class", "snippetTitle")) {
 				String href = name.getAttributeValue("href");
 				if (href.startsWith(PREFIX)) {
 					rs.setTitle(name.getTextExtractor().toString());
-					rs.setUrl(MovieService.CINEBEL.getUrl() + href);
+					rs.setUrl(CINEBEL.getUrl() + href);
 					href = href.substring(PREFIX.length());
 					int end = href.indexOf('/');
 					if (end >= 0) {
@@ -119,7 +121,7 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 
 	private String generateMovieUrl(final String id) {
 		//http://www.cinebel.be/nl/film/102-.htm
-		return MovieService.CINEBEL.getUrl() + PREFIX + id + "/";
+		return CINEBEL.getUrl() + PREFIX + id + "/";
 	}
 
 	private String generateSearchUrl(final String title, final int maxResults) {
@@ -130,8 +132,13 @@ public class CinebelFetcher extends AbstractMovieInfoFetcher {
 			throw new RuntimeException("utf-8 encoding not supported", e);
 		}
 		//String url = MovieService.CINEBEL.getUrl()+"/portal/faces/public/exo/search?portal:componentId=SearchContentPortlet&portal:type=render&portal:isSecure=false&lng="+LANG+"&query="+encoded+"&itemsPerPage="+maxResults+"&fuzzy=true&fieldToSearch=movieTitle&category=movie&movieWithSchedules=false";
-		String url = MovieService.CINEBEL.getUrl() + "/nl/zoek?query=" + encoded + "&x=13&y=13";
+		String url = CINEBEL.getUrl() + "/nl/zoek?query=" + encoded + "&x=13&y=13";
 		return url;
+	}
+	
+	@Override
+	public MovieService getService() {
+	    return CINEBEL;
 	}
 
 }

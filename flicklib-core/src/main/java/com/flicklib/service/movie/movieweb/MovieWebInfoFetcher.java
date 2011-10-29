@@ -49,7 +49,11 @@ import com.google.inject.Singleton;
 public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieWebInfoFetcher.class);
-
+    /**
+     * http://www.movieweb.com
+     */
+    final static MovieService MOVIEWEB = new MovieService("MOVIEWEB", "MovieWeb", "http://www.movieweb.com", "MWeb");
+    
     private final Parser parser;
     private final SourceLoader sourceLoader;
 
@@ -71,9 +75,9 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
     @Override
 	public MoviePage getMovieInfo(String id) throws IOException {
 		MoviePage site = null;
-		if (id.startsWith(MovieService.MOVIEWEB.getUrl())) {
+		if (id.startsWith(MOVIEWEB.getUrl())) {
 			com.flicklib.service.Source source = sourceLoader.loadSource(id);
-			site = new MoviePage(MovieService.MOVIEWEB);
+			site = new MoviePage(MOVIEWEB);
 			site.setIdForSite(id);
 			site.setUrl(id);
 			parser.parse(source, site);
@@ -118,7 +122,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
                     MovieSearchResult m = new MovieSearchResult();
                     m.setIdForSite(movieUrl);
                     m.setTitle(movieName);
-                    m.setService(MovieService.MOVIEWEB);
+                    m.setService(MOVIEWEB);
                     m.setUrl(movieUrl);
                     //m.setImgUrl(imgUrl);
                     result.add(m);
@@ -136,7 +140,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
     public MoviePage fetch(Movie movie, String id) {
         MoviePage site = new MoviePage();
         //site.setMovie(movie);
-        site.setService(MovieService.MOVIEWEB);
+        site.setService(MOVIEWEB);
         String urlToLoad = createMovieWebSearchUrl(movie.getTitle());
         try {
             com.flicklib.service.Source source = sourceLoader.loadSource(urlToLoad);
@@ -177,6 +181,11 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
 
     private String createMovieWebSearchUrl(String title) {
         return "http://www.movieweb.com/search" + Param.paramString("search", title);
+    }
+    
+    @Override
+    public MovieService getService() {
+        return MOVIEWEB;
     }
 
 }

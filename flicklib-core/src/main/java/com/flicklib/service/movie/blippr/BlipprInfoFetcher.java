@@ -27,6 +27,7 @@ import com.google.inject.Singleton;
 public class BlipprInfoFetcher implements MovieInfoFetcher {
 
     final static Logger LOG = LoggerFactory.getLogger(BlipprInfoFetcher.class);
+    final static MovieService BLIPPR = new MovieService("BLIPPR", "Blippr.com", "http://www.blippr.com");
 
     private static final String ROOT = "http://api.blippr.com/v2/";
 
@@ -102,7 +103,7 @@ public class BlipprInfoFetcher implements MovieInfoFetcher {
     private void resultToMovie(MoviePage movie, JSONObject result) throws JSONException {
         movie.setIdForSite(result.getString("id"));
         movie.setUrl(getUrlForID(movie.getIdForSite()));
-        movie.setService(MovieService.BLIPPR);
+        movie.setService(BLIPPR);
         movie.setTitle(result.getString("name"));
         movie.setScore(result.getInt("score"));
         JSONObject images = result.getJSONObject("images");
@@ -184,8 +185,12 @@ public class BlipprInfoFetcher implements MovieInfoFetcher {
 
     @Override
     public List<? extends MovieSearchResult> search(String title, String year) throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+        return search(title);
+    }
+    
+    @Override
+    public MovieService getService() {
+        return BLIPPR;
     }
 
 }

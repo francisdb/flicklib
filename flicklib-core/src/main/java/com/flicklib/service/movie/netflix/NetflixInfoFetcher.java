@@ -60,7 +60,11 @@ import com.google.inject.name.Named;
 public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NetflixInfoFetcher.class);
-
+    /**
+     * http://www.netflix.com
+     */
+    final static MovieService NETFLIX =  new MovieService("NETFLIX", "Netflix", "http://www.netflix.com");
+    
     private final OAuthAccessor accessor;
 
     @Inject
@@ -138,7 +142,7 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
 
         public SaxResultUnmarshaller() {
         	result = new ArrayList<MoviePage>();
-        	moviePage = new MoviePage(MovieService.NETFLIX);
+        	moviePage = new MoviePage(NETFLIX);
         }
         
         public List<MoviePage> getResult() {
@@ -149,7 +153,7 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
         public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
             LOGGER.debug("element <"+name+" "+toString(attributes)+">");
             if ("catalog_title".equals(name)) {
-                moviePage = new MoviePage(MovieService.NETFLIX);
+                moviePage = new MoviePage(NETFLIX);
             }
             if ("id".equals(name)) {
                 tagToReadContentFrom = name;
@@ -206,4 +210,8 @@ public class NetflixInfoFetcher extends AbstractMovieInfoFetcher {
         }
     }
 
+    @Override
+    public MovieService getService() {
+        return NETFLIX;
+    }
 }

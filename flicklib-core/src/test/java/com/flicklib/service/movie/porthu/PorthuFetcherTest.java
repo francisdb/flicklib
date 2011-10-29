@@ -33,7 +33,6 @@ import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.domain.MovieService;
 import com.flicklib.service.FileSourceLoader;
 import com.flicklib.service.movie.AliasingSourceLoader;
 
@@ -107,7 +106,7 @@ public class PorthuFetcherTest {
         try {
             MoviePage moviePage = fetcher.getMovieInfo("5609");
             assertNotNull("movie page", moviePage);
-            assertEquals("service type", MovieService.PORTHU, moviePage.getService());
+            assertEquals("service type", "PORTHU", moviePage.getService().getId());
             assertEquals("title", "A Keresztapa", moviePage.getAlternateTitle());
             assertEquals("year", Integer.valueOf(1972), moviePage.getYear());
             assertNotNull("has plot", moviePage.getPlot());
@@ -128,7 +127,7 @@ public class PorthuFetcherTest {
         try {
             MoviePage moviePage = fetcher.getMovieInfo("80364");
             assertNotNull("movie page", moviePage);
-            assertEquals("service type", MovieService.PORTHU, moviePage.getService());
+            assertEquals("service type", "PORTHU", moviePage.getService().getId());
             assertEquals("title", "Parfüm: Egy gyilkos története", moviePage.getAlternateTitle());
             assertEquals("alternate title", "Perfume: The Story of a Murderer", moviePage.getTitle());
             assertEquals("year", Integer.valueOf(2006), moviePage.getYear());
@@ -151,7 +150,7 @@ public class PorthuFetcherTest {
         try {
             MoviePage moviePage = fetcher.getMovieInfo("1269");
             assertNotNull("movie page", moviePage);
-            assertEquals("service type", MovieService.PORTHU, moviePage.getService());
+            assertEquals("service type", "PORTHU", moviePage.getService().getId());
             assertEquals("title", "Star Trek 8. - Kapcsolatfelvétel", moviePage.getAlternateTitle());
             assertEquals("alternate title", "Star Trek: First Contact", moviePage.getTitle());
             assertEquals("year", Integer.valueOf(1996), moviePage.getYear());
@@ -174,7 +173,7 @@ public class PorthuFetcherTest {
         try {
             MoviePage moviePage = fetcher.getMovieInfo("75033");
             assertNotNull("movie page", moviePage);
-            assertEquals("service type", MovieService.PORTHU, moviePage.getService());
+            assertEquals("service type", "PORTHU", moviePage.getService().getId());
             assertEquals("title", "Terkel in Trouble", moviePage.getTitle());
             assertEquals("alternate title", "Terhelt Terkel", moviePage.getAlternateTitle());
             assertEquals("original title", "Terkel i knibe", moviePage.getOriginalTitle());

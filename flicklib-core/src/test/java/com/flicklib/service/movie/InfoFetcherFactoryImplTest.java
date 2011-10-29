@@ -18,8 +18,12 @@
 package com.flicklib.service.movie;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,54 +36,93 @@ import com.flicklib.domain.MovieService;
 
 /**
  * @author francisdb
- *
+ * 
  */
 public class InfoFetcherFactoryImplTest {
-	
-	private InfoFetcherFactory factory;
-	
-	@Before
-	public void setupFactory(){
-		MovieInfoFetcher fetcher = new MockInfoFetcher();
-		factory = new InfoFetcherFactoryImpl(
-				fetcher, fetcher, fetcher, fetcher, fetcher, fetcher, fetcher, fetcher, fetcher, fetcher, fetcher);
-	}
-	
-	@Test
-	public void testAllServices(){
-		MovieInfoFetcher fetcher;
-		for (MovieService service:MovieService.values()){
-			fetcher = factory.get(service);
-			Assert.assertNotNull("fetcher for " + service + " is null", fetcher);
-		}
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testNull(){
-		factory.get(null);
-	}
-	
-	private class MockInfoFetcher implements MovieInfoFetcher {
 
-		@Override
-		public MoviePage fetch(String title) throws IOException {
-			return null;
-		}
+    private InfoFetcherFactory factory;
 
-		@Override
-		public MoviePage getMovieInfo(String idForSite) throws IOException {
-			return null;
-		}
+    @Before
+    public void setupFactory() {
+        Set<MovieInfoFetcher> f = new HashSet<MovieInfoFetcher>();
+        for (int i = 0; i < 3; i++) {
+            MovieInfoFetcher fetcher = new MockInfoFetcher("mock_" + i);
+            f.add(fetcher);
+        }
+        factory = new InfoFetcherFactoryImpl(f);
+    }
 
-		@Override
-		public List<? extends MovieSearchResult> search(String title) throws IOException {
-			return null;
-		}
+    @Test
+    public void testAllServices() {
+        MovieInfoFetcher fetcher;
+        for (MovieService service : MovieService.values()) {
+            if (service instanceof MockMovieService) {
+                fetcher = factory.get(service);
+                Assert.assertNotNull("fetcher for " + service + " is null", fetcher);
+            }
+        }
+    }
 
-		@Override
-		public List<? extends MovieSearchResult> search(String title, String year) throws IOException {
-			return null;
-		}
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void testNull() {
+        factory.get(null);
+    }
+
+    @After
+    public void cleanup() {
+        for (MovieService m : new ArrayList<MovieService>(MovieService.values())) {
+            if (m instanceof MockMovieService) {
+                ((MockMovieService) m).remove();
+            }
+        }
+    }
+
+    private static class MockMovieService extends MovieService {
+
+        public MockMovieService(String id, String name, String url, String shortName) {
+            super(id, name, url, shortName);
+        }
+
+        @Override
+        public void remove() {
+            // TODO Auto-generated method stub
+            super.remove();
+        }
+
+    }
+
+    private class MockInfoFetcher implements MovieInfoFetcher {
+
+        MovieService dummy;
+
+        MockInfoFetcher(String id) {
+            this.dummy = new MockMovieService(id, "Name=" + id, "url=" + id, "shortName:" + id);
+        }
+
+        @Override
+        public MoviePage fetch(String title) throws IOException {
+            return null;
+        }
+
+        @Override
+        public MoviePage getMovieInfo(String idForSite) throws IOException {
+            return null;
+        }
+
+        @Override
+        public List<? extends MovieSearchResult> search(String title) throws IOException {
+            return null;
+        }
+
+        @Override
+        public List<? extends MovieSearchResult> search(String title, String year) throws IOException {
+            return null;
+        }
+
+        @Override
+        public MovieService getService() {
+            return dummy;
+        }
+    }
 
 }

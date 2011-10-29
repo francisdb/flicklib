@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.domain.MovieService;
 import com.flicklib.service.movie.AlternateLiveTester;
 
 public class TomatoesInfoFetcherTest extends AlternateLiveTester {
@@ -24,7 +23,7 @@ public class TomatoesInfoFetcherTest extends AlternateLiveTester {
 	@Test
 	public void testGetMovieInfo() throws IOException {
 		MoviePage page = fetcher.getMovieInfo("pulp_fiction");
-		assertEquals(MovieService.TOMATOES, page.getService());
+		assertEquals("TOMATOES", page.getService().getId());
 		assertTrue("starts with 'Outrageously violent, time-twisting, and in love with language, '", 
 				page.getPlot().startsWith("Outrageously violent, time-twisting, and in love with language, "));
 		System.out.println("score = "+page.getScore());

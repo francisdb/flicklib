@@ -70,6 +70,18 @@ public class ModuleLoading {
         assertEquals("sourceLoader class is", PersistentCacheSourceLoader.class, instance.getClass());
     }
     
-    
+    @Test
+    public void testImdbLoader() {
+        FlicklibModule f = new FlicklibModule();
+        Injector injector = Guice.createInjector(new NetFlixAuthModule("",""), f);
+        
+        InfoFetcherFactory instance = injector.getInstance(InfoFetcherFactory.class);
+        assertNotNull("InfoFetcherFactory", instance);
+        String[] SERVICE_NAMES = new String[] { "IMDB", "PORTHU", "XPRESSHU", "BLIPPR", "CINEBEL" };
+        for (String service : SERVICE_NAMES) {
+            MovieInfoFetcher infoFetcher = instance.get(MovieService.getById(service));
+            assertNotNull("infoFetcher["+service+']', infoFetcher);
+        }
+    }
 
 }

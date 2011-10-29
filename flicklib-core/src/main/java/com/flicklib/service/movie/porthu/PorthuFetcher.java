@@ -56,6 +56,10 @@ import com.google.inject.Inject;
 public class PorthuFetcher extends AbstractMovieInfoFetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PorthuFetcher.class);
+    /**
+     * http://www.port.hu
+     */
+    final static MovieService PORTHU = new MovieService("PORTHU", "Port.hu", "http://www.port.hu");
 
     private static final String FILM_INFO_URL = "/pls/fi/films.film_page";
     private static final String TEST_CITY_ID = "3372";
@@ -90,7 +94,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     }
 
     private MoviePage parseMovieInfoPage(Source source, String id) throws IOException {
-        MoviePage mp = new MoviePage(MovieService.PORTHU);
+        MoviePage mp = new MoviePage(PORTHU);
         mp.setIdForSite(id);
         {
             List<Element> titleElements = source.getAllElements("class", "blackbigtitle", false);
@@ -232,7 +236,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
                         if (href.indexOf(FILM_INFO_URL)!=-1) {
                             LOGGER.info("film url :" + href);
                             String movieTitle = link.getContent().getTextExtractor().toString();
-                            MovieSearchResult msr = new MovieSearchResult(MovieService.PORTHU);
+                            MovieSearchResult msr = new MovieSearchResult(PORTHU);
                             msr.setUrl(new java.net.URL(new java.net.URL("http://port.hu"),href).toString());
                             msr.setIdForSite(collectIdFromUrl(href));
 
@@ -488,5 +492,10 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     protected boolean isMoviePageUrl(String url) {
     	// FIXME is this first cause correct?
         return FILM_INFO_URL.startsWith(url) || (url.startsWith("http://port.hu") && url.indexOf(FILM_INFO_URL)!=-1);
+    }
+    
+    @Override
+    public MovieService getService() {
+        return PORTHU;
     }
 }

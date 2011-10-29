@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MovieType;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.TestUtil;
@@ -38,7 +37,7 @@ public class OfdbFetcherTest {
 	public void testSearchString() throws IOException {
 		List<? extends MovieSearchResult> res = fetcher.search("Twin Peaks");
 		for(MovieSearchResult result:res){
-			assertEquals(MovieService.OFDB, result.getService());
+			assertEquals("OFDB", result.getService().getId());
 			LOG.info("result: " + result.getTitle() + " / " + result.getOriginalTitle() + " / " + result.getYear() + " / " + result.getType());
 		}
 		assertEquals("Geheimnis von Twin Peaks, Das", res.get(0).getTitle());
@@ -50,7 +49,7 @@ public class OfdbFetcherTest {
 		
 		List<? extends MovieSearchResult> res2 = fetcher.search("mar adentro");
 		for(MovieSearchResult result:res2){
-			assertEquals(MovieService.OFDB, result.getService());
+			assertEquals("OFDB", result.getService().getId());
 			assertNotNull(result.getIdForSite());
 			LOG.info("result 2:" + result.getTitle() + " / " + result.getOriginalTitle() + " / " + result.getYear() + " / " + result.getType());
 		}
@@ -61,14 +60,14 @@ public class OfdbFetcherTest {
 	@Test
 	public void testGetMovieInfo() throws IOException {
 		MoviePage page = fetcher.getMovieInfo("1050,Pulp-Fiction");
-		assertEquals(MovieService.OFDB, page.getService());
+		assertEquals("OFDB", page.getService().getId());
 		assertEquals("Pulp Fiction", page.getTitle());
 		assertNotNull(page.getScore());
 		assertNotNull(page.getPlot());
 		assertNotNull(page.getDescription());
 
 		page = fetcher.getMovieInfo("3635,Dune---Der-Wüstenplanet");
-		assertEquals(MovieService.OFDB, page.getService());
+                assertEquals("OFDB", page.getService().getId());
 		assertEquals(MovieType.MINI_SERIES, page.getType());
 		assertEquals("Dune - Der Wüstenplanet", page.getAlternateTitle());
 		assertEquals("Dune", page.getTitle());

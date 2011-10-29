@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import com.flicklib.api.Parser;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.domain.MovieService;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.ElementOnlyTextExtractor;
 import com.google.inject.Inject;
@@ -80,7 +79,7 @@ public class ImdbSearch {
                 Set<String> ids = new HashSet<String>();
                 while ((i.hasNext()) && (!tableElement.getTextExtractor().toString().startsWith("Media from")) && (!tableElement.getTextExtractor().toString().startsWith(" ")) && (!tableElement.getTextExtractor().toString().endsWith("Update your search preferences.")) && (!tableElement.getTextExtractor().toString().endsWith("...)"))) {
                     movieSite = new MovieSearchResult();
-                    movieSite.setService(MovieService.IMDB);
+                    movieSite.setService(ImdbInfoFetcher.IMDB);
                     //movieSite.setMovie(movie);
                     linkElement = (Element) i.next();
                     String href = linkElement.getAttributeValue("href");
@@ -132,7 +131,7 @@ public class ImdbSearch {
             
         }else{
             LOGGER.info("Exact match returned");
-            MoviePage result = new MoviePage(MovieService.IMDB);
+            MoviePage result = new MoviePage(ImdbInfoFetcher.IMDB);
             
             // FIXME, there should be a way to know at what url whe ended up (better way to parse imdb id)
             
@@ -153,7 +152,7 @@ public class ImdbSearch {
                     //href has to be split as href will be in from of /title/tt#######/some-other-dir-like-trailers
                     String[] split = href.split("/");
                     href = "/" + split[1] + "/" + split[2];
-                    MoviePage movieSite = new MoviePage(MovieService.IMDB);
+                    MoviePage movieSite = new MoviePage(ImdbInfoFetcher.IMDB);
                     //movieSite.setMovie(movie);
                     movieSite.setUrl("http://www.imdb.com" + href);
                     movieSite.setIdForSite(href.replaceAll("[a-zA-Z:/.+=?]", "").trim());

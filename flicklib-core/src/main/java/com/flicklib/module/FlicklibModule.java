@@ -139,6 +139,7 @@ public class FlicklibModule extends AbstractModule {
         bind(Parser.class).annotatedWith(Cinebel.class).to(CinebelParser.class);
         bind(Parser.class).annotatedWith(Ofdb.class).to(OfdbParser.class);
 
+
         bind(MovieInfoFetcher.class).annotatedWith(Imdb.class).to(ImdbInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(MovieWeb.class).to(MovieWebInfoFetcher.class);
         bind(MovieInfoFetcher.class).annotatedWith(RottenTomatoes.class).to(TomatoesInfoFetcher.class);

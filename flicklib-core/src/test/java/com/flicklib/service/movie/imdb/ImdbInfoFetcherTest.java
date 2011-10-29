@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 import com.flicklib.domain.MovieSearchResult;
-import com.flicklib.domain.MovieService;
 import com.flicklib.domain.MovieType;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.TestUtil;
@@ -40,7 +39,7 @@ public class ImdbInfoFetcherTest {
 		public void testSearchString() throws IOException {
 			List<? extends MovieSearchResult> res = fetcher.search("Twin Peaks");
 			for(MovieSearchResult result:res){
-				assertEquals(MovieService.IMDB, result.getService());
+				assertEquals("IMDB", result.getService().getId());
 				//System.out.println(result.getTitle()+" / "+result.getOriginalTitle()+" / "+result.getYear()+" / "+result.getType());
 			}
 			assertEquals("Twin Peaks", res.get(0).getTitle());
@@ -53,7 +52,7 @@ public class ImdbInfoFetcherTest {
 			
 			List<? extends MovieSearchResult> res2 = fetcher.search("mar adentro");
 			for(MovieSearchResult result:res2){
-				assertEquals(MovieService.IMDB, result.getService());
+				assertEquals("IMDB", result.getService().getId());
 				assertNotNull(result.getIdForSite());
 				System.out.println(result.getTitle()+" / "+result.getOriginalTitle()+" / "+result.getYear()+" / "+result.getType());
 			}
@@ -63,7 +62,7 @@ public class ImdbInfoFetcherTest {
 		@Test
 		public void testGetMovieInfo() throws IOException {
 			MoviePage page = fetcher.getMovieInfo("0133093");
-			assertEquals(MovieService.IMDB, page.getService());
+			assertEquals("IMDB", page.getService().getId());
 			assertEquals("The Matrix", page.getPreferredTitle());
 			assertEquals(2, page.getDirectors().size());
 			assertTrue(page.getDirectors().contains("Andy Wachowski"));

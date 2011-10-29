@@ -17,12 +17,6 @@
  */
 package com.flicklib.service.movie;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.flicklib.api.InfoFetcherFactory;
-import com.flicklib.api.MovieInfoFetcher;
-import com.flicklib.domain.MovieService;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.movie.cinebel.CinebelFetcher;
 import com.flicklib.service.movie.flixter.FlixsterInfoFetcher;
@@ -38,79 +32,21 @@ import com.flicklib.service.movie.xpress.XpressHuFetcher;
  * Lets you use flicklib without using Guice
  *
  */
-public class SimpleInfoFetcherFactory implements InfoFetcherFactory {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleInfoFetcherFactory.class);
-
-    private final MovieInfoFetcher imdbInfoFetcher;
-    private final MovieInfoFetcher movieWebInfoFetcher;
-    private final MovieInfoFetcher tomatoesInfoFetcher;
-    private final MovieInfoFetcher googleInfoFetcher;
-    private final MovieInfoFetcher flixterInfoFetcher;
-    private final MovieInfoFetcher netflixInfoFetcher;
-    private final MovieInfoFetcher porthuInfoFetcher;
-    private final MovieInfoFetcher cinebelInfoFetcher;
-    private final MovieInfoFetcher ofdbInfoFetcher;
-    private final MovieInfoFetcher xpressHuFetcher;
+public class SimpleInfoFetcherFactory extends InfoFetcherFactoryImpl{
 
     public SimpleInfoFetcherFactory(final SourceLoader sourceLoader) {
-        this.imdbInfoFetcher = new ImdbInfoFetcher(sourceLoader);
-        this.movieWebInfoFetcher = new MovieWebInfoFetcher(sourceLoader);
-        this.tomatoesInfoFetcher = new TomatoesInfoFetcher(sourceLoader);
-        this.googleInfoFetcher = new GoogleInfoFetcher(sourceLoader);
-        this.flixterInfoFetcher = new FlixsterInfoFetcher(sourceLoader);
-        // TODO: netflix needs an API key ...
-        this.netflixInfoFetcher = null; // new NetflixInfoFetcher()
-        this.porthuInfoFetcher = new PorthuFetcher(sourceLoader);
-        this.cinebelInfoFetcher = new CinebelFetcher(sourceLoader);
-        this.ofdbInfoFetcher = new OfdbFetcher(sourceLoader);
-        this.xpressHuFetcher = new XpressHuFetcher(sourceLoader);
+        super();
+        add(new ImdbInfoFetcher(sourceLoader));
+        add(new MovieWebInfoFetcher(sourceLoader));
+        add(new TomatoesInfoFetcher(sourceLoader));
+        add(new GoogleInfoFetcher(sourceLoader));
+        add(new FlixsterInfoFetcher(sourceLoader));
+        add(new PorthuFetcher(sourceLoader));
+        add(new CinebelFetcher(sourceLoader));
+        add(new OfdbFetcher(sourceLoader));
+        add(new XpressHuFetcher(sourceLoader));
     }
     
     
-    @Override
-    public MovieInfoFetcher get(MovieService service) {
-        MovieInfoFetcher fetcher = null;
-        switch(service){
-            case FLIXSTER:
-                fetcher = flixterInfoFetcher;
-                break;
-            case GOOGLE:
-                fetcher = googleInfoFetcher;
-                break;
-            case IMDB:
-                fetcher = imdbInfoFetcher;
-                break;
-            case MOVIEWEB:
-                fetcher = movieWebInfoFetcher;
-                break;
-            case TOMATOES:
-                fetcher = tomatoesInfoFetcher;
-                break;
-            case NETFLIX:
-                fetcher = netflixInfoFetcher;
-                break;
-            case PORTHU :
-                fetcher = porthuInfoFetcher;
-                break;
-            case CINEBEL :
-                fetcher = cinebelInfoFetcher;
-                break;
-            case OFDB :
-                fetcher = ofdbInfoFetcher;
-                break;
-            case XPRESSHU : 
-                fetcher = xpressHuFetcher;
-                break;
-            default:
-                // keep this exception in here!
-                throw new RuntimeException("Unknown service: "+service);
-        }
-        if(fetcher == null){
-        	LOGGER.warn("No fetcher was found for: " + service);
-        }
-        return fetcher;
-    }
-
 
 }
