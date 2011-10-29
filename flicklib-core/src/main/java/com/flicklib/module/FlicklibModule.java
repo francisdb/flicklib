@@ -58,6 +58,7 @@ import com.flicklib.service.sub.OpenSubtitlesLoader;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 
 /**
@@ -153,6 +154,19 @@ public class FlicklibModule extends AbstractModule {
         bind(MovieInfoFetcher.class).annotatedWith(Blippr.class).to(BlipprInfoFetcher.class);
 
         bind(TrailerFinder.class).to(AppleTrailerFinder.class);
+
+        Multibinder<MovieInfoFetcher> multibinder = Multibinder.newSetBinder(binder(), MovieInfoFetcher.class);
+        multibinder.addBinding().to(ImdbInfoFetcher.class);
+        multibinder.addBinding().to(MovieWebInfoFetcher.class);
+        multibinder.addBinding().to(TomatoesInfoFetcher.class);
+        multibinder.addBinding().to(GoogleInfoFetcher.class);
+        multibinder.addBinding().to(FlixsterInfoFetcher.class);
+        multibinder.addBinding().to(NetflixInfoFetcher.class);
+        multibinder.addBinding().to(PorthuFetcher.class);
+        multibinder.addBinding().to(CinebelFetcher.class);
+        multibinder.addBinding().to(OfdbFetcher.class);
+        multibinder.addBinding().to(XpressHuFetcher.class);
+        multibinder.addBinding().to(BlipprInfoFetcher.class);
 
     }
 }
