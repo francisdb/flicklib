@@ -36,6 +36,10 @@
 			<version>1.8.5</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.flicklib</groupId>
+			<artifactId>flicklib-guice</artifactId>
+		</dependency>
 	</dependencies>
 	
 	<properties>

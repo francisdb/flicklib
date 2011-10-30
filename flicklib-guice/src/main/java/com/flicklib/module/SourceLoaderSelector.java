@@ -17,6 +17,7 @@
  */
 package com.flicklib.module;
 
+import com.flicklib.service.Constants;
 import com.flicklib.service.HttpClientSourceLoader;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.service.UrlConnectionResolver;
@@ -44,9 +45,9 @@ public class SourceLoaderSelector implements Provider<SourceLoader> {
     
     @Inject
     public SourceLoaderSelector(
-            @Named(value = FlicklibModule.USE_HTTPCOMPONENTS) boolean httpClient, 
-            @Named(value = FlicklibModule.CACHE_ROOT) String cacheRoot, 
-            @Named(value = FlicklibModule.HTTP_TIMEOUT) Integer timeOut) {
+            @Named(value = Constants.USE_HTTPCOMPONENTS) boolean httpClient, 
+            @Named(value = Constants.CACHE_ROOT) String cacheRoot, 
+            @Named(value = Constants.HTTP_TIMEOUT) Integer timeOut) {
         super();
         this.httpClient = httpClient;
         this.cacheRoot = cacheRoot;

@@ -12,6 +12,7 @@
 	<modules>
 		<module>flicklib-api</module>
 		<module>flicklib-core</module>
+		<module>flicklib-guice</module>
 		<module>flicklib-httpcache4j</module>
 		<module>flicklib-ehcache</module>
 		<!-- <module>flicklib-omdb</module> -->
@@ -84,10 +85,25 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>com.flicklib</groupId>
+				<artifactId>flicklib-guice</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>net.htmlparser.jericho</groupId>
 				<artifactId>jericho-html</artifactId>
 				<version>3.2</version>
 			</dependency>
+			<dependency>
+				<groupId>com.google.inject</groupId>
+				<artifactId>guice</artifactId>
+				<version>3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.inject.extensions</groupId>
+				<artifactId>guice-multibindings</artifactId>
+				<version>3.0</version>
+			</dependency>			
 		</dependencies>
 	</dependencyManagement>
 	
@@ -97,16 +113,6 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.3</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-multibindings</artifactId>
-			<version>3.0</version>
-		</dependency>		
 
 		<!-- TESTING -->
 

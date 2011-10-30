@@ -45,7 +45,6 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.flicklib.module.FlicklibModule;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -55,7 +54,7 @@ public class HttpClientSourceLoader implements SourceLoader {
 
 	private final DefaultHttpClient client;
 	@Inject
-	public HttpClientSourceLoader(@Named(value = FlicklibModule.HTTP_TIMEOUT) final Integer timeout) {
+	public HttpClientSourceLoader(@Named(value = Constants.HTTP_TIMEOUT) final Integer timeout) {
 
 	    ThreadSafeClientConnManager tm = new ThreadSafeClientConnManager();
 	    tm.setDefaultMaxPerRoute(20);

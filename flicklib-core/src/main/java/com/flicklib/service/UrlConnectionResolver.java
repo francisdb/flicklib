@@ -21,7 +21,6 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.flicklib.module.FlicklibModule;
 import com.flicklib.tools.IOTools;
 import com.google.inject.name.Named;
 
@@ -60,7 +59,7 @@ public class UrlConnectionResolver implements SourceLoader {
 	private Integer timeOut = null;
 	private final boolean internalRedirects = true;
 
-	public UrlConnectionResolver(@Named(value = FlicklibModule.HTTP_TIMEOUT) final Integer timeout) {
+	public UrlConnectionResolver(@Named(value = Constants.HTTP_TIMEOUT) final Integer timeout) {
 		this.timeOut = timeout;
 	}
 

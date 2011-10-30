@@ -13,14 +13,27 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.flicklib</groupId>
+			<artifactId>flicklib-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>net.htmlparser.jericho</groupId>
 			<artifactId>jericho-html</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>net.oauth</groupId>
 			<artifactId>core</artifactId>
 			<version>20080621</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>
@@ -32,10 +45,6 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.flicklib</groupId>
-			<artifactId>flicklib-api</artifactId>
 		</dependency>
 		
 	</dependencies>
