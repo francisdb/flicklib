@@ -26,8 +26,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class BlipprInfoFetcher implements MovieInfoFetcher {
 
-    final static Logger LOG = LoggerFactory.getLogger(BlipprInfoFetcher.class);
-    final static MovieService BLIPPR = new MovieService("BLIPPR", "Blippr.com", "http://www.blippr.com");
+    private final static Logger LOG = LoggerFactory.getLogger(BlipprInfoFetcher.class);
+    private final static MovieService BLIPPR = new MovieService("BLIPPR", "Blippr.com", "http://www.blippr.com");
 
     private static final String ROOT = "http://api.blippr.com/v2/";
 
@@ -138,7 +138,7 @@ public class BlipprInfoFetcher implements MovieInfoFetcher {
         
     }
 
-    public Iterable<String> wrap(JSONObject object, String prop) {
+    private Iterable<String> wrap(JSONObject object, String prop) {
         if (object == null) {
             return Collections.emptyList();
         }
@@ -150,11 +150,11 @@ public class BlipprInfoFetcher implements MovieInfoFetcher {
     }
     
     
-    final static class JSONArrayIterator implements Iterator<String>, Iterable<String> {
-        JSONArray array;
-        int position;
+    private final static class JSONArrayIterator implements Iterator<String>, Iterable<String> {
+        private final JSONArray array;
+        private int position;
 
-        public JSONArrayIterator(JSONArray array) {
+        private JSONArrayIterator(JSONArray array) {
             this.array = array;
         }
         @Override

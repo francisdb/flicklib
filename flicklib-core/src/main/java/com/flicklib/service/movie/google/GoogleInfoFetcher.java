@@ -55,7 +55,7 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
 	/**
          * http://www.google.com/movies
          */
-        final static MovieService GOOGLE = new MovieService("GOOGLE", "Google movies", "http://www.google.com", "Google");
+        private final static MovieService GOOGLE = new MovieService("GOOGLE", "Google movies", "http://www.google.com", "Google");
 
 	private final Parser googleParser;
 	private final SourceLoader httpLoader;
@@ -150,23 +150,6 @@ public class GoogleInfoFetcher extends AbstractMovieInfoFetcher {
 			result.add(m);
 		}
 		return result;
-	}
-
-	private boolean isReviewTitle(String title) {
-		// filter out '73 reviews' style titles or '1 review'
-		String[] words = title.split(" ");
-		if (words.length == 2) {
-			if (words[1].startsWith("review")) {
-				try {
-					Integer.parseInt(words[0].trim());
-					return true;
-				} catch (NumberFormatException e) {
-					return false;
-				}
-			}
-		}
-		return false;
-
 	}
 
 	@Deprecated

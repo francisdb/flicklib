@@ -14,10 +14,10 @@ import net.htmlparser.jericho.TextExtractor;
  */
 public class AdvancedTextExtractor extends TextExtractor {
 
-	boolean defaultDecision;
-	Set<String> allowedTagNames = new HashSet<String>();
+	private final boolean defaultDecision;
+	private final Set<String> allowedTagNames = new HashSet<String>();
 
-	Set<String> excludedTagNames = new HashSet<String>();
+	private final Set<String> excludedTagNames = new HashSet<String>();
 
 	public AdvancedTextExtractor(Segment segment, boolean defaultDecision) {
 		super(segment);

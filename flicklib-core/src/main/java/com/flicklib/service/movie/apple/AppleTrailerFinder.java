@@ -41,7 +41,7 @@ public class AppleTrailerFinder implements TrailerFinder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppleTrailerFinder.class);
 
-	final SourceLoader loader;
+	private final SourceLoader loader;
 
 	@Inject
 	public AppleTrailerFinder(SourceLoader loader) {
@@ -74,7 +74,7 @@ public class AppleTrailerFinder implements TrailerFinder {
 		return url;
 	}
 
-	protected JSONObject getJSON(String title) throws IOException, JSONException {
+	private JSONObject getJSON(String title) throws IOException, JSONException {
 		//String url = "http://trailers.apple.com/trailers/home/scripts/quickfind.php?"+Param.paramString("q", title);
 		String url = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q="+Param.encode(title+ " site:apple.com");
 		Source src = loader.loadSource(url, true);

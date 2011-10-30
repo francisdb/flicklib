@@ -8,7 +8,7 @@ import java.util.List;
 import net.htmlparser.jericho.Element;
 
 public class SimpleXPath implements Iterable<Element> {
-    List<Element> root;
+    private final List<Element> root;
 
     public SimpleXPath() {
         this.root = new ArrayList<Element>();

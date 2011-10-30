@@ -48,7 +48,7 @@ import com.google.inject.Singleton;
 public class ImdbParser implements Parser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImdbParser.class);
-    Map<String, MovieType> movieTypeMap = new HashMap<String, MovieType>();
+    private final Map<String, MovieType> movieTypeMap = new HashMap<String, MovieType>();
     {
         movieTypeMap.put("video", MovieType.VIDEO_MOVIE);
     }
@@ -62,7 +62,7 @@ public class ImdbParser implements Parser {
         parse(htmlSource.getContent(), htmlSource.getJerichoSource(), movieSite);
     }
 
-    public void parse(final String html, Source source, MoviePage movie) {
+    private void parse(final String html, Source source, MoviePage movie) {
 
         ImdbParserRegex regexParser = new ImdbParserRegex(html);
 

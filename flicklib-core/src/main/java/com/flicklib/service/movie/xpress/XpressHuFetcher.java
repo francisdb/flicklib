@@ -47,7 +47,7 @@ import com.flicklib.service.SourceLoader;
 import com.google.inject.Inject;
 
 public class XpressHuFetcher extends AbstractMovieInfoFetcher {
-    final static MovieService XPRESSHU = new MovieService("XPRESSHU" ,"Xpress.hu", "http://www.xpress.hu");
+    private final static MovieService XPRESSHU = new MovieService("XPRESSHU" ,"Xpress.hu", "http://www.xpress.hu");
     
 
     private static final Pattern ORIG_TITLE_WITH_YEAR_PATTERN = Pattern.compile("(.*) - ([0-9]+)");

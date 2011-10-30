@@ -58,7 +58,7 @@ public class ImdbSearch {
         this.imdbParser = imdbParser;
     }
 
-    public List<MovieSearchResult> parseResults(com.flicklib.service.Source source) throws IOException{
+    private List<MovieSearchResult> parseResults(com.flicklib.service.Source source) throws IOException{
         Source jerichoSource = source.getJerichoSource();
 
         List<MovieSearchResult> results = new ArrayList<MovieSearchResult>();
@@ -218,7 +218,7 @@ public class ImdbSearch {
      * @return the results found as List of MoviePage
      * @throws java.io.IOException
      */
-    public List<MovieSearchResult> getResults(String search) throws IOException {
+    List<MovieSearchResult> getResults(String search) throws IOException {
         String url = generateImdbTitleSearchUrl(search);
         LOGGER.info(url);
         com.flicklib.service.Source source = sourceLoader.loadSource(url);
@@ -229,7 +229,7 @@ public class ImdbSearch {
      * @param title 
      * @return the imdb url
      */
-    public String generateImdbTitleSearchUrl(String title) {
+    String generateImdbTitleSearchUrl(String title) {
         String encoded = "";
         try {
             encoded = URLEncoder.encode(title, "UTF-8");

@@ -65,9 +65,6 @@ public class ImdbSearchTest extends AlternateLiveTester {
         assertEquals("David Bowie: Black Tie White Noise", result.get(0).getPreferredTitle());
     }
 
-    private String getOriginalTitle(MovieSearchResult m) {
-	    return m.getOriginalTitle() != null ? m.getOriginalTitle() : m.getTitle();
-    }
     /**
      * Test of generateImdbTitleSearchUrl method, of class ImdbSearch.
      */

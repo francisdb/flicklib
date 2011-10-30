@@ -13,10 +13,10 @@ import com.flicklib.tools.IOTools;
 
 public class LoggingHttpCache implements SourceLoader {
 
-    final SourceLoader internal;
-    File dumpPath;
-    int reqNum;
-    PrintWriter logFile;
+    private final SourceLoader internal;
+    private final File dumpPath;
+    private int reqNum;
+    private final PrintWriter logFile;
     
     public LoggingHttpCache(SourceLoader internal, File dumpPath) throws IOException {
         this.internal = internal;

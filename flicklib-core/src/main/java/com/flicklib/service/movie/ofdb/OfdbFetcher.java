@@ -51,7 +51,7 @@ public class OfdbFetcher extends AbstractMovieInfoFetcher {
     /**
      * http://www.ofdb.de
      */
-    final static MovieService OFDB =  new MovieService("OFDB", "Online-Filmdatenbank", "http://www.ofdb.de", "OFDb");
+    private final static MovieService OFDB =  new MovieService("OFDB", "Online-Filmdatenbank", "http://www.ofdb.de", "OFDb");
     
     private final SourceLoader sourceLoader;
     private final Parser parser;

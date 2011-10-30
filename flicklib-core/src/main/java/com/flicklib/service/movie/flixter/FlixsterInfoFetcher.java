@@ -50,7 +50,7 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
     /**
      * http://www.flixster.com
      */
-    final static MovieService FLIXSTER = new MovieService("FLIXSTER", "Flixster", "http://www.flixster.com");
+    private final static MovieService FLIXSTER = new MovieService("FLIXSTER", "Flixster", "http://www.flixster.com");
 
     private static final String MOVIE_PREFIX = "http://www.flixster.com/movie/";
     private static final Logger LOGGER = LoggerFactory.getLogger(FlixsterInfoFetcher.class);
@@ -100,7 +100,7 @@ public class FlixsterInfoFetcher extends AbstractMovieInfoFetcher {
         return result;
     }
 
-	void parse(List<MovieSearchResult> result, Source jerichoSource) {
+	private void parse(List<MovieSearchResult> result, Source jerichoSource) {
 		List<?> aElements = jerichoSource.getAllElements(HTMLElementName.A);
         for (Iterator<?> i = aElements.iterator(); i.hasNext();) {
             Element aElement = (Element) i.next();

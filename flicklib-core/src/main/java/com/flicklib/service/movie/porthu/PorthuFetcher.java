@@ -59,7 +59,7 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
     /**
      * http://www.port.hu
      */
-    final static MovieService PORTHU = new MovieService("PORTHU", "Port.hu", "http://www.port.hu");
+    private final static MovieService PORTHU = new MovieService("PORTHU", "Port.hu", "http://www.port.hu");
 
     private static final String FILM_INFO_URL = "/pls/fi/films.film_page";
     private static final String TEST_CITY_ID = "3372";

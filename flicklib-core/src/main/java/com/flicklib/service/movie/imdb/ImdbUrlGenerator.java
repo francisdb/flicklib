@@ -23,7 +23,7 @@ import com.flicklib.tools.Param;
  *
  * @author francisdb
  */
-public class ImdbUrlGenerator {
+class ImdbUrlGenerator {
 
     private ImdbUrlGenerator() {
         // Utility class

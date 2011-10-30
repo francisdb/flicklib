@@ -86,20 +86,20 @@ public class CinebelParser implements Parser {
 		}
 	}
 
-	protected void parseTitle(MoviePage page, Source document) {
+	private void parseTitle(MoviePage page, Source document) {
 		Element movieDetails = document.getElementById("movieDetails");
 		Element title = new SimpleXPath(movieDetails).children().filterTagName(HTMLElementName.H1).children().unique();
 		page.setTitle(title.getTextExtractor().toString());
 	}
 
-	protected void parseImageUrl(MoviePage page, Source document) {
+	private void parseImageUrl(MoviePage page, Source document) {
 		Element fullPosterLink = document.getElementById("fullPosterLink");
 		if (fullPosterLink != null) {
 			page.setImgUrl(fullPosterLink.getAttributeValue("href"));
 		}
 	}
 
-	protected void parseRating(MoviePage page, Source document) {
+	private void parseRating(MoviePage page, Source document) {
 		Element rating = document.getElementById("userRating");
 		if (rating != null) {
 			Element average = new SimpleXPath(rating).getAllTagByAttributes("class", "average").unique();
@@ -109,7 +109,7 @@ public class CinebelParser implements Parser {
 		}
 	}
 
-	protected void parseSynopsis(MoviePage page, Source document) {
+	private void parseSynopsis(MoviePage page, Source document) {
 		List<Element> synopsis = document.getAllElements("class", "synopsis", true);
 		if (synopsis.size() > 0) {
 
@@ -119,7 +119,7 @@ public class CinebelParser implements Parser {
 		}
 	}
 
-	protected String excludeStrong(List<Element> synopsis) {
+	private String excludeStrong(List<Element> synopsis) {
 		return new AdvancedTextExtractor(synopsis.get(0), false).addExcludedTagName(HTMLElementName.STRONG).toString();
 	}
 

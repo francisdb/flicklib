@@ -115,14 +115,6 @@ public class MovieService {
         return "MovieService["+id+']';
     }
     
-    /**
-     * Compatibility method for the enums
-     * @return
-     */
-    @Deprecated()
-    public String name() {
-        return id;
-    }
 
     public static MovieService valueOf(String id) {
         MovieService s = services.get(id);

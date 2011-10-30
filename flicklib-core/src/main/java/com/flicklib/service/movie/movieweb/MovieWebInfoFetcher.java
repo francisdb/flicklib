@@ -52,7 +52,7 @@ public class MovieWebInfoFetcher extends AbstractMovieInfoFetcher {
     /**
      * http://www.movieweb.com
      */
-    final static MovieService MOVIEWEB = new MovieService("MOVIEWEB", "MovieWeb", "http://www.movieweb.com", "MWeb");
+    private final static MovieService MOVIEWEB = new MovieService("MOVIEWEB", "MovieWeb", "http://www.movieweb.com", "MWeb");
     
     private final Parser parser;
     private final SourceLoader sourceLoader;
