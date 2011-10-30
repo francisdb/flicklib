@@ -29,5 +29,9 @@
 			<groupId>com.flicklib</groupId>
 			<artifactId>flicklib-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.flicklib</groupId>
+			<artifactId>flicklib-netflix</artifactId>
+		</dependency>
 	</dependencies>
 </project>

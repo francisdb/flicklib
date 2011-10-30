@@ -7,9 +7,9 @@
 		<version>0.5-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>flicklib-core</artifactId>
+	<artifactId>flicklib-netflix</artifactId>
 	<packaging>jar</packaging>
-	<name>flicklib-core</name>
+	<name>flicklib-netflix</name>
 
 	<dependencies>
 		<dependency>
@@ -25,14 +25,22 @@
 			<artifactId>guice</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>net.oauth</groupId>
+			<artifactId>core</artifactId>
+			<version>20080621</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20090211</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.1.2</version>
-		</dependency>
+		
 	</dependencies>
 </project>

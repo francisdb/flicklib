@@ -15,6 +15,7 @@
 		<module>flicklib-guice</module>
 		<module>flicklib-httpcache4j</module>
 		<module>flicklib-ehcache</module>
+		<module>flicklib-netflix</module>
 		<!-- <module>flicklib-omdb</module> -->
 	</modules>
 	
@@ -87,6 +88,11 @@
 			<dependency>
 				<groupId>com.flicklib</groupId>
 				<artifactId>flicklib-guice</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.flicklib</groupId>
+				<artifactId>flicklib-netflix</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
