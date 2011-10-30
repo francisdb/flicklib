@@ -10,6 +10,7 @@
 	<url>http://www.flicklib.com</url>
 	
 	<modules>
+		<module>flicklib-api</module>
 		<module>flicklib-core</module>
 		<module>flicklib-httpcache4j</module>
 		<module>flicklib-ehcache</module>
@@ -72,6 +73,11 @@
 	
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>com.flicklib</groupId>
+				<artifactId>flicklib-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.flicklib</groupId>
 				<artifactId>flicklib-core</artifactId>
