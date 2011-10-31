@@ -91,6 +91,14 @@ public class FileGroup {
         return files;
     }
     
+    public FileMeta getFileByName(String name) {
+        for (FileMeta f : getFiles()) {
+            if (f.getName().equals(name)) {
+                return f;
+            }
+        }
+        return null;
+    }
 
     @Override
     public String toString() {
