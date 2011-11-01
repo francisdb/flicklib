@@ -27,14 +27,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.flicklib.tools.LevenshteinDistance;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 /**
  * Scans a folder for movies
@@ -60,6 +61,9 @@ public class AdvancedFolderScanner implements Scanner {
         this.movieNameExtractor = movieNameExtractor;
     }
 
+    public AdvancedFolderScanner() {
+        this.movieNameExtractor = new MovieNameExtractor();
+    }
 
 
     private List<FileGroup> movies;
