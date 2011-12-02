@@ -81,4 +81,9 @@ public class FileSourceLoader implements SourceLoader {
         }
         return source;
     }
+    
+    @Override
+    public RestBuilder url(String url) {
+    	throw new UnsupportedOperationException("not implemented");
+    }
 }

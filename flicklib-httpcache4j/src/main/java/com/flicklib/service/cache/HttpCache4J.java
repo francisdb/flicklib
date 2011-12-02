@@ -151,5 +151,10 @@ public class HttpCache4J implements SourceLoader {
 		}
 		return content;
 	}
+	
+    @Override
+    public RestBuilder url(String url) {
+    	throw new UnsupportedOperationException("not implemented");
+    }
 
 }

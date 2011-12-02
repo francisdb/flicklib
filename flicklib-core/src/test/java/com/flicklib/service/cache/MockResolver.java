@@ -35,4 +35,9 @@ final class MockResolver implements SourceLoader {
 	public int getCallCount() {
 		return count;
 	}
+	
+    @Override
+    public RestBuilder url(String url) {
+    	throw new UnsupportedOperationException("not implemented");
+    }
 }

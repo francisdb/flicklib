@@ -53,5 +53,21 @@ public interface SourceLoader {
      * @return the page source
      * @throws IOException
      */
-    Source post(String url, Map<String,String> parameters, Map<String,String> headers) throws IOException; 
+    Source post(String url, Map<String,String> parameters, Map<String,String> headers) throws IOException;
+    
+    RestBuilder url(String url);
+    
+    interface RestBuilder{
+
+		RestBuilder setHeader(String string, String string2);
+		RestResult get() throws IOException;
+    	
+    }
+    
+    interface RestResult{
+    	// TODO implement
+		//JsonElement getJson();
+		
+		String getString() throws IOException;
+    }
 }

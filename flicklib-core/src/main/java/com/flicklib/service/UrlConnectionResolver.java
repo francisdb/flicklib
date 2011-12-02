@@ -159,5 +159,10 @@ public class UrlConnectionResolver implements SourceLoader {
 
 		return processRequest(url, connection);
 	}
+	
+    @Override
+    public RestBuilder url(String url) {
+    	throw new UnsupportedOperationException("not implemented");
+    }
 
 }

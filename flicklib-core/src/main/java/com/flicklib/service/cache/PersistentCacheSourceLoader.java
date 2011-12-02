@@ -105,7 +105,11 @@ public class PersistentCacheSourceLoader extends HttpCacheSourceLoader {
 		} catch (IOException e) {
 			LOG.warn("error writing "+file.getAbsolutePath()+" : "+e.getMessage(), e);
 		}
-
 	}
+	
+    @Override
+    public RestBuilder url(String url) {
+    	throw new UnsupportedOperationException("not implemented");
+    }
 
 }

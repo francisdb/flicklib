@@ -78,4 +78,9 @@ public class AliasingSourceLoader implements SourceLoader {
         return loadSource(s.toString());
     }
     
+    @Override
+    public RestBuilder url(String url) {
+    	throw new UnsupportedOperationException("not implemented");
+    }
+    
 }

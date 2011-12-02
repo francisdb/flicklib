@@ -44,5 +44,10 @@ public class MemoryCacheSourceLoader extends HttpCacheSourceLoader {
 	protected void put(String url, Source source) {
 		cache.put(url, source);
 	}
+	
+    @Override
+    public RestBuilder url(String url) {
+    	throw new UnsupportedOperationException("not implemented");
+    }
 
 }

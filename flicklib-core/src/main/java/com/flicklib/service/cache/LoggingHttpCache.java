@@ -59,5 +59,10 @@ public class LoggingHttpCache implements SourceLoader {
     public Source post(String url, Map<String, String> parameters, Map<String, String> headers) throws IOException {
         return log(url, internal.post(url, parameters, headers));
     }
+    
+    @Override
+    public RestBuilder url(String url) {
+    	throw new UnsupportedOperationException("not implemented");
+    }
 
 }

@@ -22,9 +22,6 @@ public class ImdbApiFetcher extends AbstractMovieInfoFetcher {
 	
 	final static Logger LOG = LoggerFactory.getLogger(ImdbApiFetcher.class);
 	
-	    /**
-	     * http://www.imdb.com
-	     */
 	final static MovieService IMDB_API = new MovieService("IMDB_API", "IMDB Api", "http://www.imdbapi.com");
 
 	private final SourceLoader loader;

@@ -118,6 +118,11 @@ public class HttpClientSourceLoader implements SourceLoader {
 		}
 
 	}
+	
+	@Override
+	public RestBuilder url(final String url) {
+		return new HttpClientRestBuilder(url);
+	}
 
     private Source buildSource(String url, HttpResponse response, HttpRequestBase httpMethod, HttpContext ctx) throws IOException {
         LOGGER.info("Finished loading at " + httpMethod.getURI().toString());
@@ -140,4 +145,58 @@ public class HttpClientSourceLoader implements SourceLoader {
         return new Source(resultUri.toString(), content, contentType, url);
     }
 
+	private final class HttpClientRestBuilder implements RestBuilder {
+		
+		private final List<Header> headers = new ArrayList<Header>();
+		private final String url;
+		
+		public HttpClientRestBuilder(final String url) {
+			this.url = url;
+		}
+		
+		@Override
+		public RestBuilder setHeader(String name, String value) {
+			headers.add(new Header(name, value));
+			return this;
+		}
+
+		@Override
+		public RestResult get() throws IOException {
+			HttpGet httpMethod = new HttpGet(url);
+			for(Header header:headers){
+				httpMethod.addHeader(header.name,header.value);
+			}
+			HttpContext ctx = new BasicHttpContext();
+			HttpResponse response = client.execute(httpMethod, ctx);
+			return new HttpClientRestResult(response);
+		}
+		
+		
+	}
+	
+	private static final class Header{
+		private final String name;
+		private final String value;
+		private Header(String name, String value) {
+			super();
+			this.name = name;
+			this.value = value;
+		}
+	}
+	
+	private final class HttpClientRestResult implements RestResult {
+		
+		private final HttpResponse response;
+		
+		public HttpClientRestResult(final HttpResponse response) {
+			this.response = response;
+		}
+		
+		@Override
+		public String getString() throws IOException {
+			final HttpEntity entity = response.getEntity();
+			String content = EntityUtils.toString(entity);
+			return content;
+		}
+	}
 }

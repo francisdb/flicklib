@@ -77,5 +77,10 @@ public class HttpEHCache extends HttpCacheSourceLoader {
 				+ ")");
 		cache.put(new Element(url, page));
 	}
+	
+    @Override
+    public RestBuilder url(String url) {
+    	throw new UnsupportedOperationException("not implemented");
+    }
 
 }
