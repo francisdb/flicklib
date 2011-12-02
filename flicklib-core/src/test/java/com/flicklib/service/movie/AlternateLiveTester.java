@@ -2,6 +2,7 @@ package com.flicklib.service.movie;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -15,7 +16,7 @@ import com.flicklib.service.UrlConnectionResolver;
 @RunWith(value = Parameterized.class)
 public abstract class AlternateLiveTester {
 	
-	private static final int TIMEOUT = 30000;
+	private static final int TIMEOUT = (int) TimeUnit.SECONDS.toMillis(30);
 
     @Parameters
     public static Collection<Object[]> data() {

@@ -29,7 +29,7 @@
 	</dependencies>
 	
 	<properties>
-		<httpcache4j.version>2.1.1</httpcache4j.version>
+		<httpcache4j.version>3.4</httpcache4j.version>
 		<!-- <httpcache4j.version>2.2-SNAPSHOT</httpcache4j.version> -->
 	</properties>
 </project>

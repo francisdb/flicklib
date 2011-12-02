@@ -35,10 +35,12 @@ public class MemoryCacheSourceLoader extends HttpCacheSourceLoader {
 		super(resolver);
 	}
 
+	@Override
 	protected Source getFromCache(String url) {
 		return cache.get(url);
 	}
 
+	@Override
 	protected void put(String url, Source source) {
 		cache.put(url, source);
 	}

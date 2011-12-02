@@ -18,10 +18,8 @@
 package com.flicklib.service.movie.apple;
 
 import java.io.IOException;
+import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,57 +27,49 @@ import com.flicklib.api.TrailerFinder;
 import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
 import com.flicklib.tools.Param;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/**
- * TODO get rid of the restlet dependency
- * @author francisdb
- */
 @Singleton
 public class AppleTrailerFinder implements TrailerFinder {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppleTrailerFinder.class);
 
 	private final SourceLoader loader;
+	private final Gson gson;
 
 	@Inject
-	public AppleTrailerFinder(SourceLoader loader) {
+	public AppleTrailerFinder(final SourceLoader loader, final Gson gson) {
 		this.loader = loader;
+		this.gson = gson;
 	}
 
 	@Override
 	public String findTrailerUrl(String title, String localId) {
-		JSONObject obj;
-		String url = null;
 		try {
-			obj = getJSON(title);
-			JSONArray array = obj.getJSONObject("responseData").getJSONArray("results");
-			for (int i = 0; i< array.length();i++) {
-				JSONObject o = array.getJSONObject(i);
-				LOGGER.info("results:"+o);
-				String unescapedUrl = o.optString("unescapedUrl", "");
-				if (unescapedUrl.startsWith("http://trailers.apple.com")) {
-					return unescapedUrl;
+			GoogleResponse response = getJSON(title);
+			List<GoogleSearchResult> results = response.responseData.results;
+			for (GoogleSearchResult result:results) {
+				if (result.unescapedUrl.startsWith("http://trailers.apple.com")) {
+					return result.unescapedUrl;
 				}
 			}
-			
-			
 		} catch (IOException e) {
-			LOGGER.info("error :"+e.getMessage(), e);
-		} catch (JSONException e) {
-			LOGGER.info("error :"+e.getMessage(), e);
+			LOGGER.info("error :" + e.getMessage(), e);
+		} catch (JsonSyntaxException e) {
+			LOGGER.info("error :" + e.getMessage(), e);
 		}
 		
-		return url;
+		return null;
 	}
 
-	private JSONObject getJSON(String title) throws IOException, JSONException {
+	private GoogleResponse getJSON(String title) throws IOException {
 		//String url = "http://trailers.apple.com/trailers/home/scripts/quickfind.php?"+Param.paramString("q", title);
 		String url = "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q="+Param.encode(title+ " site:apple.com");
 		Source src = loader.loadSource(url, true);
-		JSONObject obj = new JSONObject(src.getContent());
-		return obj;
+		return gson.fromJson(src.getContent(), GoogleResponse.class);
 	}
 
 }

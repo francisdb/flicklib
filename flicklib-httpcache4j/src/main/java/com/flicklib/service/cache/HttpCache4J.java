@@ -19,6 +19,7 @@ package com.flicklib.service.cache;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class HttpCache4J implements SourceLoader {
 	@Override
 	public Source loadSource(final String url, boolean useCache) {
 		HTTPRequest request = new HTTPRequest(URI.create(url));
-		HTTPResponse response = cache.doCachedRequest(request, !useCache);
+		HTTPResponse response = cache.execute(request, !useCache);
 		String content = payloadToString(response);
 		String respUrl = response.getHeaders().getFirstHeaderValue("Content-Location");
 		//System.err.println(response.getHeaders().toString());
@@ -90,7 +91,12 @@ public class HttpCache4J implements SourceLoader {
 			if(builder.length() > 0){
 				builder.append("&");
 			}
-			builder.append(URLEncoder.encode(param.getKey())).append("=").append(URLEncoder.encode(param.getValue()));
+			String encoding = "UTF-8";
+			try {
+				builder.append(URLEncoder.encode(param.getKey(), encoding)).append("=").append(URLEncoder.encode(param.getValue(), encoding));
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		ByteArrayInputStream bis = new ByteArrayInputStream(builder.toString().getBytes());
 		
@@ -105,7 +111,7 @@ public class HttpCache4J implements SourceLoader {
 		request = request.payload(payload);
 		//////////////////////////////////////////////////////////////////////////
 		
-		HTTPResponse response = cache.doCachedRequest(request, false);
+		HTTPResponse response = cache.execute(request, false);
 		String content = payloadToString(response);
 		
 		final String respUrl = response.getHeaders().getFirstHeaderValue("Content-Location");

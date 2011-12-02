@@ -28,10 +28,6 @@ import org.junit.Test;
 import com.flicklib.domain.MoviePage;
 import com.flicklib.service.TestUtil;
 
-/**
- *
- * @author francisdb
- */
 public class FlixterInfoFetcherTest {
 
     /**

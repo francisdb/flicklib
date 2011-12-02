@@ -23,10 +23,6 @@ import org.junit.Test;
 
 import com.flicklib.domain.MoviePage;
 
-/**
- *
- * @author francisdb
- */
 public class ImdbTrailerFinderTest {
 
     /**

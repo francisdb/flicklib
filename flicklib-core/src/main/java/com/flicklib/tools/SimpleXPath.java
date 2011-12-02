@@ -138,11 +138,8 @@ public class SimpleXPath implements Iterable<Element> {
         return root.size();
     }
 
-    /**
-     * @return
-     * @see java.util.List#iterator()
-     */
-    public Iterator<Element> iterator() {
+    @Override
+	public Iterator<Element> iterator() {
         return root.iterator();
     }
     

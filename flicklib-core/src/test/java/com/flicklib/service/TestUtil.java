@@ -1,5 +1,7 @@
 package com.flicklib.service;
 
+import java.util.concurrent.TimeUnit;
+
 import com.flicklib.service.cache.MemoryCacheSourceLoader;
 import com.flicklib.service.cache.PersistentCacheSourceLoader;
 
@@ -12,6 +14,6 @@ public abstract class TestUtil {
 	}
 	
 	public static SourceLoader createLoader() {
-		return wrapCache(new UrlConnectionResolver(10000));
+		return wrapCache(new UrlConnectionResolver((int) TimeUnit.SECONDS.toMillis(10)));
 	}
 }

@@ -205,7 +205,8 @@ public class PorthuFetcher extends AbstractMovieInfoFetcher {
         return null;
     }
 
-    public List<MovieSearchResult> search(String title) throws IOException {
+    @Override
+	public List<MovieSearchResult> search(String title) throws IOException {
         List<MovieSearchResult> result = new ArrayList<MovieSearchResult>();
         String url = generateUrlForTitleSearch(title);
 

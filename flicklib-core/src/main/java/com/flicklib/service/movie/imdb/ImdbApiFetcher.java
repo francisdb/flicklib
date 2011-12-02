@@ -1,11 +1,11 @@
 package com.flicklib.service.movie.imdb;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,18 +15,24 @@ import com.flicklib.domain.MovieSearchResult;
 import com.flicklib.domain.MovieService;
 import com.flicklib.service.Source;
 import com.flicklib.service.SourceLoader;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 public class ImdbApiFetcher extends AbstractMovieInfoFetcher {
+	
 	final static Logger LOG = LoggerFactory.getLogger(ImdbApiFetcher.class);
+	
 	    /**
 	     * http://www.imdb.com
 	     */
-	    final static MovieService IMDB_API = new MovieService("IMDB", "IMDB Api", "http://www.imdbapi.com");
+	final static MovieService IMDB_API = new MovieService("IMDB_API", "IMDB Api", "http://www.imdbapi.com");
 
 	private final SourceLoader loader;
+	private final Gson gson;
 
 	public ImdbApiFetcher(SourceLoader loader) {
 		this.loader = loader;
+		this.gson = new Gson();
 	}
 
 	@Override
@@ -46,34 +52,32 @@ public class ImdbApiFetcher extends AbstractMovieInfoFetcher {
 	private MoviePage parseJson(Source source) throws IOException {
 		LOG.info("response from " + source.getUrl() + " type is :" + source.getContentType());
 
-		JSONObject obj;
 		try {
-			obj = new JSONObject(source.getContent());
-			return parseInfo(obj);
-		} catch (JSONException e) {
-			LOG.error("Parsing " + source.getContent() + " were failed:" + e.getMessage(), e);
+			ImdbApiMovie imdbApiMovie = gson.fromJson(source.getContent(), ImdbApiMovie.class);
+			return parseInfo(imdbApiMovie);
+		} catch (JsonParseException e) {
 			throw new IOException(e);
 		}
 	}
 
-	private MoviePage parseInfo(JSONObject obj) throws JSONException {
+	private MoviePage parseInfo(ImdbApiMovie imdbApiMovie) {
 		MoviePage mp = new MoviePage(IMDB_API);
-		mp.setIdForSite(obj.getString("ID"));
-		mp.setTitle(obj.getString("Title"));
-		mp.setYear(obj.optInt("Year"));
-		mp.setPlot(obj.getString("Plot"));
-		mp.setVotes(obj.optInt("Votes"));
-		mp.setImgUrl(obj.getString("Poster"));
-		mp.setScore((int) Math.round(obj.optDouble("Rating") * 10));
-		for (String genre : obj.optString("Genre", "").split(",")) {
-			mp.getGenres().add(genre);
-		}
-		for (String director : obj.optString("Director", "").split(",")) {
-			mp.getDirectors().add(director);
-		}
-		for (String actor : obj.optString("Actors", "").split(",")) {
-			mp.getActors().add(actor);
-		}
+		mp.setIdForSite(imdbApiMovie.id);
+		mp.setTitle(imdbApiMovie.title);
+		mp.setYear(imdbApiMovie.year);
+		mp.setPlot(imdbApiMovie.plot);
+		mp.setVotes(imdbApiMovie.votes);
+		mp.setImgUrl(imdbApiMovie.poster);
+		mp.setScore((int) Math.round(Double.parseDouble(imdbApiMovie.rating) * 10));
+//		for (String genre : obj.optString("Genre", "").split(",")) {
+//			mp.getGenres().add(genre);
+//		}
+//		for (String director : obj.optString("Director", "").split(",")) {
+//			mp.getDirectors().add(director);
+//		}
+//		for (String actor : obj.optString("Actors", "").split(",")) {
+//			mp.getActors().add(actor);
+//		}
 		return mp;
 	}
 
@@ -82,7 +86,11 @@ public class ImdbApiFetcher extends AbstractMovieInfoFetcher {
 	}
 
 	private String generateSearchUrl(String id) {
-		return "http://www.imdbapi.com/?t=" + id + "&plot=full&r=JSON&tomatoes=true";
+		try {
+			return "http://www.imdbapi.com/?t=" + URLEncoder.encode(id,"UTF8") + "&plot=full&r=JSON&tomatoes=true";
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override

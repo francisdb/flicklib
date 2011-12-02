@@ -3,6 +3,7 @@ package com.flicklib.service.movie.blippr;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -33,6 +34,10 @@ public class BlipprInfoFetcherTest extends AlternateLiveTester {
         MoviePage page = fetcher.getMovieInfo("1167");
         assertNotNull("expecting results", page);
         assertEquals("Pulp Fiction", page.getTitle());
+        assertEquals(Integer.valueOf(1994), page.getYear());
         assertNotNull(page.getScore());
+        assertTrue("no genres", page.getGenres().size() > 0);
+        assertTrue("no actors", page.getActors().size() > 0);
+        assertTrue("no directors", page.getDirectors().size() > 0);
     }
 }

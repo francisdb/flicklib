@@ -53,6 +53,7 @@ public class HttpClientSourceLoader implements SourceLoader {
 	private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientSourceLoader.class);
 
 	private final DefaultHttpClient client;
+	
 	@Inject
 	public HttpClientSourceLoader(@Named(value = Constants.HTTP_TIMEOUT) final Integer timeout) {
 

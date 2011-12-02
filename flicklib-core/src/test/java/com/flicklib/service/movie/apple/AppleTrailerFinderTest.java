@@ -22,11 +22,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.flicklib.service.TestUtil;
+import com.google.gson.Gson;
 
-/**
- *
- * @author francisdb
- */
 public class AppleTrailerFinderTest {
 
     /**
@@ -34,7 +31,8 @@ public class AppleTrailerFinderTest {
      */
     @Test
     public void testFindTrailerUrl() {
-        AppleTrailerFinder instance = new AppleTrailerFinder(TestUtil.createLoader());
+    	Gson gson = new Gson();
+        AppleTrailerFinder instance = new AppleTrailerFinder(TestUtil.createLoader(), gson);
         String url = instance.findTrailerUrl("The descendants", null);
         assertEquals("http://trailers.apple.com/trailers/fox_searchlight/thedescendants/", url);
     }
